@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wskj.project.dao.TableMapper" >
+    <!--模版列表-->
+    <select id="getTemplateList" resultType="java.util.Map">
+        select * from CLASSNODE WHERE TYPE ='C'
+    </select>
+    <!--添加到已选模版-->
+    <insert id="createTemplate" parameterType="java.util.Map">
+        INSERT INTO CLASSDESCRIPTION (CLASSCODE,NAME,CHINESENAME)
+        VALUES(#{classCode},#{name},#{chineseName})
+    </insert>
+    <!--删除已选择模版列表-->
+    <delete id="delTemplate">
+         DELETE FROM CLASSDESCRIPTION WHERE CLASSCODE = #{classCode}
+    </delete>
+    <!--已选择模版列表-->
+    <select id="getOptionalTemplateList" resultType="java.util.Map">
+        SELECT  * FROM CLASSDESCRIPTION
+    </select>
+
+    <!--当前节点选则底层门类模版列表-->
+    <select id="getSelectTemplateList" resultType="java.util.Map">
+        SELECT  * FROM CLASSDESCRIPTION
+        WHERE NAME IN (
+            SELECT  CLASSTABLECODE FROM CLASSNODE WHERE  PARENTCODE=#{parentCode}
+        )
+    </select>
+    <!--选中后查询实体表字段信息-->
+    <select id="getSelectTableByClassCode" resultType="java.util.Map">
+       SELECT LEVELCODE,CLASSCODE,RELATIONLEVEL,TABLECODE,ISNECESSARY,CHINESENAME FROM CLASSLEVEL WHERE CLASSCODE=#{classCode}
+        ORDER BY RELATIONLEVEL
+    </select>
+    <!--获取创建实体表字段信息 getTableInfoByTableCode-->
+    <select id="getTableInfoByTableCode" resultType="java.util.Map">
+        SELECT COLUMNCODE,TABLECODE,NAME,CHINESENAME,SERIAL,CATEGORY,TYPE,WIDTH,POINT,ISKEY,INDEXNAME,CANNULL,CANREPEAT,VISIBLE,FORMAT,VALUESCALE,VALUEDEFAULT,ISSECURITY,INHERIT,INCREASE,INPUTTYPE,DICTIONARYCODE,REMARK,ISSIMPLEQUERY,ISCATALOGQUERY FROM
+         CLASSCOLUMNDESCRIPTION
+         WHERE TABLECODE=#{tableCode}
+         ORDER BY SERIAL
+    </select>
+
+    <!-- 创建实体数据表-->
+    <update id="addTable" parameterType="java.util.Map">
+        ${SQL}
+    </update>
+    <!-- 数据表基本描述-->
+    <insert id="addTableDescription" parameterType="java.util.Map">
+        INSERT INTO TABLEDESCRIPTION(TABLECODE,NAME,AUXINAME,CHINESENAME,DATATYPE,SYSTEMTYPE,AGGREGATE)
+        VALUES(#{tableCode},#{name},#{auxiName},#{chineseName},#{dataType},#{systemType},#{aggregate})
+    </insert>
+    <!--表字段关系-->
+    <insert id="createTableRelation">
+        INSERT INTO TABLERELATION(RELATIONCODE ,MASTERCOLUMNCODE ,SLAVECOLUMNCODE ,NO,TYPE,CANCHANGE )
+        VALUES(#{relationCode},#{masterColumnCode},#{slaveColumnCode},#{NO},#{TYPE},#{CANCHANGE})
+    </insert>
+    <!-- 添加门类树节点信息 实体类表类型为E-->
+    <insert id="addTableTreeInfo" parameterType="java.util.Map">
+        INSERT INTO CLASSNODE (NODECODE, PARENTCODE,NAME,TYPE,CLASSCODE,CLASSTABLECODE,TABLECODE,SERIAL)
+        VALUES (#{NODECODE},#{PARENTCODE},#{NAME},#{TYPE},#{CLASSCODE},#{CLASSTABLECODE},#{TABLECODE},#{SERIAL})
+    </insert>
+    <!--添加 用户角色数据表-->
+    <!--U 表示用户，R 表示角色-->
+    <!--用户、角色对应操作的表名-->
+    <!--0：没有权限-->
+    <!--1：自定义权限-->
+    <!--9：全部权限-->
+    <insert id="addSystemUseRRoleTable" parameterType="java.util.Map">
+        INSERT INTO SYSTEMUSERROLETABLE(USERROLETABLECODE,USERROLECODE,TYPE,TABLENAME,RIGHTTYPE)VALUES(#{userCode},'0','U',#{tableName},'9')
+    </insert>
+    <!--添加实体表包涵数据列-->
+    <insert id="addTableColumnDescription" parameterType="java.util.Map">
+    INSERT INTO TABLECOLUMNDESCRIPTION(COLUMNCODE,TABLECODE,NAME,CHINESENAME,SERIAL,CATEGORY,TYPE,WIDTH,POINT,ISKEY,INDEXNAME,CANNULL,CANREPEAT,VISIBLE,VALUESCALE,VALUEDEFAULT,ISSECURITY,INHERIT,INCREASE,INPUTTYPE,DICTIONARYCODE,REMARK,ISSIMPLEQUERY,ISCATALOGQUERY,FORMAT)
+    VALUES(#{COLUMNCODE},#{TABLECODE},#{NAME},#{CHINESENAME},#{SERIAL},#{CATEGORY},#{TYPE},
+            #{WIDTH},#{POINT},#{ISKEY},#{INDEXNAME},#{CANNULL},
+            #{CANREPEAT},
+            #{VISIBLE},
+            #{VALUESCALE},
+            #{VALUEDEFAULT},
+            #{ISSECURITY},
+            #{INHERIT},
+            #{INCREASE},
+            #{INPUTTYPE},
+            #{DICTIONARYCODE},
+            #{REMARK},
+            #{ISSIMPLEQUERY},
+            #{ISCATALOGQUERY},
+            #{FORMAT})
+    </insert>
+
+
+    <!--查询表描述-->
+    <select id="getTableByTableCode" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT * FROM TABLEDESCRIPTION WHERE TABLECODE=#{tableCode}
+    </select>
+
+    <!--删除实体表，描述表的列-->
+    <delete id="delTableByTableName" parameterType="java.util.Map">
+        DROP TABLE ${tableName}
+    </delete>
+    <!--删除描述表的列-->
+    <delete id="delTableDescriptionByTableCode" parameterType="java.util.Map">
+        DELETE FROM TABLEDESCRIPTION WHERE TABLECODE = #{tableCode}
+    </delete>
+
+    <!--删除权限表列-->
+    <delete id="delSystemUseRRoleTableByTableName" parameterType="java.util.Map">
+        DELETE FROM SYSTEMUSERROLETABLE WHERE TABLENAME = #{tableName}
+    </delete>
+<!--删除纪录表数据-->
+    <delete id="delTableColumnDescription" parameterType="java.util.Map">
+       DELETE FROM  TABLECOLUMNDESCRIPTION WHERE TABLECODE = #{tableCode}
+    </delete>
+    <!--获取修改的修改-->
+    <select id="getEntityTableInfo" resultType="java.util.Map">
+        SELECT * FROM TABLEDESCRIPTION WHERE TABLECODE=#{tableCode}
+    </select>
+
+    <!--获取修改实体表字段-->
+    <select id="getEntityTableColumn" resultType="java.util.Map">
+        SELECT * FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode}
+    </select>
+    <!--实体表关系-->
+    <select id="getEntityTableRelation" resultType="java.util.Map">
+        SELECT * FROM TableRelation WHERE MASTERCOLUMNCODE=#{tableCode}
+    </select>
+    <!--获取模版类型-->
+    <select id="getSelectTemplateByDataType" resultType="java.util.Map">
+      SELECT * FROM CLASSNODE WHERE  TYPE='T' and CLASSTABLECODE=#{classTableCode} and PARENTCODE=#{parentCode}
+    </select>
+    <!--是否是空表 getIsOkUpDataByTableName-->
+    <select id="getIsOkUpDataByTableName" resultType="java.lang.Integer">
+      SELECT count(*) AS COUNT FROM ${tableName}
+    </select>
+</mapper>
+
+
+
+    <!--更新门类-->
+    <!--<update id="upClassLC" parameterType="java.util.Map">-->
+
+    <!--</update>-->
+
+    <!--修改查询表描述-->
+    <!--<select id="getTableByTableCode" parameterType="java.lang.String" resultType="java.util.Map">-->
+        <!--SELECT * FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE =(-->
+        <!--SELECT TABLECODE FROM TABLEDESCRIPTION WHERE TABLECODE = #{})-->
+    <!--</select>-->

@@ -1,0 +1,66 @@
+package com.wskj.project.dao;
+
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
+
+public interface TableMapper {
+    //T 模版列表
+    List<Map<String,String>> getTemplateList();
+    //添加 已选模版数据
+    Integer createTemplate(Map<String,String> parmMap);
+    //删除已选模版数据
+    Integer delTemplate(@Param("classCode") String classCode);
+    //已选择模版列表
+    List<Map<String,String>> getOptionalTemplateList();
+
+    //当前可选择底层门类
+    List<Map<String,Object>> getSelectTemplateList(Map<String,String> map);
+
+    //当前可选择底层门类选中后查询实体表
+    List<Map<String,String>> getSelectTableByClassCode(Map<String,String> map);
+    //获取创建实体表字段信息
+    List<Map<String,String>> getTableInfoByTableCode(Map<String,String> map);
+
+    //数据表基本描述
+    Integer addTableDescription(Map<String,String> parmMap);
+    //表字段关系
+    Integer createTableRelation(Map<String,String> parmMap);
+    //添加门类树节点信息 实体类表类型为E C
+    Integer addTableTreeInfo(Map<String,String> parmMap);
+    //创建实体数据表 <>
+    Integer addTable(Map<String,String> parmMap);
+    //创建用户角色数据表 R角色 U用户
+    Integer addSystemUseRRoleTable(Map<String,String> parmMap);
+
+    //根据表描述里的tableCode新建表字段属性 TableColumnDescription
+    Integer addTableColumnDescription(Map<String,Object> parmMap);
+
+    //查询表描述
+    List<Map<String,String>> getTableByTableCode(@Param("tableCode")String tableCode);
+//    实体删除表
+    Integer delTableByTableName(@Param("tableName")String tableName);
+    //和表描述
+    Integer delTableDescriptionByTableCode(@Param("tableCode")String tableCode);
+    //权限表
+    Integer delSystemUseRRoleTableByTableName(@Param("tableName")String tableName);
+    //字段纪录表
+    Integer delTableColumnDescription(@Param("tableCode")String tableCode);
+
+
+    //获取实体表详情
+    List<Map<String,Object>> getEntityTableInfo(@Param("tableCode")String tableCode);
+    //获取实体表字段
+    List<Map<String,Object>> getEntityTableColumn(@Param("tableCode")String tableCode);
+    //获取实体表关系
+    List<Map<String,Object>> getEntityTableRelation(@Param("tableCode")String tableCode);
+
+    //当前可选择底层门类 getSelectTemplateByDataType
+    List<Map<String,Object>> getSelectTemplateByDataType(Map<String,Object> parmMap);
+
+
+    //判断要修改的表是否是空表
+    Integer getIsOkUpDataByTableName(@Param("tableName")String tableName);
+
+}
