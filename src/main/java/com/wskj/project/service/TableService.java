@@ -33,4 +33,12 @@ public interface TableService {
 
     //判断修改表是否有数据
     Boolean getIsOkUpDataByTableName(String tableName);
+
+
+    //添加表新字段
+    Boolean addField(Map<String,Object> field);
+    //删除表新字段
+    Boolean delField(Map<String,Object> field);
+    //修改表新字段
+    Boolean upField(Map<String,Object> field);
 }
