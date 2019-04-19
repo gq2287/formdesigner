@@ -96,6 +96,27 @@ public class ResponseController {
             return new ResponseResult(400, "失败");
         }
     }
+    @ApiOperation(value = "type(add增 del删 up改) 字段", notes = "返回信息 0成功，400失败,500参数错误")
+    @RequestMapping(value = "/getModifyFieldInfo", method = RequestMethod.POST)
+    public ResponseResult getModifyFieldInfo(String fieldInfo,String type) {
+        boolean bool=true;
+        Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object>  pras=JSONObject.parseObject(fieldInfo,typeObj);// 获取参数列
+        //type判断是对字段的 add增 del删 up改
+        if("add".equals(type)){
+            bool=tableService.addField(pras);
+        }else if("del".equals(type)){
+            bool=tableService.delField(pras);
+
+        }else if("up".equals(type)){
+            bool=tableService.upField(pras);
+        }
+        if(bool){
+            return new ResponseResult(0, "处理成功");
+        }else{
+            return new ResponseResult(400, "处理失败");
+        }
+    }
 
 
 
