@@ -69,7 +69,6 @@ public class TableServiceImpl implements TableService {
             parmMap.put("parentCode", "12");
             mapList = tableMapper.getSelectTemplateList(parmMap);
         }
-//       萨斯说
         return mapList;
     }
 
@@ -297,6 +296,11 @@ public class TableServiceImpl implements TableService {
         return parms;
     }
 
+    /**
+     * 查询数据表是否有数据
+     * @param tableName
+     * @return
+     */
     @Override
     public Boolean getIsOkUpDataByTableName(String tableName) {
         boolean bool=true;
@@ -305,5 +309,25 @@ public class TableServiceImpl implements TableService {
             bool=false;
         }
         return bool;
+    }
+
+
+
+    @Override
+    public Boolean addField(Map<String, Object> field) {
+
+        return true;
+    }
+
+    @Override
+    public Boolean delField(Map<String, Object> field) {
+
+        return true;
+    }
+
+    @Override
+    public Boolean upField(Map<String, Object> field) {
+
+        return true;
     }
 }
