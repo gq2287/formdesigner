@@ -21,8 +21,6 @@ public class TableServiceImpl implements TableService {
     private TableMapper tableMapper;
     @Resource
     private ClassLevelServiceImpl classLevelService;
-    @Resource
-    private TableServiceImpl tableService;
 
     @Override
     public List<Map<String, String>> getTemplateList() {
