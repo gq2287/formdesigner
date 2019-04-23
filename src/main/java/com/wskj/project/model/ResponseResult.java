@@ -3,7 +3,8 @@ package com.wskj.project.model;
 /**
  * 全局返回对象
  */
-public class ResponseResult {
+public  class  ResponseResult {
+    public static final int OK=0;
     private int code;   //返回码 非0即失败
     private String msg; //消息提示
     private Object data; //返回的数据

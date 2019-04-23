@@ -35,7 +35,7 @@ public interface TableMapper {
     Integer addSystemUseRRoleTable(Map<String,String> parmMap);
 
     //根据表描述里的tableCode新建表字段属性 TableColumnDescription
-    Integer addTableColumnDescription(Map<String,Object> parmMap);
+    Integer addTableColumnDescription(@Param("sql")StringBuffer sql);
 
     //查询表描述
     List<Map<String,String>> getTableByTableCode(@Param("tableCode")String tableCode);
@@ -54,7 +54,7 @@ public interface TableMapper {
     //获取实体表字段
     List<Map<String,Object>> getEntityTableColumn(@Param("tableCode")String tableCode);
     //获取实体表关系
-    List<Map<String,Object>> getEntityTableRelation(@Param("tableCode")String tableCode);
+    List<Map<String,Object>> getEntityTableRelation(@Param("tableName")String tableName);
 
     //当前可选择底层门类 getSelectTemplateByDataType
     List<Map<String,Object>> getSelectTemplateByDataType(Map<String,Object> parmMap);
@@ -62,5 +62,27 @@ public interface TableMapper {
 
     //判断要修改的表是否是空表
     Integer getIsOkUpDataByTableName(@Param("tableName")String tableName);
+
+
+
+    //添加表新字段
+    Integer addField(Map<String,Object> field);
+
+    //修改描述表字段
+    Integer upFieldTableDescription(Map<String,String> field);
+    //修改表新字段
+    Integer upFieldTableColumnDescription(Map<String,String> field);
+    //修改实体表
+    Integer upFieldEntityTable(Map<String,String> field);
+    //修改表字段关系
+    Integer upFieldTableRelation(Map<String,Object> field);
+    //删除表字段描述
+    Integer delFieldTableColumnDescription(Map<String,Object> field);
+    //删除表字段关系
+    Integer delFieldTableRelation(Map<String,Object> field);
+    //删除关系
+    Integer delFieldRelation(@Param("relationCode")String relationCode);
+    //删除实体表字段
+    Integer delFieldTable(Map<String,Object> field);
 
 }

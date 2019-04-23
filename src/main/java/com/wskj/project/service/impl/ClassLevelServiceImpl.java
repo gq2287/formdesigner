@@ -82,36 +82,41 @@ public class ClassLevelServiceImpl implements ClassLevelService {
     @Override
     public int createTreeL(Map<String, Object> parmMap) {
         int result=0;
-        Map<String,String> treeT=new HashMap<>();
-        treeT.put("NODECODE", "ucls"+StringUtil.getDate(2)+StringUtil.getRandom(1000,10000)+1);//唯一编号
-        treeT.put("CLASSCODE","");
-        treeT.put("CLASSTABLECODE","");
-        treeT.put("TABLECODE","");
-        treeT.put("SERIAL","");
-        if(parmMap.get("name")!=null){
-            treeT.put("NAME",parmMap.get("name").toString());
-        }
-        if(parmMap.get("type")!=null){
-            treeT.put("TYPE",parmMap.get("type").toString());
-        }
-        if(parmMap.get("type")!=null){
-            if("L".equals(parmMap.get("type").toString())){ //中间门类
-                for (String obj:parmMap.keySet()) {
-                    if(parmMap.get("attrs")!=null){
-                        Map<String,String> map=(Map<String,String>)parmMap.get("attrs");//获取当前
-                        treeT.put("PARENTCODE",map.get("NODECODE"));
+        try {
+            Map<String,String> treeT=new HashMap<>();
+            treeT.put("NODECODE", "ucls"+StringUtil.getDate(2)+StringUtil.getRandom(1000,10000)+1);//唯一编号
+            treeT.put("CLASSCODE","");
+            treeT.put("CLASSTABLECODE","");
+            treeT.put("TABLECODE","");
+            treeT.put("SERIAL","");
+            if(parmMap.get("name")!=null){
+                treeT.put("NAME",parmMap.get("name").toString());
+            }
+            if(parmMap.get("type")!=null){
+                treeT.put("TYPE",parmMap.get("type").toString());
+            }
+            if(parmMap.get("type")!=null){
+                if("L".equals(parmMap.get("type").toString())){ //中间门类
+                    for (String obj:parmMap.keySet()) {
+                        if(parmMap.get("attrs")!=null){
+                            Map<String,String> map=(Map<String,String>)parmMap.get("attrs");//获取当前
+                            treeT.put("PARENTCODE",map.get("NODECODE"));
+                        }
+                    }
+                    result=classLevelMapper.addTreeLC(treeT);
+                }else if("C".equals(parmMap.get("type").toString())){ //底层门类
+                    boolean bool=tableService.addTableDescription(parmMap);
+                    if(bool){
+                        result=1;
+                        System.out.println("增加底层门类成功");
                     }
                 }
-                result=classLevelMapper.addTreeLC(treeT);
-            }else if("C".equals(parmMap.get("type").toString())){ //底层门类
-                boolean bool=tableService.addTableDescription(parmMap);
-                if(bool){
-                    result=1;
-                    System.out.println("增加底层门类成功");
-                }
             }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }finally {
+            return result;
         }
-        return result;
     }
 
     /**
@@ -122,67 +127,67 @@ public class ClassLevelServiceImpl implements ClassLevelService {
     @Override
     public String delTreeLC(Map<String,String> parmMap) {
         String result="";
-        if(parmMap!=null){
-            String type=parmMap.get("TYPE");
-            if("L".equals(type)){
-                int re=classLevelMapper.delTreeL(parmMap);
-                if(re>0){
-                    result="删除成功";
-                }
-            }else if("C".equals(type)){
-                List<Map<String,String>> listMap=getTableByNodeCode(parmMap.get("NODECODE"));//实体表节点集合
-                List<Map<String,String>> tableListMap=new ArrayList<>();//实体表描述集合
-                if(listMap!=null&&listMap.size()!=0){
-                    for (int i = 0; i <listMap.size() ; i++) {
-                        int re=0;//接收返回值
-                        //查询实体表tableCode
-                        String tableCode=listMap.get(i).get("TABLECODE")+"";//根据实体表节点集合里的tableCode获取实体表描述
-                        List<Map<String,String>> tableList=tableMapper.getTableByTableCode(tableCode);//查询表描述
-                        re=classLevelMapper.delTreeE(listMap.get(i));//删除实体E节点
-                        if(re>0){
-                            result="删除成功11";
-                            System.err.println("删除成功CLASSNODE里Type为E的成功--"+listMap.get(i));
-                        }
-                        re=classLevelMapper.delTreeC(parmMap);//删除C节点
-                        if(re>0){
-                            result="删除成功1";
-                            System.err.println("删除成功CLASSNODE里Type为C的成功--"+parmMap);
-                        }
-                        if(tableList!=null&&tableList.size()!=0){
-                            for (int j = 0; j <tableList.size() ; j++) {
-                                String tableName=tableList.get(j).get("NAME");//获取表名称，
-                                re=tableMapper.delTableByTableName(tableName);//删除实体表
-                                if(re>0){
-                                    result="删除实体表成功2";
-                                    System.err.println("删除实体表成功---"+tableName);
-                                }
-                                re=tableMapper.delSystemUseRRoleTableByTableName(tableName);//删除权限表列
-                                if(re>0){
-                                    result="删除权限表列3";
-                                    System.err.println("删除权限表列成功----"+tableCode);
-                                }
-                                re=tableMapper.delTableDescriptionByTableCode(tableCode);//删除用户角色表权限
-                                if(re>0){
-                                    result="删除描述的实体表成功4";
-                                    System.err.println("删除描述的实体表成功----"+tableCode);
-                                }
-                                re=tableMapper.delTableColumnDescription(tableCode);//删除字纪录表数据
-                                if(re>0){
-                                    result="删除字纪录表数据5";
-                                    System.err.println("删除字纪录表数据成功----"+tableCode);
-                                }
-                            }
-                        }
-                    }
-                }else{
+        try {
+            if(parmMap!=null){
+                String type=parmMap.get("TYPE");
+                if("L".equals(type)){
                     int re=classLevelMapper.delTreeL(parmMap);
                     if(re>0){
                         result="删除成功";
                     }
+                }else if("C".equals(type)){
+                    List<Map<String,String>> listMap=getTableByNodeCode(parmMap.get("NODECODE"));//实体表节点集合
+                    List<Map<String,String>> tableListMap=new ArrayList<>();//实体表描述集合
+                    if(listMap!=null&&listMap.size()!=0){
+                        for (int i = 0; i <listMap.size() ; i++) {
+                            int re=0;//接收返回值
+                            //查询实体表tableCode
+                            String tableCode=listMap.get(i).get("TABLECODE")+"";//根据实体表节点集合里的tableCode获取实体表描述
+                            List<Map<String,String>> tableList=tableMapper.getTableByTableCode(tableCode);//查询表描述
+                            re=classLevelMapper.delTreeE(listMap.get(i));//删除实体E节点
+                            if(re>0){
+                                System.err.println("删除成功CLASSNODE里Type为E的成功--"+listMap.get(i));
+                            }
+                            re=classLevelMapper.delTreeC(parmMap);//删除C节点
+                            if(re>0){
+                                System.err.println("删除成功CLASSNODE里Type为C的成功--"+parmMap);
+                            }
+                            if(tableList!=null&&tableList.size()!=0){
+                                for (int j = 0; j <tableList.size() ; j++) {
+                                    String tableName=tableList.get(j).get("NAME");//获取表名称，
+                                    re=tableMapper.delTableByTableName(tableName);//删除实体表
+                                    if(re>0){
+                                        System.err.println("删除实体表成功---"+tableName);
+                                    }
+                                    re=tableMapper.delSystemUseRRoleTableByTableName(tableName);//删除权限表列
+                                    if(re>0){
+                                        System.err.println("删除权限表列成功----"+tableCode);
+                                    }
+                                    re=tableMapper.delTableDescriptionByTableCode(tableCode);//删除描述表的列
+                                    if(re>0){
+                                        System.err.println("删除描述的实体表成功----"+tableCode);
+                                    }
+                                    re=tableMapper.delTableColumnDescription(tableCode);//删除字纪录表数据
+                                    if(re>0){
+                                        System.err.println("删除字纪录表数据成功----"+tableCode);
+                                    }
+                                }
+                            }
+                        }
+                    }else{
+                        int re=classLevelMapper.delTreeL(parmMap);
+                        if(re>0){
+                            result="删除成功";
+                        }
+                    }
                 }
             }
+        }catch (Exception e){
+            System.err.println(e.getMessage());
+            result=e.getMessage();
+        }finally {
+            return result;//删除中间或底层门类
         }
-        return result;//删除中间或底层门类
     }
 
     /**

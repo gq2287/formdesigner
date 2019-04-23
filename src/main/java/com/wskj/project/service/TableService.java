@@ -34,11 +34,18 @@ public interface TableService {
     //判断修改表是否有数据
     Boolean getIsOkUpDataByTableName(String tableName);
 
-
+    //添加表关系
+    void addTableRelation(Map<String,String> tableRelationMap);
     //添加表新字段
     Boolean addField(Map<String,Object> field);
+    //添加描述表信息
+    Boolean upFieldTableDescription(Map<String,String> field);
+    //修改表关系
+    Boolean upFieldTableRelation(Map<String,Object> fieldRelation);
     //删除表新字段
     Boolean delField(Map<String,Object> field);
+    //删除表关系
+    Boolean delFieldTableRelation(String relationCode);
     //修改表新字段
     Boolean upField(Map<String,Object> field);
 }
