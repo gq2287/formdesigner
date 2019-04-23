@@ -61,4 +61,8 @@
     <select id="getTableByNodeCode" resultType="java.util.Map">
         SELECT * from CLASSNODE WHERE PARENTCODE = #{nodeCode}
     </select>
+    <!--修改表名及序号-->
+    <update id="upTreeNameAndSerial" parameterType="java.util.Map">
+        UPDATE CLASSNODE SET NAME=#{name},SERIAL=#{serial} WHERE NODECODE=#{nodeCode}
+    </update>
 </mapper>
