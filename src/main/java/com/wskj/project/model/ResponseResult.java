@@ -1,13 +1,20 @@
 package com.wskj.project.model;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 全局返回对象
  */
 public  class  ResponseResult {
     public static final int OK=0;
-    private int code;   //返回码 非0即失败
-    private String msg; //消息提示
-    private Object data; //返回的数据
+    @ApiModelProperty("返回码 非0即失败")
+    private int code;
+    @ApiModelProperty("消息提示")
+    private String msg;
+    @ApiModelProperty("返回的数据")
+    private Object data;
+    @ApiModelProperty("是否成功")
+    private boolean success;
 
     public int getCode() {
         return code;
@@ -33,6 +40,14 @@ public  class  ResponseResult {
         this.data = data;
     }
 
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
     public ResponseResult() {
     }
 
@@ -45,5 +60,17 @@ public  class  ResponseResult {
         this.code = code;
         this.msg = msg;
         this.data = data;
+    }
+    public ResponseResult(int code, String msg, boolean success) {
+        this.code = code;
+        this.msg = msg;
+        this.success = success;
+    }
+
+    public ResponseResult(int code, String msg, Object data, boolean success) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+        this.success = success;
     }
 }

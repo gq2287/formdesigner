@@ -27,4 +27,6 @@ public interface ClassLevelService {
      */
     List<Map<String,String>> getAllDictionaryData();
 
+    Boolean upTreeNameAndSerial(Map<String,String> parmMap);
+
 }

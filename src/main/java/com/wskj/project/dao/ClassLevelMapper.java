@@ -33,4 +33,8 @@ public interface ClassLevelMapper {
     //根据父节点nodeCode获取实体表数据
     List<Map<String,String>> getTableByNodeCode(@Param("nodeCode") String nodeCode);
 
+
+    //修改节点序号和名称
+    Integer upTreeNameAndSerial(Map<String,String> parmMap);
+
 }

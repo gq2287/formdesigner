@@ -219,6 +219,26 @@ public class ClassLevelServiceImpl implements ClassLevelService {
     public List<Map<String, String>> getAllDictionaryData() {
         return classLevelMapper.getAllDictionaryData();
     }
+    /**
+     * 修改classnode
+     * @parmMap
+     * @return
+     */
+    @Override
+    public Boolean upTreeNameAndSerial(Map<String, String> parmMap) {
+        boolean bool=true;
+        try {
+            int result= classLevelMapper.upTreeNameAndSerial(parmMap);
+            if (result>0){
+                System.out.println("修改classnode名称及序号成功--"+parmMap);
+            }
+        }catch (Exception e){
+            bool=false;
+            System.out.println("修改classnode名称及序号--"+e.getMessage()+"参数："+parmMap);
+        }finally {
+            return bool;
+        }
+    }
 
     /**
      * 根据父节点nodecode获取旗下实体表

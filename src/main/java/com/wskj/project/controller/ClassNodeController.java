@@ -29,9 +29,13 @@ public class ClassNodeController {
     @ApiOperation(value = "获取Tree菜单", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTreeMenu", method = RequestMethod.GET)
     public ResponseResult getTreeMenu() {
-        Tree tree = classLevelService.getTreeMenu();
-        ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功 ", tree);
-        return responseResult;
+        Tree tree =null;
+        try {
+            tree=classLevelService.getTreeMenu();
+        }catch (Exception e){
+            return new ResponseResult(ResponseResult.OK, e.getMessage(), tree,false);
+        }
+        return new ResponseResult(ResponseResult.OK, "成功", tree,true);
     }
 
     @ApiOperation(value = "创建 L中间门类 C底层门类 ", notes = "返回信息 0成功，400失败   ")
@@ -46,11 +50,15 @@ public class ClassNodeController {
         parmMap.put("name", name);
         parmMap.put("type", type);
         parmMap.put("tableDescriptions", tds);//表描述
-        int result = classLevelService.createTreeL(parmMap);
-        if (result == 1) {
-            return new ResponseResult(ResponseResult.OK, "成功", parmMap);
-        } else {
-            return new ResponseResult(ResponseResult.OK, "创建失败");
+        try {
+            int result = classLevelService.createTreeL(parmMap);
+            if (result == 1) {
+                return new ResponseResult(ResponseResult.OK, "成功", parmMap,true);
+            } else {
+                return new ResponseResult(ResponseResult.OK, "创建失败",false);
+            }
+        }catch (Exception e){
+            return new ResponseResult(ResponseResult.OK, "创建 L中间门类 C底层门类异常--"+e.getMessage(),false);
         }
     }
 
@@ -60,11 +68,16 @@ public class ClassNodeController {
         logger.info("删除 L中间门类 C底层门类 (如果旗下还存在子节点前台请给与提示)"+attrs);
         Type typeObj = new TypeToken<Map<String, String>>() {}.getType();
         Map<String, String>  pras=JSONObject.parseObject(attrs,typeObj);//JSONObject转换map
-        String result= classLevelService.delTreeLC(pras);
-        if(!"".equals(result)){
-            return new ResponseResult(ResponseResult.OK, result);
-        }else{
-            return new ResponseResult(ResponseResult.OK, "删除失败");
+        String result=null;
+        try {
+            result=classLevelService.delTreeLC(pras);
+            if(!"".equals(result)){
+                return new ResponseResult(ResponseResult.OK, result,true);
+            }else{
+                return new ResponseResult(ResponseResult.OK, "删除失败",false);
+            }
+        }catch (Exception e){
+            return new ResponseResult(ResponseResult.OK, "删除 L中间门类 C底层门类异常--"+e.getMessage(),false);
         }
     }
 
@@ -72,8 +85,28 @@ public class ClassNodeController {
     @ApiOperation(value = "获取字典", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getAllDictionaryData", method = RequestMethod.GET)
     public ResponseResult getAllDictionaryData() {
-        List<Map<String,String>> list=classLevelService.getAllDictionaryData();
-        return  new ResponseResult(ResponseResult.OK, "成功", list);
+        List<Map<String,String>> list=null;
+        try {
+            list=classLevelService.getAllDictionaryData();
+            return  new ResponseResult(ResponseResult.OK, "成功", list,true);
+        }catch (Exception e){
+            return new ResponseResult(ResponseResult.OK, "获取字典异常--"+e.getMessage(),false);
+        }
+    }
+
+    @ApiOperation(value = "修改名称和序号", notes = "返回信息 0成功，400失败 ")
+    @RequestMapping(value = "/getTreeNameAndSerial", method = RequestMethod.POST)
+    public ResponseResult getTreeNameAndSerial(String treeInfo) {
+        logger.info("修改名称和序号："+treeInfo);
+        boolean aBoolean=true;
+        Type typeObj = new TypeToken<Map<String, String>>() {}.getType();
+        Map<String, String>  pras=JSONObject.parseObject(treeInfo,typeObj);//JSONObject转换map
+        aBoolean=classLevelService.upTreeNameAndSerial(pras);
+        if(aBoolean){
+            return new ResponseResult(ResponseResult.OK, "修改名称和序号成功",aBoolean);
+        }else{
+            return new ResponseResult(ResponseResult.OK, "修改名称和序号失败",aBoolean);
+        }
     }
 
 }
