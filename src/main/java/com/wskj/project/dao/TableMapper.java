@@ -33,6 +33,8 @@ public interface TableMapper {
     Integer addTable(Map<String,String> parmMap);
     //创建用户角色数据表 R角色 U用户
     Integer addSystemUseRRoleTable(Map<String,String> parmMap);
+    //添加默认视图列表信息 VISIBLE为T的全部添加
+    Integer addOneColumn(Map<String,String> parmMap);
 
     //根据表描述里的tableCode新建表字段属性 TableColumnDescription
     Integer addTableColumnDescription(@Param("sql")StringBuffer sql);
@@ -78,6 +80,8 @@ public interface TableMapper {
     Integer upFieldTableRelation(Map<String,Object> field);
     //删除表字段描述
     Integer delFieldTableColumnDescription(Map<String,Object> field);
+    //删除视图表字段
+    Integer delOneColumn(Map<String,Object> field);
     //删除表字段关系
     Integer delFieldTableRelation(Map<String,Object> field);
     //删除关系

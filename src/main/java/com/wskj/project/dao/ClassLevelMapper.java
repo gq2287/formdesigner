@@ -14,7 +14,8 @@ public interface ClassLevelMapper {
 
     //C，底层门类，中间门类
     List<Map<String,String>> getClassCL(@Param("nodeCode") String nodeCode);
-
+    //获取底层门类实体表
+//    List<Map<String,String>> getClassEByNodeCode(@Param("nodeCode") String nodeCode);
     //C，底层门类，中间门类 数量
     Integer getClassCLCount(@Param("nodeCode") String nodeCode);
 

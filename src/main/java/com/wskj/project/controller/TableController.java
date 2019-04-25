@@ -53,7 +53,7 @@ public class TableController {
         if(bool){
             return new ResponseResult(ResponseResult.OK, "可以修改成功",true);
         }else {
-            return new ResponseResult(ResponseResult.OK, "无法修改",false);
+            return new ResponseResult(ResponseResult.OK, "无法修改",true);
         }
     }
 

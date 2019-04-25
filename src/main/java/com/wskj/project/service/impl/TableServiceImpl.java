@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class TableServiceImpl implements TableService
@@ -173,6 +170,20 @@ public class TableServiceImpl implements TableService
                                                             if (count > 0) {
                                                                 System.out.println("保存字段到纪录表成功--" + stringBuffer);
                                                             }
+                                                            //保存视图列表
+                                                            String visible = tempColumnsMap.get("VISIBLE") + "";//是否可见 T全部添加数据
+                                                            if("T".equals(visible)){
+                                                                Map<String, String> viewMap = new HashMap<>();//字段记录表集合//添加到纪录表
+                                                                viewMap.put("listCode", String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));
+                                                                viewMap.put("columnCode", String.valueOf(tableColumnDMap.get("COLUMNCODE")));
+                                                                viewMap.put("serial", String.valueOf(tableColumnDMap.get("SERIAL")));
+                                                                viewMap.put("title", String.valueOf(tableColumnDMap.get("CHINESENAME")));
+                                                                count=tableMapper.addOneColumn(viewMap);
+                                                                if (count > 0) {
+                                                                    System.out.println("保存列到视图表成功--" + viewMap);
+                                                                }
+                                                            }
+
                                                             String mc = tempColumnsMap.get("NAME") + "";//字段名称
                                                             String lx = tempColumnsMap.get("TYPE") + "";//数据类型
                                                             String cd = tempColumnsMap.get("WIDTH") + "";//数据长度
@@ -366,6 +377,20 @@ public class TableServiceImpl implements TableService
             if (result2 > 0) {
                 System.err.println("追加新表纪录列成功--" + objectMap);
             }
+            //保存视图列表
+            String visible = objectMap.get("VISIBLE") + "";//是否可见 T全部添加数据
+            if("T".equals(visible)){
+                Map<String, String> viewMap = new HashMap<>();//字段记录表集合//添加到纪录表
+                viewMap.put("listCode", String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));
+                viewMap.put("columnCode", String.valueOf(objectMap.get("COLUMNCODE")));
+                String SERIAL=objectMap.get("SERIAL")!=null&&!"".equals(String.valueOf(objectMap.get("SERIAL")))? String.valueOf(objectMap.get("SERIAL")):"0";
+                viewMap.put("serial", SERIAL);
+                viewMap.put("title", String.valueOf(objectMap.get("CHINESENAME")));
+                int count=tableMapper.addOneColumn(viewMap);
+                if (count > 0) {
+                    System.out.println("保存列到视图表成功--" + viewMap);
+                }
+            }
             bool = true;
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -429,13 +454,17 @@ public class TableServiceImpl implements TableService
             if(res1>0){
                 System.out.println("删除表字段描述成功"+field);
             }
-            int res2=tableMapper.delFieldTableRelation(field);
+            res1=tableMapper.delFieldTableRelation(field);
             if(res1>0){
                 System.out.println("删除表字段关系成功"+field);
             }
-            int res3=tableMapper.delFieldTable(field);
+            res1=tableMapper.delFieldTable(field);
             if(res1>0){
                 System.out.println("删除实体表字段成功"+field);
+            }
+            res1=tableMapper.delOneColumn(field);
+            if(res1>0){
+                System.out.println("删除视图字段成功"+field);
             }
         }catch (Exception e){
             bool=false;

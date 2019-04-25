@@ -167,6 +167,23 @@ public class ClassLevelServiceImpl implements ClassLevelService {
                                     if(re>0){
                                         System.err.println("删除描述的实体表成功----"+tableCode);
                                     }
+                                    List<Map<String,Object>> listView=tableMapper.getEntityTableColumn(tableCode);//获取纪录表列
+                                    if(listView!=null&&listView.size()>0){
+                                        for (int k = 0; k < listView.size(); k++) {
+                                            for (String strr:listView.get(k).keySet()) {
+                                                Map<String,Object> mapView=new HashMap();
+                                                mapView.put("columnCode",String.valueOf(listView.get(k).get("COLUMNCODE")));
+                                                re=tableMapper.delOneColumn(mapView);//删除视图表数据
+                                                if(re>0){
+                                                    System.err.println("删除视图表数据成功----删除列："+String.valueOf(listView.get(k).get("COLUMNCODE")));
+                                                    break;
+                                                }else{
+                                                    continue;
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     re=tableMapper.delTableColumnDescription(tableCode);//删除字纪录表数据
                                     if(re>0){
                                         System.err.println("删除字纪录表数据成功----"+tableCode);
@@ -203,6 +220,7 @@ public class ClassLevelServiceImpl implements ClassLevelService {
             for (String cls:treeList.get(i).keySet()) {
                 tree1.setId(treeList.get(i).get("NODECODE"));
                 tree1.setText(treeList.get(i).get("NAME"));
+                break;
             }
             tree1.setLi_attr(treeList.get(i));
             trees.add(tree1);

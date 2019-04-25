@@ -32,10 +32,10 @@ public class ClassNodeController {
         Tree tree =null;
         try {
             tree=classLevelService.getTreeMenu();
+            return new ResponseResult(ResponseResult.OK, "成功", tree,true);
         }catch (Exception e){
             return new ResponseResult(ResponseResult.OK, e.getMessage(), tree,false);
         }
-        return new ResponseResult(ResponseResult.OK, "成功", tree,true);
     }
 
     @ApiOperation(value = "创建 L中间门类 C底层门类 ", notes = "返回信息 0成功，400失败   ")
@@ -74,7 +74,7 @@ public class ClassNodeController {
             if(!"".equals(result)){
                 return new ResponseResult(ResponseResult.OK, result,true);
             }else{
-                return new ResponseResult(ResponseResult.OK, "删除失败",false);
+                return new ResponseResult(ResponseResult.OK, "删除失败",true);
             }
         }catch (Exception e){
             return new ResponseResult(ResponseResult.OK, "删除 L中间门类 C底层门类异常--"+e.getMessage(),false);
