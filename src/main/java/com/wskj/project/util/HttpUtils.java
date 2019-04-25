@@ -26,7 +26,11 @@ public class HttpUtils {
         }
     }
 
-
+    /**
+     * 获取请求头参数
+     * @param request
+     * @return
+     */
     public static Map<String, String> getHeaders(HttpServletRequest request) {
         Map<String, String> map = new LinkedHashMap<>();
         Enumeration<String> enumeration = request.getHeaderNames();
