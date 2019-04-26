@@ -2,11 +2,12 @@ package com.wskj.project.service.impl;
 
 import com.wskj.project.dao.TableInputViewMapper;
 import com.wskj.project.service.TableInputViewService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
-
+@Service
 public class TableInputViewServiceImpl implements TableInputViewService {
     @Resource
     private TableInputViewMapper tableInputViewMapper;
