@@ -11,5 +11,6 @@ public interface TableViewService {
 
     Tree getTreeMenu();
 
-    Boolean upTableViewSelect(Map<String,String> parms);
+    Boolean upTableViewSelect(List<Object> parms);
+    Boolean delTableViewColumn(List<String> listCodes);
 }

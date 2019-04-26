@@ -165,6 +165,7 @@ public class TableServiceImpl implements TableService
                                                             Map<String, Object> tableColumnDMap = tempColumnsMap;//字段记录表集合//添加到纪录表
                                                             tableColumnDMap.put("TABLECODE", tableCode);
                                                             tableColumnDMap.put("COLUMNCODE", tableColumnDMap.get("COLUMNCODE"));//防止主键重复添加失败，把clomnCode修改为数据库编号
+                                                            tableColumnDMap.put("SERIAL",String.valueOf(j));
                                                             StringBuffer stringBuffer = getSQLTableColumnDescription(tableColumnDMap);
                                                             int count = tableMapper.addTableColumnDescription(stringBuffer);//保存字段到纪录表
                                                             if (count > 0) {
@@ -176,14 +177,13 @@ public class TableServiceImpl implements TableService
                                                                 Map<String, String> viewMap = new HashMap<>();//字段记录表集合//添加到纪录表
                                                                 viewMap.put("listCode", String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));
                                                                 viewMap.put("columnCode", String.valueOf(tableColumnDMap.get("COLUMNCODE")));
-                                                                viewMap.put("serial", String.valueOf(tableColumnDMap.get("SERIAL")));
+                                                                viewMap.put("serial", String.valueOf(j));
                                                                 viewMap.put("title", String.valueOf(tableColumnDMap.get("CHINESENAME")));
                                                                 count=tableMapper.addOneColumn(viewMap);
                                                                 if (count > 0) {
                                                                     System.out.println("保存列到视图表成功--" + viewMap);
                                                                 }
                                                             }
-
                                                             String mc = tempColumnsMap.get("NAME") + "";//字段名称
                                                             String lx = tempColumnsMap.get("TYPE") + "";//数据类型
                                                             String cd = tempColumnsMap.get("WIDTH") + "";//数据长度
@@ -383,8 +383,8 @@ public class TableServiceImpl implements TableService
                 Map<String, String> viewMap = new HashMap<>();//字段记录表集合//添加到纪录表
                 viewMap.put("listCode", String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));
                 viewMap.put("columnCode", String.valueOf(objectMap.get("COLUMNCODE")));
-                String SERIAL=objectMap.get("SERIAL")!=null&&!"".equals(String.valueOf(objectMap.get("SERIAL")))? String.valueOf(objectMap.get("SERIAL")):"0";
-                viewMap.put("serial", SERIAL);
+                int SERIAL=objectMap.get("SERIAL")!=null&&!"".equals(String.valueOf(objectMap.get("SERIAL")))? Integer.valueOf((String)objectMap.get("SERIAL")):6;
+                viewMap.put("serial", ++SERIAL+"");
                 viewMap.put("title", String.valueOf(objectMap.get("CHINESENAME")));
                 int count=tableMapper.addOneColumn(viewMap);
                 if (count > 0) {

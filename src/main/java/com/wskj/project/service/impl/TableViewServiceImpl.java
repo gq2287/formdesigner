@@ -1,5 +1,7 @@
 package com.wskj.project.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.reflect.TypeToken;
 import com.wskj.project.dao.ClassLevelMapper;
 import com.wskj.project.dao.TableViewMapper;
 import com.wskj.project.model.Tree;
@@ -7,10 +9,8 @@ import com.wskj.project.service.TableViewService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Type;
+import java.util.*;
 
 @Service
 public class TableViewServiceImpl implements TableViewService {
@@ -132,19 +132,73 @@ public class TableViewServiceImpl implements TableViewService {
         return rootTree;
     }
 
+    /**
+     * 修改添加视图
+     * @param parms
+     * @return
+     */
     @Override
-    public Boolean upTableViewSelect(Map<String, String> parms) {
+    public Boolean upTableViewSelect(List<Object> parms) {
         boolean bool=true;
+        Type typeObj = new TypeToken<Map<String,String>>() {}.getType();
         try {
-            int result=tableViewMapper.upTableViewSelect(parms);
-            if(result>0){
-                System.out.println("添加显示卡片列成功"+parms);
+            if(parms!=null&&parms.size()>0){
+                for (int i = 0; i <parms.size() ; i++) {
+                    Map<String,String>  pras= JSONObject.parseObject(String.valueOf(parms.get(i)),typeObj);//JSONObject转换map
+                    System.err.println("----------"+pras);
+                    String tableCode=pras.get("TABLECODE");
+                    String listCode=pras.get("LISTCODE");//如果存在就是已存在的视图列
+                    if(listCode!=null&&!"".equals(listCode)){
+                        pras.put("SERIAL",i+"");//序号
+                        int result=tableViewMapper.upTableViewSelect(pras);//更新视图列
+                        if(result>0){
+                            System.out.println("修改添加显示卡片列成功"+pras);
+                        }
+                    }else{
+                        int result=tableViewMapper.upTableColumnSelect(pras);//修改纪录表
+                        if(result>0){
+                            System.out.println("修改纪录表列成功"+pras);
+                        }
+                        pras.put("SERIAL",i+"");//序号
+                        pras.put("LISTCODE", String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));
+                        result=tableViewMapper.addTableViewColumn(pras);//添加视图列
+                        if(result>0){
+                            System.out.println("成功添加视图列"+pras);
+                        }
+
+                    }
+                }
             }
         }catch (Exception e){
             bool=false;
-            System.out.println("添加显示卡片列"+parms);
+            System.out.println("添加显示卡片列失败"+parms+"---"+e.getMessage());
         }
         return bool;
     }
+
+    /**
+     * 删除试图列
+     * @param listCodes 唯一编号
+     * @return
+     */
+    @Override
+    public Boolean delTableViewColumn(List<String> listCodes) {
+        Boolean bool=true;
+        try {
+           if(listCodes!=null&&listCodes.size()>0){
+               for (int i = 0; i <listCodes.size() ; i++) {
+                   int result=tableViewMapper.delTableViewColumnByListCode(listCodes.get(i));
+                   if(result>0){
+                       System.out.println("** "+i+" **删除视图列数据成功ListCode:"+listCodes.get(i));
+                   }
+               }
+           }
+        }catch (Exception e){
+            bool=false;
+            System.out.println("删除添加显示卡片列失败"+listCodes+"---"+e.getMessage());
+        }
+        return bool;
+    }
+
 
 }
