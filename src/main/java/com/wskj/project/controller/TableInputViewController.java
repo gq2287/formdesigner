@@ -1,7 +1,7 @@
 package com.wskj.project.controller;
 
 import com.wskj.project.model.ResponseResult;
-import com.wskj.project.service.impl.TableViewServiceImpl;
+import com.wskj.project.service.impl.TableInputViewServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -17,11 +17,12 @@ import javax.annotation.Resource;
 public class TableInputViewController {
     private Logger logger = LoggerFactory.getLogger(TableInputViewController.class);
     @Resource
-    private TableViewServiceImpl tableViewService;
+    private TableInputViewServiceImpl tableInputViewService;
 
     @ApiOperation(value = "获取表录入视图", notes = "返回信息 0成功，400失败 ")
-    @RequestMapping(value = "/getTableView", method = RequestMethod.POST)
+    @RequestMapping(value = "/getTableInputView", method = RequestMethod.POST)
     public ResponseResult getTableInputView(String tableCode) {
+        tableInputViewService.getTableInputView(tableCode);
         return new ResponseResult(ResponseResult.OK, "失败，参数无效 ", "参数-" + tableCode, false);
     }
 }
