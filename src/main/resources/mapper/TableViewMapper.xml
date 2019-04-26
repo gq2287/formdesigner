@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wskj.project.dao.TableViewMapper">
+    <select id="getTableView" resultType="java.util.Map">
+         SELECT
+             v.LISTCODE,
+             v.USERCODE,
+             t.COLUMNCODE as COLUMNCODE,
+             v.SERIAL,
+             t.CHINESENAME as TITLE,
+             t.NAME as NAME,
+             v.WIDTH,v.ENTITYCODE,
+             t.TABLECODE,t.VISIBLE
+         FROM TABLECOLUMNDESCRIPTION t
+         LEFT JOIN TABLEINTERFACELISTVIEW v on v.COLUMNCODE=t.COLUMNCODE
+         WHERE t.COLUMNCODE IN (SELECT COLUMNCODE FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE= #{tableCode} )
+         ORDER BY  v.SERIAL
+    </select>
+
+    <!--获取最大的序号-->
+    <select id="getSerialMax" resultType="java.util.Map">
+        SELECT MAX(SERIAL) MAXSERIAL FROM TABLEINTERFACELISTVIEW
+        WHERE COLUMNCODE IN( SELECT COLUMNCODE FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode} )
+    </select>
+
+    <!--更新视图列-->
+    <update id="upTableViewSelect" parameterType="java.util.Map">
+        UPDATE TABLEINTERFACELISTVIEW
+        SET SERIAL=#{SERIAL,jdbcType=NUMERIC},WIDTH=#{WIDTH,jdbcType=NUMERIC}
+        WHERE LISTCODE=#{LISTCODE,jdbcType=VARCHAR}
+    </update>
+
+    <!--删除视图列-->
+    <delete id="delTableViewColumnByListCode">
+        delete TABLEINTERFACELISTVIEW WHERE  LISTCODE=#{listCode}
+    </delete>
+
+    <!--添加视图列-->
+    <insert id="addTableViewColumn" parameterType="java.util.Map">
+        INSERT INTO TABLEINTERFACELISTVIEW(LISTCODE,USERCODE,COLUMNCODE,SERIAL,TITLE,WIDTH)
+        VALUES (#{LISTCODE},'ISA',#{COLUMNCODE},#{SERIAL,jdbcType=NUMERIC},#{TITLE},#{WIDTH,jdbcType=NUMERIC})
+    </insert>
+    <!--是否显示-->
+    <update id="upTableColumnSelect" parameterType="java.util.Map">
+        UPDATE TABLECOLUMNDESCRIPTION SET VISIBLE=#{VISIBLE} WHERE COLUMNCODE=#{COLUMNCODE} and TABLECODE=#{TABLECODE}
+    </update>
+
+
+
+</mapper>

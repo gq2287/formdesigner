@@ -4,7 +4,7 @@
 <mapper namespace="com.wskj.project.dao.ClassLevelMapper">
     <!--树根节点-->
     <select id="getClassI" resultType="java.util.Map">
-        SELECT * FROM CLASSNODE
+        SELECT NODECODE,PARENTCODE,NAME,TYPE,CLASSCODE,CLASSTABLECODE,TABLECODE,SERIAL FROM CLASSNODE
         WHERE 1=1
         <if test="type != null and type != ''">
             AND TYPE =#{type}
@@ -17,7 +17,7 @@
 
     <!--中间门类 底层门类组成-->
     <select id="getClassCL" resultType="java.util.Map">
-        SELECT * FROM CLASSNODE WHERE (TYPE ='C' or TYPE='L')
+        SELECT NODECODE,PARENTCODE,NAME,TYPE,CLASSCODE,CLASSTABLECODE,TABLECODE,SERIAL FROM CLASSNODE WHERE (TYPE ='C' or TYPE='L')
         <if test="nodeCode != null and nodeCode != ''">
             AND PARENTCODE = #{nodeCode}
         </if>
@@ -33,9 +33,6 @@
         GROUP BY PARENTCODE
     </select>
 
-    <select id="getDeLTableNameBytableCode" resultType="java.util.List">
-
-    </select>
     <!--删除中间门类 底层门类-->
     <delete id="delTreeL" parameterType="java.util.Map">
          DELETE FROM CLASSNODE WHERE NODECODE = #{NODECODE}

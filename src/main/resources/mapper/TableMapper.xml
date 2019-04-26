@@ -68,6 +68,11 @@
     <insert id="addSystemUseRRoleTable" parameterType="java.util.Map">
         INSERT INTO SYSTEMUSERROLETABLE(USERROLETABLECODE,USERROLECODE,TYPE,TABLENAME,RIGHTTYPE)VALUES(#{userCode},'0','U',#{tableName},'9')
     </insert>
+    <!--添加默认列表长度-->
+    <insert id="addOneColumn" parameterType="java.util.Map">
+        INSERT INTO TABLEINTERFACELISTVIEW(LISTCODE,USERCODE,COLUMNCODE,SERIAL,TITLE,WIDTH)
+        VALUES (#{listCode},'ISA',#{columnCode},#{serial},#{title},'500')
+    </insert>
     <!--添加实体表包涵数据列-->
     <insert id="addTableColumnDescription" parameterType="java.util.Map">
         ${sql}
@@ -143,6 +148,11 @@
     <delete id="delFieldTableColumnDescription" parameterType="java.util.Map">
         DELETE FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode} and COLUMNCODE=#{columnCode}
     </delete>
+    <!--删除默认视图列表长度-->
+    <delete id="delOneColumn" parameterType="java.util.Map">
+        DELETE FROM TABLEINTERFACELISTVIEW WHERE COLUMNCODE=#{columnCode}
+    </delete>
+
     <!--删除表字段关系-->
     <delete id="delFieldTableRelation" parameterType="java.util.Map">
         DELETE FROM TABLERELATION WHERE MASTERCOLUMNCODE=#{columnCode}
