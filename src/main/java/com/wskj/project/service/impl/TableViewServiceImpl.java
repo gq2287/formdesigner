@@ -33,6 +33,9 @@ public class TableViewServiceImpl implements TableViewService {
         List<Map<String, Object>> parms = null;
         try {
             parms = tableViewMapper.getTableView(tableCode);
+            if(parms!=null&&parms.size()>0){
+                System.err.println("查询视图列成功"+parms);
+            }
         } catch (Exception e) {
             System.err.println("查询视图列失败：" + e.getMessage() + "tableCode");
         }
@@ -190,6 +193,9 @@ public class TableViewServiceImpl implements TableViewService {
                    int result=tableViewMapper.delTableViewColumnByListCode(listCodes.get(i));
                    if(result>0){
                        System.out.println("** "+i+" **删除视图列数据成功ListCode:"+listCodes.get(i));
+                   }else{
+                       bool=false;
+                       System.out.println("** "+i+" **删除视图列数据失败,删除列不存在ListCode:"+listCodes.get(i));
                    }
                }
            }

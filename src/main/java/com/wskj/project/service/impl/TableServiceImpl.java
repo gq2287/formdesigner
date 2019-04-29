@@ -184,12 +184,12 @@ public class TableServiceImpl implements TableService
                                                                     System.out.println("保存列到视图表成功--" + viewMap);
                                                                 }
                                                             }
-                                                            String mc = tempColumnsMap.get("NAME") + "";//字段名称
-                                                            String lx = tempColumnsMap.get("TYPE") + "";//数据类型
-                                                            String cd = tempColumnsMap.get("WIDTH") + "";//数据长度
-                                                            String zj = tempColumnsMap.get("ISKEY") + "";//是否为主键
-                                                            String sfwk = tempColumnsMap.get("CANNULL") + "";//是否为空
-                                                            String mrz = tempColumnsMap.get("VALUEDEFAULT") + "";//默认值 CANREPEAT
+                                                            String mc =  String.valueOf(tempColumnsMap.get("NAME") );//字段名称
+                                                            String lx =  String.valueOf(tempColumnsMap.get("TYPE") );//数据类型
+                                                            String cd =  String.valueOf(tempColumnsMap.get("WIDTH") );//数据长度
+                                                            String zj =  String.valueOf(tempColumnsMap.get("ISKEY") );//是否为主键
+                                                            String sfwk =  String.valueOf(tempColumnsMap.get("CANNULL") );//是否为空
+                                                            String mrz = String.valueOf(tempColumnsMap.get("VALUEDEFAULT")) ;//默认值 CANREPEAT
                                                             sb.append(mc + " ");
                                                             sb.append(dataType.get(lx) + " ");
                                                             if (!"0".equals(cd) && !"DATE".equals(dataType.get(lx)) && !"NUMBER".equals(dataType.get(lx))) {
@@ -198,7 +198,13 @@ public class TableServiceImpl implements TableService
                                                                 sb.append(") ");
                                                             }
                                                             if (mrz != null && !"".equals(mrz)) {
-                                                                sb.append(" DEFAULT(" + mrz + ") ");
+                                                                if("NUMBER".equals(dataType.get(lx))){
+                                                                    sb.append(" DEFAULT(" + mrz + ") ");
+                                                                }else if("DATE".equals(dataType.get(lx))){
+                                                                    sb.append(" DEFAULT(to_date('"+mrz+"','yyyy-mm-dd hh24:mi:ss'))");
+                                                                }else{
+                                                                    sb.append(" DEFAULT('" + mrz + "') ");
+                                                                }
                                                             }
                                                             if ("T".equals(zj)) {
                                                                 if (isOK) {
@@ -357,7 +363,14 @@ public class TableServiceImpl implements TableService
                 sql.append(") ");
             }
             if (objectMap.get("VALUEDEFAULT") != null && !"".equals(objectMap.get("VALUEDEFAULT"))) {//默认值
-                sql.append(" DEFAULT(" + objectMap.get("VALUEDEFAULT") + ") ");
+                if("NUMBER".equals(dataType.get(lx))){
+                    sql.append(" DEFAULT(" + objectMap.get("VALUEDEFAULT") + ") ");
+                }else if("DATE".equals(dataType.get(lx))){
+//                    to_date(sysdate,'yyyy-mm-dd hh24:mi:ss')
+                    sql.append(" DEFAULT(to_date('"+objectMap.get("VALUEDEFAULT")+"','yyyy-mm-dd hh24:mi:ss'))");
+                }else{
+                    sql.append(" DEFAULT('" + objectMap.get("VALUEDEFAULT") + "') ");
+                }
             }
 
             if ("F".equals(objectMap.get("CANNULL"))) {

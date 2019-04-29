@@ -55,6 +55,9 @@ public interface TableMapper {
     List<Map<String,Object>> getEntityTableInfo(@Param("tableCode")String tableCode);
     //获取实体表字段
     List<Map<String,Object>> getEntityTableColumn(@Param("tableCode")String tableCode);
+
+    //获取实体表字段
+    List<Map<String,Object>> getEntityTableColumnByVisible(@Param("tableCode")String tableCode);
     //获取实体表关系
     List<Map<String,Object>> getEntityTableRelation(@Param("tableName")String tableName);
 

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @Api("表录入视图Controller")
@@ -22,7 +24,11 @@ public class TableInputViewController {
     @ApiOperation(value = "获取表录入视图", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTableInputView", method = RequestMethod.POST)
     public ResponseResult getTableInputView(String tableCode) {
-        tableInputViewService.getTableInputView(tableCode);
-        return new ResponseResult(ResponseResult.OK, "失败，参数无效 ", "参数-" + tableCode, false);
+        List<Map<String, String>>  mapList=tableInputViewService.getTableInputView(tableCode);
+        if(mapList!=null&&mapList.size()>0){
+            return new ResponseResult(ResponseResult.OK, "成功", mapList, true);
+        }else{
+            return new ResponseResult(ResponseResult.OK, "失败 参数内部错误", tableCode, false);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.wskj.project.service.impl;
 
 import com.wskj.project.dao.ClassLevelMapper;
+import com.wskj.project.dao.TableInputViewMapper;
 import com.wskj.project.dao.TableMapper;
 import com.wskj.project.model.Tree;
 import com.wskj.project.service.ClassLevelService;
@@ -22,6 +23,8 @@ public class ClassLevelServiceImpl implements ClassLevelService {
 
     @Resource
     private TableServiceImpl tableService;
+    @Resource
+    private TableInputViewMapper tableInputViewMapper;
 
 
     @Override
@@ -167,6 +170,21 @@ public class ClassLevelServiceImpl implements ClassLevelService {
                                     if(re>0){
                                         System.err.println("删除描述的实体表成功----"+tableCode);
                                     }
+                                    boolean booll=tableInputViewMapper.delTableInputViewByTableCode(tableCode);
+                                    if(booll){
+                                        System.err.println("删除录入表成功----"+tableCode);
+                                        booll=tableInputViewMapper.dexTableIndex(tableCode);
+                                        if(booll){
+                                            System.err.println("删除索引表成功----"+tableCode);
+
+                                            booll=tableInputViewMapper.dexTableIndex(tableCode);
+                                        }else{
+                                            System.err.println("删除索引表失败----"+tableCode+"---未有数据或内部错误");
+                                        }
+                                    }else{
+                                        System.err.println("删除录入表失败----"+tableCode+"---未有数据或内部错误");
+                                    }
+
                                     List<Map<String,Object>> listView=tableMapper.getEntityTableColumn(tableCode);//获取纪录表列
                                     if(listView!=null&&listView.size()>0){
                                         for (int k = 0; k < listView.size(); k++) {
