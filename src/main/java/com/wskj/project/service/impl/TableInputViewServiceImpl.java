@@ -18,9 +18,16 @@ public class TableInputViewServiceImpl implements TableInputViewService {
     private TableInputViewMapper tableInputViewMapper;
     @Resource
     private TableMapper tableMapper;
+
+    /**
+     * 获取录入视图
+     * @param tableCode
+     * @return
+     */
     @Override
-    public List<Map<String, String>> getTableInputView(String tableCode) {
+    public List<Map<String, Object>> getTableInputView(String tableCode) {
         System.out.println(tableCode);
+        List<Map<String, Object>> AllList=new ArrayList<>();//返回数据集合
         List<Map<String, String>> inputList=null;
         List<Map<String, String>> tagMapList=new ArrayList<>();
         try {
@@ -45,7 +52,7 @@ public class TableInputViewServiceImpl implements TableInputViewService {
                     }
                     inputList=tableInputViewMapper.getTableInputView(tableCode);//获取当前录入列表数据
                     if(inputList!=null&&inputList.size()>0){
-                        getSplitTableInputView(tableCode,inputList,tagMapList);//转换成属性对象
+                        getSplitTableInputView(tableCode,inputList,tagMapList);//转换成属性对象 tagMapList录入样式集合
                         System.out.println("获取录入视图成功");
                     }else{
                         System.out.println("获取异常"+tableCode);
@@ -55,10 +62,48 @@ public class TableInputViewServiceImpl implements TableInputViewService {
         }catch (Exception e){
             System.err.println("获取录入视图失败！"+e.getMessage()+"---"+tableCode);
         }
-        return tagMapList;
+        Map<String, Object> tempMap=new HashMap<>();
+        tempMap.put("tagMapList",tagMapList);
+        tempMap.put("noTagMapList",getNoInputView(tableCode));
+        AllList.add(tempMap);//保存到返回集合
+        return AllList;
+    }
+
+    /**
+     * 保存数据列
+     * @param parms
+     * @return
+     */
+    @Override
+    public Boolean saveTableInputView(Map<String, Object> parms) {
+        boolean bool=true;
+        try {
+            int result=tableInputViewMapper.addTableInputViewColumn(parms);
+            if(result>0){
+                System.out.println("录入数据保存成功"+parms);
+            }else{
+                System.out.println("录入数据保存失败"+parms);
+            }
+            return bool;
+        }catch (Exception e){
+            System.out.println("参数-"+parms+"-sql异常"+e.getMessage());
+            return  bool=false;
+        }
     }
 
 
+    /**
+     * 获取为录入视图
+     * @param tableCode
+     * @return
+     */
+    public List<Map<String,Object>> getNoInputView(String tableCode){
+        List<Map<String,Object>> inputMap=tableInputViewMapper.getInputColumnByTableCode(tableCode);//inputMap
+        return inputMap;
+    }
+
+    /**
+     * 未录入列
     /**
      * 添加录入列默认数据
      * @param tableCode 表编号
@@ -506,6 +551,12 @@ public class TableInputViewServiceImpl implements TableInputViewService {
         }
     }
 
+    /**
+     * 最大字符长度
+     * @param tag
+     * @param tableCode
+     * @return
+     */
     private String getMaxLength(String tag,String tableCode){
         String max=tableInputViewMapper.getEntityTableColumnByTag(tag,tableCode);
         String returnValue="";

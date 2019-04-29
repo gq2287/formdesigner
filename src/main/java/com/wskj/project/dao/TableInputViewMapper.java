@@ -26,4 +26,8 @@ public interface TableInputViewMapper {
     Boolean dexTableIndex(@Param("tableCode") String tableCode);
 
     String getEntityTableColumnByTag(@Param("tag") String tag,@Param("tableCode") String tableCode);
+
+    //获取录入视图列表字段名
+    List<Map<String,Object>> getInputColumnByTableCode(@Param("tableCode") String tableCode);
+
 }

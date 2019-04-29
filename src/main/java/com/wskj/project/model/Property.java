@@ -43,7 +43,7 @@ public class Property {
 
 
     /**
-     * 获取属性信息
+     * 获取属性信息 分解 |
      */
     public void getProperty() {
         int start = 0;

@@ -84,7 +84,7 @@ public class TableController {
     @ApiOperation(value = "修改表关系字段", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getModifyTableRelation", method = RequestMethod.POST)
     public ResponseResult getModifyTableRelation(String fieldRelation) {
-        logger.info("修改表关系字段---"+fieldRelation);
+        logger.info("修改表关系字段---getModifyTableRelation--",fieldRelation);
         Boolean bool=null;
         Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object>  pras=JSONObject.parseObject(fieldRelation,typeObj);// 获取参数列
@@ -99,7 +99,7 @@ public class TableController {
     @ApiOperation(value = "删除表字段关系", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/delFieldTableRelation", method = RequestMethod.POST)
     public ResponseResult delFieldTableRelation(String relationCode) {
-        logger.info("删除表字段关系---"+relationCode);
+        logger.info("删除表字段关系---delFieldTableRelation--",relationCode);
         Boolean bool=null;
         bool=tableService.delFieldTableRelation(relationCode);
         if(bool){
@@ -112,7 +112,7 @@ public class TableController {
     @ApiOperation(value = "修改描述表信息字段", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getModifyTableDescription", method = RequestMethod.POST)
     public ResponseResult getModifyTableDescription(String fieldDescription) {
-        logger.info("修改描述表信息字段---"+fieldDescription);
+        logger.info("修改描述表信息字段---getModifyTableDescription--",fieldDescription);
         Boolean bool=null;
         Type typeObj = new TypeToken<Map<String, String>>() {}.getType();
         Map<String, String>  pras=JSONObject.parseObject(fieldDescription,typeObj);// 获取参数列
@@ -128,7 +128,7 @@ public class TableController {
     @ApiOperation(value = "添加字段关系", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/addTableRelation", method = RequestMethod.POST)
     public ResponseResult addTableRelation(String fieldInfo) {
-        logger.info("添加字段关系---"+fieldInfo);
+        logger.info("添加字段关系---addTableRelation--",fieldInfo);
         Type typeObj = new TypeToken<Map<String, String>>() {}.getType();
         Map<String, String>  pras=JSONObject.parseObject(fieldInfo,typeObj);// 获取参数列
         try {
@@ -142,21 +142,25 @@ public class TableController {
     @ApiOperation(value = "模版列表", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTemplateList", method = RequestMethod.GET)
     public ResponseResult getTemplateList() {
-        ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功 ", tableService.getTemplateList(),true);
+        List<Map<String,String>> pram=tableService.getTemplateList();
+        logger.info("模版列表---getTemplateList--",pram);
+        ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功 ",pram ,true);
         return responseResult;
     }
 
     @ApiOperation(value = "已选模版", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getOptionalTemplateList", method = RequestMethod.GET)
     public ResponseResult getOptionalTemplateList() {
-        ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功 ", tableService.getOptionalTemplateList(),true);
+        List<Map<String,String>> pram=tableService.getOptionalTemplateList();
+        logger.info("已选模版---getOptionalTemplateList--",pram);
+        ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功 ",pram ,true);
         return responseResult;
     }
 
     @ApiOperation(value = "当前节点可选择底层模版", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getSelectTemplateList", method = RequestMethod.GET)
     public ResponseResult getSelectTemplateList(String parentCode) {
-        logger.info("当前节点可选择底层模版---"+parentCode);
+        logger.info("当前节点可选择底层模版---getSelectTemplateList--",parentCode);
         Map<String,String> parmMap=new HashMap<>();
         parmMap.put("parentCode",parentCode);
         ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功", tableService.getSelectTemplateList(parmMap),true);
@@ -166,7 +170,7 @@ public class TableController {
     @ApiOperation(value = "选中后加载旗下实体表", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getSelectTableByClassCode", method = RequestMethod.GET)
     public ResponseResult getSelectTableByClassCode(String classCode) {
-        logger.info("选中后加载旗下实体表---"+classCode);
+        logger.info("选中后加载旗下实体表---getSelectTableByClassCode--",classCode);
         Map<String,String> parmMap=new HashMap<>();
         parmMap.put("classCode",classCode);
         ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功", tableService.getSelectTableByClassCode(parmMap),true);
@@ -176,7 +180,7 @@ public class TableController {
     @ApiOperation(value = "加载实体表字段信息", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTableByTableCode", method = RequestMethod.GET)
     public ResponseResult getTableByTableCode(String tableCode) {
-        logger.info("加载实体表字段信息---"+tableCode);
+        logger.info("加载实体表字段信息---getTableByTableCode--",tableCode);
         Map<String,String> parmMap=new HashMap<>();
         parmMap.put("tableCode",tableCode);
         ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功 ", tableService.getTableInfoByTableCode(parmMap),true);
@@ -186,7 +190,7 @@ public class TableController {
     @ApiOperation(value = "添加已选模版", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getCreateTemplate", method = RequestMethod.POST)
     public ResponseResult CreateTemplate(String createData) {
-        logger.info("添加已选模版---"+createData);
+        logger.info("添加已选模版---CreateTemplate--",createData);
         //操作使用fastjson进行字符串对象转换
         List<Template> list=new ArrayList<Template>();
         JSONArray jsonArray= JSONArray.parseArray(createData);
@@ -214,7 +218,7 @@ public class TableController {
     @ApiOperation(value = "删除已选模版", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/delTemplate", method = RequestMethod.POST)
     public ResponseResult delTemplate(String delData) {
-        logger.info("删除已选模版---"+delData);
+        logger.info("删除已选模版---delTemplate--",delData);
         //操作使用fastjson进行字符串对象转换
         List<Template> list=new ArrayList<Template>();
         JSONArray jsonArray= JSONArray.parseArray(delData);

@@ -3,6 +3,7 @@ package com.wskj.project.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.reflect.TypeToken;
 import com.wskj.project.model.ResponseResult;
+import com.wskj.project.model.Tree;
 import com.wskj.project.service.impl.TableViewServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +29,7 @@ public class TableViewController {
     @ApiOperation(value = "获取视图节点", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTableView", method = RequestMethod.POST)
     public ResponseResult getTableView(String tableCode) {
+        logger.info("获取视图节点---getTableView--",tableCode);
         if (tableCode != null) {
             List<Map<String, Object>> parms = tableViewService.getTableView(tableCode);
             if (parms != null && parms.size() > 0) {
@@ -44,12 +46,15 @@ public class TableViewController {
     @ApiOperation(value = "获取视图树", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTableViewTree", method = RequestMethod.POST)
     public ResponseResult getTableViewTree() {
-        return new ResponseResult(ResponseResult.OK, "成功", tableViewService.getTreeMenu(), true);
+        Tree tree=tableViewService.getTreeMenu();
+        logger.info("获取视图树---getTableViewTree--",tree);
+        return new ResponseResult(ResponseResult.OK, "成功", tree, true);
     }
 
     @ApiOperation(value = "添加视图列表", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getUpTableViewSelect", method = RequestMethod.POST)
     public ResponseResult getUpTableViewSelect(String parms) {
+        logger.info("添加视图列表---getUpTableViewSelect--",parms);
         Type typeObj = new TypeToken<List<Object>>() {}.getType();
         List<Object>  pras= JSONObject.parseObject(parms,typeObj);//JSONObject转换map
         boolean bool=tableViewService.upTableViewSelect(pras);
@@ -63,6 +68,7 @@ public class TableViewController {
     @ApiOperation(value = "删处视图列表", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/delTableViewByListCode", method = RequestMethod.POST)
     public ResponseResult delTableViewByListCode(@RequestParam(required = false, value = "parms[]") List<String> parms) {
+        logger.info("删处视图列表---delTableViewByListCode--",parms);
         boolean bool=tableViewService.delTableViewColumn(parms);
         if(bool){
             return new ResponseResult(ResponseResult.OK, "成功", true);
