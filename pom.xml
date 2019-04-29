@@ -102,7 +102,12 @@
             <artifactId>aspectjrt</artifactId>
             <version>1.6.10</version>
         </dependency>
-
+        <!--MyBatis分页-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>4.1.4</version>
+        </dependency>
     </dependencies>
     <build>
         <!--<resources>-->
