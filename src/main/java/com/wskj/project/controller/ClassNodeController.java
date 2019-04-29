@@ -32,7 +32,7 @@ public class ClassNodeController {
         Tree tree =null;
         try {
             tree=classLevelService.getTreeMenu();
-            logger.info("获取Tree菜单---getTreeMenu--",tree);
+            logger.info("获取Tree菜单---getTreeMenu--参数--{}",tree);
             return new ResponseResult(ResponseResult.OK, "成功", tree,true);
         }catch (Exception e){
             return new ResponseResult(ResponseResult.OK, e.getMessage(), tree,false);
@@ -42,7 +42,7 @@ public class ClassNodeController {
     @ApiOperation(value = "创建 L中间门类 C底层门类 ", notes = "返回信息 0成功，400失败   ")
     @RequestMapping(value = "/getCreateTree", method = RequestMethod.POST)
     public ResponseResult createTree(String name,String type,String attrs,String tableDescriptions) {
-        logger.info("创建 L中间门类 C底层门类---getCreateTree--",name+"--"+type+"--"+attrs+"--"+tableDescriptions);
+        logger.info("创建 L中间门类 C底层门类---getCreateTree--参数--{}",name+"--"+type+"--"+attrs+"--"+tableDescriptions);
         Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object>  pras=JSONObject.parseObject(attrs,typeObj);//JSONObject转换map
         Map<String, Object>  tds=JSONObject.parseObject(tableDescriptions,typeObj);//JSONObject转换map
@@ -66,7 +66,7 @@ public class ClassNodeController {
     @ApiOperation(value = "删除 L中间门类 C底层门类 (如果旗下还存在子节点前台请给与提示)", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/delTree", method = RequestMethod.POST)
     public ResponseResult delTree(String attrs) {
-        logger.info("删除  L中间门类 C底层门类---delTree--",attrs);
+        logger.info("删除  L中间门类 C底层门类---delTree--参数--{}",attrs);
         Type typeObj = new TypeToken<Map<String, String>>() {}.getType();
         Map<String, String>  pras=JSONObject.parseObject(attrs,typeObj);//JSONObject转换map
         String result=null;
@@ -89,7 +89,7 @@ public class ClassNodeController {
         List<Map<String,String>> list=null;
         try {
             list=classLevelService.getAllDictionaryData();
-            logger.info("获取字典---getAllDictionaryData--",list);
+            logger.info("获取字典---getAllDictionaryData--参数--{}",list);
             return  new ResponseResult(ResponseResult.OK, "成功", list,true);
         }catch (Exception e){
             return new ResponseResult(ResponseResult.OK, "获取字典异常--"+e.getMessage(),false);
@@ -99,7 +99,7 @@ public class ClassNodeController {
     @ApiOperation(value = "修改名称和序号", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTreeNameAndSerial", method = RequestMethod.POST)
     public ResponseResult getTreeNameAndSerial(String treeInfo) {
-        logger.info("修改名称和序号---getTreeNameAndSerial--",treeInfo);
+        logger.info("修改名称和序号---getTreeNameAndSerial--参数--{}",treeInfo);
         boolean aBoolean=true;
         Type typeObj = new TypeToken<Map<String, String>>() {}.getType();
         Map<String, String>  pras=JSONObject.parseObject(treeInfo,typeObj);//JSONObject转换map
