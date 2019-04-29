@@ -32,7 +32,7 @@ public class ClassNodeController {
         Tree tree =null;
         try {
             tree=classLevelService.getTreeMenu();
-            logger.info("获取Tree菜单---getTreeMenu--参数--{}",tree);
+            logger.info("获取Tree菜单---getTreeMenu--参数--{}",tree.toString());
             return new ResponseResult(ResponseResult.OK, "成功", tree,true);
         }catch (Exception e){
             return new ResponseResult(ResponseResult.OK, e.getMessage(), tree,false);
