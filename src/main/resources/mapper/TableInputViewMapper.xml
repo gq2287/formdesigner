@@ -2,50 +2,116 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.wskj.project.dao.TableInputViewMapper">
-    <!--<select id="getTableView" resultType="java.util.Map">-->
-         <!--SELECT-->
-             <!--v.LISTCODE,-->
-             <!--v.USERCODE,-->
-             <!--t.COLUMNCODE as COLUMNCODE,-->
-             <!--v.SERIAL,-->
-             <!--t.CHINESENAME as TITLE,-->
-             <!--t.NAME as NAME,-->
-             <!--v.WIDTH,v.ENTITYCODE,-->
-             <!--t.TABLECODE,t.VISIBLE-->
-         <!--FROM TABLECOLUMNDESCRIPTION t-->
-         <!--LEFT JOIN TABLEINTERFACELISTVIEW v on v.COLUMNCODE=t.COLUMNCODE-->
-         <!--WHERE t.COLUMNCODE IN (SELECT COLUMNCODE FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE= #{tableCode} )-->
-         <!--ORDER BY  v.SERIAL-->
-    <!--</select>-->
+    <!--查询当前表录入界面-->
+    <select id="getTableInputView" resultType="java.util.Map">
+         SELECT
+             INTERFACECARDCODE,
+             TABLECODE,
+             USERCODE,
+             CONTROLNAME,
+             CONTROLINDEX,
+             CONTROLTYPE,
+             ISEXIST,
+             CONTAINER,
+             CONTAINERINDEX,
+             LOADNO,
+             TABINDEX,
+             FIELDNAME,
+             PROPERTIESINFO1,
+             PROPERTIESINFO2,
+             REMARK
+         FROM TABLEINTERFACECARD
+         WHERE TABLECODE= #{tableCode}
+         ORDER BY  LOADNO
+    </select>
 
-    <!--&lt;!&ndash;获取最大的序号&ndash;&gt;-->
-    <!--<select id="getSerialMax" resultType="java.util.Map">-->
-        <!--SELECT MAX(SERIAL) MAXSERIAL FROM TABLEINTERFACELISTVIEW-->
-        <!--WHERE COLUMNCODE IN( SELECT COLUMNCODE FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode} )-->
-    <!--</select>-->
+    <!--获取最大的序号-->
+    <select id="getLoadNOMax" resultType="java.util.Map">
+    SELECT MAX(LOADNO) MAXSERIAL FROM TABLEINTERFACECARD
+    WHERE TABLECODE=#{tableCode}
+    </select>
 
-    <!--&lt;!&ndash;更新视图列&ndash;&gt;-->
-    <!--<update id="upTableViewSelect" parameterType="java.util.Map">-->
-        <!--UPDATE TABLEINTERFACELISTVIEW-->
-        <!--SET SERIAL=#{SERIAL,jdbcType=NUMERIC},WIDTH=#{WIDTH,jdbcType=NUMERIC}-->
-        <!--WHERE LISTCODE=#{LISTCODE,jdbcType=VARCHAR}-->
-    <!--</update>-->
+    <!--添加录入列-->
+    <insert id="addTableInputViewColumn" parameterType="java.util.Map">
+      INSERT INTO TABLEINTERFACECARD(
+      INTERFACECARDCODE,
+      TABLECODE,
+      USERCODE,
+      CONTROLNAME,
+      CONTROLINDEX,
+      CONTROLTYPE,
+      ISEXIST,
+      CONTAINER,
+      CONTAINERINDEX,
+      LOADNO,
+      TABINDEX,
+      FIELDNAME,
+      PROPERTIESINFO1,
+      REMARK)
+      VALUES (
+      #{INTERFACECARDCODE},
+      #{TABLECODE},
+      #{USERCODE},
+      #{CONTROLNAME},
+      #{CONTROLINDEX,jdbcType=NUMERIC},
+      #{CONTROLTYPE,jdbcType=NUMERIC},
+      #{ISEXIST},
+      #{CONTAINER},
+      #{CONTAINERINDEX,jdbcType=NUMERIC},
+      #{LOADNO,jdbcType=NUMERIC},
+      #{TABINDEX,jdbcType=NUMERIC},
+      #{FIELDNAME},
+      #{PROPERTIESINFO1},
+      #{REMARK}
+      )
+    </insert>
+    <!--默认添加录入列-->
+    <insert id="defAddTableInputViewColumn" parameterType="java.util.Map">
+      INSERT INTO TABLEINTERFACECARD(
+      INTERFACECARDCODE,
+      TABLECODE,
+      USERCODE,
+      CONTROLNAME,
+      ISEXIST,
+      CONTAINER,
+      FIELDNAME,
+      LOADNO,
+      PROPERTIESINFO1)
+      VALUES (
+      #{INTERFACECARDCODE,jdbcType=VARCHAR},
+      #{TABLECODE,jdbcType=VARCHAR},
+      #{USERCODE,jdbcType=VARCHAR},
+      #{CONTROLNAME,jdbcType=VARCHAR},
+      #{ISEXIST,jdbcType=VARCHAR},
+      #{CONTAINER,jdbcType=VARCHAR},
+      #{FIELDNAME,jdbcType=VARCHAR},
+      #{LOADNO,jdbcType=NUMERIC},
+      #{PROPERTIESINFO1,jdbcType=VARCHAR}
+      )
+    </insert>
+    <!--修改录入界面-->
+    <update id="upTableInputColumnSelect" parameterType="java.util.Map">
 
-    <!--&lt;!&ndash;删除视图列&ndash;&gt;-->
-    <!--<delete id="delTableViewColumnByListCode">-->
-        <!--delete TABLEINTERFACELISTVIEW WHERE  LISTCODE=#{listCode}-->
-    <!--</delete>-->
+    </update>
 
-    <!--&lt;!&ndash;添加视图列&ndash;&gt;-->
-    <!--<insert id="addTableViewColumn" parameterType="java.util.Map">-->
-        <!--INSERT INTO TABLEINTERFACELISTVIEW(LISTCODE,USERCODE,COLUMNCODE,SERIAL,TITLE,WIDTH)-->
-        <!--VALUES (#{LISTCODE},'ISA',#{COLUMNCODE},#{SERIAL,jdbcType=NUMERIC},#{TITLE},#{WIDTH,jdbcType=NUMERIC})-->
-    <!--</insert>-->
-    <!--&lt;!&ndash;是否显示&ndash;&gt;-->
-    <!--<update id="upTableColumnSelect" parameterType="java.util.Map">-->
-        <!--UPDATE TABLECOLUMNDESCRIPTION SET VISIBLE=#{VISIBLE} WHERE COLUMNCODE=#{COLUMNCODE} and TABLECODE=#{TABLECODE}-->
-    <!--</update>-->
+    <delete id="delTableInputViewByTableCode" parameterType="java.util.Map">
+        DELETE FROM TABLEINTERFACECARD WHERE TABLECODE= #{tableCode}
+    </delete>
 
 
+    <!--添加表索引-->
+    <insert id="addTableIndex" parameterType="java.util.Map">
+        INSERT INTO TABLEINTERFACEINDEX(INTERFACEINDEXCODE,TABLECODE,USERCODE,INTERFACETYPE)
+        VALUES(#{indexCode},#{tableCode},'ISA',0)
+    </insert>
+    <!--添加表索引-->
+    <delete id="dexTableIndex" parameterType="java.util.Map">
+        DELETE FROM TABLEINTERFACEINDEX WHERE TABLECODE= #{tableCode}
+    </delete>
 
+
+    <!--获取字段最大值-->
+    <select id="getEntityTableColumnByTag" resultType="java.lang.String">
+        SELECT WIDTH FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode} and name=#{tag}
+    </select>
 </mapper>
