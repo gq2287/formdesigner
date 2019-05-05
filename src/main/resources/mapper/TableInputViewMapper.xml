@@ -31,6 +31,8 @@
     WHERE TABLECODE=#{tableCode}
     </select>
 
+
+
     <!--添加录入列-->
     <insert id="addTableInputViewColumn" parameterType="java.util.Map">
       INSERT INTO TABLEINTERFACECARD(
@@ -41,28 +43,44 @@
       CONTROLINDEX,
       CONTROLTYPE,
       ISEXIST,
-      CONTAINER,
-      CONTAINERINDEX,
+        <if test="CONTAINER != null and '' != CONTAINER">
+            CONTAINER,
+        </if>
+        <if test="CONTAINERINDEX != null and '' != CONTAINERINDEX">
+            CONTAINERINDEX,
+        </if>
       LOADNO,
-      TABINDEX,
-      FIELDNAME,
+        <if test="TABINDEX != null and '' != TABINDEX">
+            TABINDEX,
+        </if>
+        <if test="FIELDNAME != null and '' != FIELDNAME">
+            FIELDNAME,
+        </if>
       PROPERTIESINFO1,
       REMARK)
       VALUES (
-      #{INTERFACECARDCODE},
-      #{TABLECODE},
-      #{USERCODE},
-      #{CONTROLNAME},
+      #{INTERFACECARDCODE,jdbcType=VARCHAR},
+      #{TABLECODE,jdbcType=VARCHAR},
+      #{USERCODE,jdbcType=VARCHAR},
+      #{CONTROLNAME,jdbcType=VARCHAR},
       #{CONTROLINDEX,jdbcType=NUMERIC},
       #{CONTROLTYPE,jdbcType=NUMERIC},
-      #{ISEXIST},
-      #{CONTAINER},
-      #{CONTAINERINDEX,jdbcType=NUMERIC},
+      #{ISEXIST,jdbcType=VARCHAR},
+        <if test="CONTAINER != null and '' != CONTAINER">
+            #{CONTAINER},
+        </if>
+        <if test="CONTAINERINDEX != null and '' != CONTAINERINDEX">
+            #{CONTAINERINDEX,jdbcType=NUMERIC},
+        </if>
       #{LOADNO,jdbcType=NUMERIC},
-      #{TABINDEX,jdbcType=NUMERIC},
-      #{FIELDNAME},
-      #{PROPERTIESINFO1},
-      #{REMARK}
+        <if test="TABINDEX != null and '' != TABINDEX">
+            #{TABINDEX,jdbcType=NUMERIC},
+        </if>
+        <if test="FIELDNAME != null and '' != FIELDNAME">
+            #{FIELDNAME,jdbcType=VARCHAR},
+        </if>
+      #{PROPERTIESINFO1,jdbcType=VARCHAR},
+      #{REMARK,jdbcType=VARCHAR}
       )
     </insert>
     <!--默认添加录入列-->
@@ -72,6 +90,8 @@
       TABLECODE,
       USERCODE,
       CONTROLNAME,
+      CONTROLINDEX,
+      CONTROLTYPE,
       ISEXIST,
       CONTAINER,
       FIELDNAME,
@@ -82,6 +102,8 @@
       #{TABLECODE,jdbcType=VARCHAR},
       #{USERCODE,jdbcType=VARCHAR},
       #{CONTROLNAME,jdbcType=VARCHAR},
+      #{CONTROLINDEX,jdbcType=NUMERIC},
+      #{CONTROLTYPE,jdbcType=NUMERIC},
       #{ISEXIST,jdbcType=VARCHAR},
       #{CONTAINER,jdbcType=VARCHAR},
       #{FIELDNAME,jdbcType=VARCHAR},
@@ -112,6 +134,13 @@
 
     <!--获取字段最大值-->
     <select id="getEntityTableColumnByTag" resultType="java.lang.String">
-        SELECT WIDTH FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode} and name=#{tag}
+        SELECT WIDTH FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode} and NAME=#{tag}
+    </select>
+
+    <!--查询录入列-->
+    <select id="getInputColumnByTableCode" resultType="java.util.Map">
+        SELECT * FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode} and  NAME NOT IN(
+        SELECT DISTINCT FIELDNAME FROM TABLEINTERFACECARD WHERE TABLECODE=#{tableCode} and FIELDNAME is NOT null
+        and FIELDNAME  in (select FIELDNAME from TABLEINTERFACECARD group by FIELDNAME having count(FIELDNAME)>1))
     </select>
 </mapper>
