@@ -49,4 +49,15 @@ public class Tree {
     public void setLi_attr(Object li_attr) {
         this.li_attr = li_attr;
     }
+
+    @Override
+    public String toString() {
+        return "Tree{" +
+                "id='" + id + '\'' +
+                ", text='" + text + '\'' +
+                ", children=" + children +
+                ", icon='" + icon + '\'' +
+                ", li_attr=" + li_attr +
+                '}';
+    }
 }

@@ -7,5 +7,5 @@ public interface TableInputViewService {
     //获取录入视图列表
     List<Map<String, Object>> getTableInputView(String tableCode);
     //获取录入视图列表
-    Boolean saveTableInputView(Map<String,Object> map);
+    Boolean saveTableInputView(String tableCode,List<Map<String,Object>> parmsUIList);
 }

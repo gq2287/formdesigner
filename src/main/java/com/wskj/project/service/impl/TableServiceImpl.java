@@ -20,6 +20,8 @@ public class TableServiceImpl implements TableService
     @Resource
     private ClassLevelServiceImpl classLevelService;
 
+    @Resource
+    private TableInputViewServiceImpl tableInputViewService;
     @Override
     public List<Map<String, String>> getTemplateList() {
         return tableMapper.getTemplateList();
@@ -89,6 +91,7 @@ public class TableServiceImpl implements TableService
     @Override
     public Boolean addTableDescription(Map<String, Object> parmMap) {
         boolean bool = true;
+        Map<String, String> tableCodeMap=new HashMap<>();//存放tableCode
         try {
             //创建底层门类
             Map<String, String> attrs = (Map<String, String>) parmMap.get("attrs");
@@ -150,6 +153,7 @@ public class TableServiceImpl implements TableService
                                         StringBuffer sql = new StringBuffer("CREATE TABLE ");
                                         sql.append(" " + tableName + "(");//获取里面的数据列字段
                                         String tableCode = StringUtil.getDate(2) + StringUtil.getRandom(1000, 10000) + 1;//获取tableCode
+                                        tableCodeMap.put(tableCode,tableCode);//存放tableCode
                                         Map<String, String> tableDescriptionMap = new HashMap<>();//表描述
                                         boolean isOK = true;//判断是只有一个主键bi
                                         for (String temp : tempMap.keySet()) {
@@ -271,6 +275,16 @@ public class TableServiceImpl implements TableService
             bool = false;
         } finally {
             System.out.println("是否成功：" + bool);
+            if(bool){
+                for (String tableCode:tableCodeMap.keySet()) {
+                    List<Map<String,Object>> viewss=tableInputViewService.getTableInputView(tableCode);
+                    if(viewss!=null&&viewss.size()>0){
+                        System.err.println("创建默认录入列表成功！--"+viewss);
+                    }else{
+                        bool=false;
+                    }
+                }
+            }
             return bool;
         }
     }
@@ -291,7 +305,7 @@ public class TableServiceImpl implements TableService
                 System.out.println("添加字段关系创建成功--"+tableRelationMap);
             }
         }catch (Exception e){
-            System.out.println("添加字段关系失败--"+e.getMessage());
+            System.err.println("添加字段关系失败--"+e.getMessage());
         }
     }
     /**

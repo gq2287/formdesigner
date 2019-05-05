@@ -174,7 +174,7 @@ public class TableViewServiceImpl implements TableViewService {
             }
         }catch (Exception e){
             bool=false;
-            System.out.println("添加显示卡片列失败"+parms+"---"+e.getMessage());
+            System.err.println("添加显示卡片列失败"+parms+"---"+e.getMessage());
         }
         return bool;
     }
@@ -195,13 +195,13 @@ public class TableViewServiceImpl implements TableViewService {
                        System.out.println("** "+i+" **删除视图列数据成功ListCode:"+listCodes.get(i));
                    }else{
                        bool=false;
-                       System.out.println("** "+i+" **删除视图列数据失败,删除列不存在ListCode:"+listCodes.get(i));
+                       System.err.println("** "+i+" **删除视图列数据失败,删除列不存在ListCode:"+listCodes.get(i));
                    }
                }
            }
         }catch (Exception e){
             bool=false;
-            System.out.println("删除添加显示卡片列失败"+listCodes+"---"+e.getMessage());
+            System.err.println("删除添加显示卡片列失败"+listCodes+"---"+e.getMessage());
         }
         return bool;
     }

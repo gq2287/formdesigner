@@ -36,7 +36,7 @@ public class TableInputViewServiceImpl implements TableInputViewService {
                 getSplitTableInputView(tableCode,inputList,tagMapList);//转换成属性对象
                 System.out.println("获取录入视图成功"+tableCode);
             }else{
-                //如果没有就添加默认的
+                //如果没有录入视图就添加默认的
                 List<Map<String, Object>> conlumnList=tableMapper.getEntityTableColumnByVisible(tableCode);//获取选中表数据列
                 if(conlumnList!=null&&conlumnList.size()>0){
                     Boolean bool=getAddColumn(tableCode,conlumnList);//获取当前添加数据
@@ -71,22 +71,31 @@ public class TableInputViewServiceImpl implements TableInputViewService {
 
     /**
      * 保存数据列
-     * @param parms
+     * @param parmsUIList
      * @return
      */
     @Override
-    public Boolean saveTableInputView(Map<String, Object> parms) {
+    public Boolean saveTableInputView(String tableCode,List<Map<String,Object>> parmsUIList) {
         boolean bool=true;
         try {
-            int result=tableInputViewMapper.addTableInputViewColumn(parms);
-            if(result>0){
-                System.out.println("录入数据保存成功"+parms);
+            Boolean onbool = tableInputViewMapper.delTableInputViewByTableCode(tableCode);
+            if(onbool){
+                System.out.println("删除成功"+tableCode);
+                for (int i = 0; i < parmsUIList.size(); i++) {
+                    int result=tableInputViewMapper.addTableInputViewColumn(parmsUIList.get(i));
+                    if(result>0){
+                        System.out.println("录入数据保存成功,共--"+parmsUIList.size());
+                    }else{
+                        System.err.println("录入数据保存失败"+parmsUIList.get(i));
+                    }
+                }
             }else{
-                System.out.println("录入数据保存失败"+parms);
+                System.err.println("删除成功"+tableCode);
+                bool=false;
             }
             return bool;
         }catch (Exception e){
-            System.out.println("参数-"+parms+"-sql异常"+e.getMessage());
+            System.err.println("参数-"+parmsUIList+"-sql异常"+e.getMessage());
             return  bool=false;
         }
     }
@@ -134,76 +143,78 @@ public class TableInputViewServiceImpl implements TableInputViewService {
                 String remark = null;
                 for (String col:pstmtMap.keySet()) {
                     if("INPUTTYPE".equals(col)){
-                        if ("T".equals(pstmtMap.get(col))) {
-                            CONTROLNAME = "txtInfos";
-                            CONTROLTYPE = 12;
-                            CONTAINER = "picContainerBack";
-                            PROPERTIESINFO1 = "@HEIGHT|2|315@WIDTH|2|8000@FORECOLOR|3|-2147483640@FONTSIZE|3|9@FONTNAME|1|宋体@BORDERSTYLE|2|1@LEFT|2|" + ctrlLeft * 15 + "@BACKCOLOR|3|-2147483643@APPEARANCE|2|1" + "@TOP|2|" + top * 15 + "@TEXT|1|" + pstmtMap.get("CHINESENAME") + "@TAG|1|" + pstmtMap.get("NAME");
-                            remark = "文本信息";
-                        } else if ("S".equals(pstmtMap.get(col))) {
-                            CONTROLNAME = "cboInfos";
-                            CONTROLTYPE = 13;
-                            CONTAINER = "picContainerFront";
-                            PROPERTIESINFO1 = "@APPEARANCE|2|1@LEFT|2|" + ctrlLeft * 15 + "@TOP|2|" + top * 15 + "@HEIGHT|2|330@WIDTH|2|2475@FONTNAME|1|宋体@FONTSIZE|3|9@FORECOLOR|3|2147483656" + "@BACKCOLOR|3|2147483653@TAG|1|" + pstmtMap.get("NAME") + "@TEXT|1|" + pstmtMap.get("CHINESENAME");
-                            remark = "下拉框信息";
-                        } else {
-                            if (!"F".equals(pstmtMap.get(col))) {
-                                continue;
+                        if(pstmtMap.get(col)!=null&&!"".equals(pstmtMap.get(col))){
+                            if ("T".equals(pstmtMap.get(col))) {
+                                CONTROLNAME = "txtInfos";
+                                CONTROLTYPE = 12;
+                                CONTAINER = "picContainerBack";
+                                PROPERTIESINFO1 = "@HEIGHT|2|315@WIDTH|2|8000@FORECOLOR|3|-2147483640@FONTSIZE|3|9@FONTNAME|1|宋体@BORDERSTYLE|2|1@LEFT|2|" + ctrlLeft * 15 + "@BACKCOLOR|3|-2147483643@APPEARANCE|2|1" + "@TOP|2|" + top * 15 + "@TEXT|1|" + pstmtMap.get("CHINESENAME") + "@TAG|1|" + pstmtMap.get("NAME");
+                                remark = "文本信息";
+                            } else if ("S".equals(pstmtMap.get(col))) {
+                                CONTROLNAME = "cboInfos";
+                                CONTROLTYPE = 13;
+                                CONTAINER = "picContainerFront";
+                                PROPERTIESINFO1 = "@APPEARANCE|2|1@LEFT|2|" + ctrlLeft * 15 + "@TOP|2|" + top * 15 + "@HEIGHT|2|330@WIDTH|2|2475@FONTNAME|1|宋体@FONTSIZE|3|9@FORECOLOR|3|2147483656" + "@BACKCOLOR|3|2147483653@TAG|1|" + pstmtMap.get("NAME") + "@TEXT|1|" + pstmtMap.get("CHINESENAME");
+                                remark = "下拉框信息";
+                            } else {
+                                if (!"F".equals(pstmtMap.get(col))) {
+                                    continue;
+                                }
+                                CONTROLNAME = "txtInfos";
+                                CONTROLTYPE = 12;
+                                CONTAINER = "picContainerBack";
+                                PROPERTIESINFO1 = "@HEIGHT|2|315@WIDTH|2|2500@FORECOLOR|3|-2147483640@FONTSIZE|3|9@FONTNAME|1|宋体@BORDERSTYLE|2|1@LEFT|2|" + ctrlLeft * 15 + "@BACKCOLOR|3|-2147483643@APPEARANCE|2|1" + "@TOP|2|" + top * 15 + "@TEXT|1|" + pstmtMap.get("CHINESENAME") + "@TAG|1|" + pstmtMap.get("NAME");
+                                remark = "文本信息";
                             }
-                            CONTROLNAME = "txtInfos";
-                            CONTROLTYPE = 12;
+                            //添加录入列
+                            inputMap.put("CONTROLNAME", CONTROLNAME);
+                            inputMap.put("CONTROLINDEX", String.valueOf(CONTAINERINDEX));
+                            inputMap.put("CONTROLTYPE", String.valueOf(CONTROLTYPE));
+                            inputMap.put("ISEXIST", "T");
+                            inputMap.put("CONTAINER", CONTAINER);
+                            inputMap.put("CONTAINERINDEX", String.valueOf(-1));
+                            inputMap.put("LOADNO", String.valueOf(LOADNO));
+                            inputMap.put("TABINDEX", String.valueOf(TABINDEX));
+                            inputMap.put("FIELDNAME",String.valueOf(pstmtMap.get("NAME")) );
+                            inputMap.put("PROPERTIESINFO1", PROPERTIESINFO1);
+                            inputMap.put("REMARK", remark);
+                            int result =tableInputViewMapper.addTableInputViewColumn(inputMap);//添加到录入表
+                            if(result>0){
+                                System.out.println("主---添加成功！"+inputMap);
+                            }else{
+                                System.err.println("主---添加失败！"+inputMap);
+                            }
+                            //添加副表
+                            inputMap.put("INTERFACECARDCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));//录入界面设置编号
+                            CONTROLNAME = "lblInfos";
+                            CONTROLTYPE = 11;
                             CONTAINER = "picContainerBack";
-                            PROPERTIESINFO1 = "@HEIGHT|2|315@WIDTH|2|2500@FORECOLOR|3|-2147483640@FONTSIZE|3|9@FONTNAME|1|宋体@BORDERSTYLE|2|1@LEFT|2|" + ctrlLeft * 15 + "@BACKCOLOR|3|-2147483643@APPEARANCE|2|1" + "@TOP|2|" + top * 15 + "@TEXT|1|" + pstmtMap.get("CHINESENAME") + "@TAG|1|" + pstmtMap.get("NAME");
-                            remark = "文本信息";
+                            PROPERTIESINFO1 = "@CAPTION|1|" + pstmtMap.get("CHINESENAME") + "@BORDERSTYLE|2|0@APPEARANCE|2|1@LEFT|2|" + labelLeft * 15 + "@TOP|2|" + top * 15 + "@HEIGHT|2|315@WIDTH|2|1575@FONTNAME|1|宋体@FONTSIZE|3|9@FORECOLOR|3|-2147483630@BACKCOLOR|3|-2147483633@TAG|1|";
+                            remark = "注释信息";
+                            inputMap.put("CONTROLNAME", CONTROLNAME);
+                            inputMap.put("CONTROLINDEX", String.valueOf(CONTAINERINDEX));
+                            inputMap.put("CONTROLTYPE", String.valueOf(CONTROLTYPE));
+                            inputMap.put("ISEXIST", "T");
+                            inputMap.put("CONTAINER", CONTAINER);
+                            inputMap.put("CONTAINERINDEX", String.valueOf(-1));
+                            ++LOADNO;
+                            inputMap.put("LOADNO", String.valueOf(LOADNO));
+                            inputMap.put("TABINDEX", String.valueOf(TABINDEX));
+                            inputMap.put("FIELDNAME",String.valueOf(pstmtMap.get("NAME")) );
+                            inputMap.put("PROPERTIESINFO1", PROPERTIESINFO1);
+                            inputMap.put("REMARK", remark);
+                            result =tableInputViewMapper.addTableInputViewColumn(inputMap);//添加到录入表
+                            if(result>0){
+                                System.out.println("副---添加成功！"+inputMap);
+                            }else{
+                                System.err.println("副---添加失败！"+inputMap);
+                            }
+                            CONTAINERINDEX=1+CONTAINERINDEX;
+                            top = top+step;
+                            System.out.println(top);
+                            LOADNO=1+LOADNO;
+                            TABINDEX=1+TABINDEX;
                         }
-                        //添加录入列
-                        inputMap.put("CONTROLNAME", CONTROLNAME);
-                        inputMap.put("CONTROLINDEX", String.valueOf(CONTAINERINDEX));
-                        inputMap.put("CONTROLTYPE", String.valueOf(CONTROLTYPE));
-                        inputMap.put("ISEXIST", "T");
-                        inputMap.put("CONTAINER", CONTAINER);
-                        inputMap.put("CONTAINERINDEX", String.valueOf(-1));
-                        inputMap.put("LOADNO", String.valueOf(LOADNO));
-                        inputMap.put("TABINDEX", String.valueOf(TABINDEX));
-                        inputMap.put("FIELDNAME",String.valueOf(pstmtMap.get("NAME")) );
-                        inputMap.put("PROPERTIESINFO1", PROPERTIESINFO1);
-                        inputMap.put("REMARK", remark);
-                        int result =tableInputViewMapper.addTableInputViewColumn(inputMap);//添加到录入表
-                        if(result>0){
-                            System.out.println("主---添加成功！"+inputMap);
-                        }else{
-                            System.err.println("主---添加失败！"+inputMap);
-                        }
-                        //添加副表
-                        inputMap.put("INTERFACECARDCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));//录入界面设置编号
-                        CONTROLNAME = "lblInfos";
-                        CONTROLTYPE = 11;
-                        CONTAINER = "picContainerBack";
-                        PROPERTIESINFO1 = "@CAPTION|1|" + pstmtMap.get("CHINESENAME") + "@BORDERSTYLE|2|0@APPEARANCE|2|1@LEFT|2|" + labelLeft * 15 + "@TOP|2|" + top * 15 + "@HEIGHT|2|315@WIDTH|2|1575@FONTNAME|1|宋体@FONTSIZE|3|9@FORECOLOR|3|-2147483630@BACKCOLOR|3|-2147483633@TAG|1|";
-                        remark = "注释信息";
-                        inputMap.put("CONTROLNAME", CONTROLNAME);
-                        inputMap.put("CONTROLINDEX", String.valueOf(CONTAINERINDEX));
-                        inputMap.put("CONTROLTYPE", String.valueOf(CONTROLTYPE));
-                        inputMap.put("ISEXIST", "T");
-                        inputMap.put("CONTAINER", CONTAINER);
-                        inputMap.put("CONTAINERINDEX", String.valueOf(-1));
-                        ++LOADNO;
-                        inputMap.put("LOADNO", String.valueOf(LOADNO));
-                        inputMap.put("TABINDEX", String.valueOf(TABINDEX));
-                        inputMap.put("FIELDNAME",String.valueOf(pstmtMap.get("NAME")) );
-                        inputMap.put("PROPERTIESINFO1", PROPERTIESINFO1);
-                        inputMap.put("REMARK", remark);
-                        result =tableInputViewMapper.addTableInputViewColumn(inputMap);//添加到录入表
-                        if(result>0){
-                            System.out.println("副---添加成功！"+inputMap);
-                        }else{
-                            System.err.println("副---添加失败！"+inputMap);
-                        }
-                        CONTAINERINDEX=1+CONTAINERINDEX;
-                        top = top+step;
-                        System.out.println(top);
-                        LOADNO=1+LOADNO;
-                        TABINDEX=1+TABINDEX;
                     }else {
                         continue;
                     }
@@ -211,7 +222,7 @@ public class TableInputViewServiceImpl implements TableInputViewService {
             }
         }catch (Exception e){
             bool=false;
-            System.out.println("添加录入列部分失败"+e.getMessage());
+            System.err.println("添加录入列部分失败"+e.getMessage());
         }finally {
             return bool;
         }
@@ -226,11 +237,12 @@ public class TableInputViewServiceImpl implements TableInputViewService {
         inputMap.put("INTERFACECARDCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));//录入界面设置编号
         inputMap.put("TABLECODE",tableCode);//表编号
         inputMap.put("USERCODE","ISA");//用户编号
-        inputMap.put("CONTROLNAME","frmRecordBrowse");//是否还存在
-        inputMap.put("CONTROLINDEX",-1+"");//字段名
-        inputMap.put("CONTROLTYPE",1+"");//图片容器索引号
-        inputMap.put("ISEXIST","T");//控件索引号
-        inputMap.put("LOADNO","1");//控件名称
+        inputMap.put("CONTROLNAME","frmRecordBrowse");//字段名
+        inputMap.put("CONTROLINDEX",-1+"");//容器索引号
+        inputMap.put("CONTROLTYPE",1+"");//类型
+        inputMap.put("ISEXIST","T");//是否还存在
+        inputMap.put("LOADNO","1");//加载编号
+
         inputMap.put("PROPERTIESINFO1","@CAPTION|1|记录操作界面设计@ForeColor|3|-2147483630@BackColor|3|-2147483633@HEIGHT|2|11640@WIDTH|2|19320");//属性信息1
         int result =tableInputViewMapper.defAddTableInputViewColumn(inputMap);//添加到录入表
         if(result>0){
@@ -271,11 +283,11 @@ public class TableInputViewServiceImpl implements TableInputViewService {
         }
 
         inputMap.put("INTERFACECARDCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));//录入界面设置编号
-        inputMap.put("CONTROLNAME","picContainerFront");
+        inputMap.put("CONTROLNAME","vsbVScroll");
         inputMap.put("CONTROLINDEX",-1+"");
         inputMap.put("CONTROLTYPE",4+"");
         inputMap.put("ISEXIST","T");
-        inputMap.put("CONTAINER","picContainerBack");
+        inputMap.put("CONTAINER","picContainerFront");
         inputMap.put("CONTAINERINDEX","-1");
         inputMap.put("LOADNO","4");
         inputMap.put("PROPERTIESINFO1","@VALUE|2|0@VISIBLE|1|F@HEIGHT|2|4365@WIDTH|2|240");//属性信息1
@@ -338,8 +350,9 @@ public class TableInputViewServiceImpl implements TableInputViewService {
     private UIBean getUIBean(String prop){
         UIBean uiBean=new UIBean();
         int start = 0;
-        int end;
+        int end=0;
         for(int i = 0; i < prop.length(); i = end + 1) {
+            //--分解@
             start = prop.indexOf("@", start);//获取第一个@
             end = prop.indexOf("@", start + 1);//获取第二个@
             if (end == -1) {
@@ -347,8 +360,19 @@ public class TableInputViewServiceImpl implements TableInputViewService {
             }
             Property property = new Property();
             property.setPropertyString(prop.substring(start, end));
-            property.getProperty();
-            getUI(uiBean,property);
+            //分解@结束
+            //--分解||
+            int startP = 0;
+            int endP = property.getPropertyString().indexOf("|", startP);//获取第一个位置
+            property.setName( property.getPropertyString().substring(startP + 1, endP));
+            startP = endP + 1;
+            endP =property.getPropertyString().indexOf("|", startP);
+            property.setDataType(property.getPropertyString().substring(startP, endP));
+            startP = endP + 1;
+            endP = property.getPropertyString().length();
+            property.setValue( property.getPropertyString().substring(startP, endP));
+            //分解||结束
+            getUI(uiBean,property);//解析详细属性
             start = end;
         }
         return uiBean;
@@ -460,10 +484,12 @@ public class TableInputViewServiceImpl implements TableInputViewService {
             String tempFieldValue = "示例文字";
             switch(index) {
                 case 0://
+                    uiMap.put("FIELDNAME",mapList.get(i).get("FIELDNAME") );//字段名称
+                    uiMap.put("CONTAINER",mapList.get(i).get("CONTAINER") );//图片容器
                     uiMap.put("id","P@"+mapList.get(i).get("INTERFACECARDCODE")+"@"+name+ "@" + uibean2.getText() + "@" + uibean2.getCaption());//获取名称;
                     uiMap.put("style","TOP:0px;LEFT:0px;Z-INDEX:0;BACKGROUND-COLOR:" + backgroundColor);
                     if (uibean2.getFloat(uibean2.getHeight()) / 15.0F > 500.0F) {
-                        uiMap.put("HEIGHT","500px");
+                        uiMap.put("HEIGHT",uibean2.getFloat(uibean2.getHeight()) / 15.0F+"px");
                     } else {
                         uiMap.put("HEIGHT",uibean2.getFloat(uibean2.getHeight()) / 15.0F+"px");
                     }
@@ -476,6 +502,8 @@ public class TableInputViewServiceImpl implements TableInputViewService {
                     }
                     break;
                 case 1:
+                    uiMap.put("FIELDNAME",mapList.get(i).get("FIELDNAME") );//字段名称
+                    uiMap.put("CONTAINER",mapList.get(i).get("CONTAINER") );//图片容器
                     tempFieldValue = uibean2.getText();
                     if (uibean2.getFloat(uibean2.getHeight()) / 15.0F > 30.0F) {//标签类型v高度大于30F就是文本域，否则input框
                         uiMap.put("tag","textarea");
@@ -502,6 +530,8 @@ public class TableInputViewServiceImpl implements TableInputViewService {
                     uiMap.put("HEIGHT", uibean2.getFloat(uibean2.getHeight()) / 15.0F + "px" );
                     break;
                 case 2:
+                    uiMap.put("FIELDNAME",mapList.get(i).get("FIELDNAME") );//字段名称
+                    uiMap.put("CONTAINER",mapList.get(i).get("CONTAINER") );//图片容器
                     tempFieldValue = uibean2.getText();
                     uiMap.put("id","showinfo@" +mapList.get(i).get("INTERFACECARDCODE") + "@" + mapList.get(i).get("CONTROLNAME") + "@" + uibean2.getText() + "@" + uibean2.getCaption() );//获取名称);
                     uiMap.put("readonly", "readonly" );
@@ -526,6 +556,8 @@ public class TableInputViewServiceImpl implements TableInputViewService {
                     uiMap.put("tag","select");
                     break;
                 case 3:
+                    uiMap.put("FIELDNAME",mapList.get(i).get("FIELDNAME") );//字段名称
+                    uiMap.put("CONTAINER",mapList.get(i).get("CONTAINER") );//图片容器
                     uiMap.put("id","showinfo@" +mapList.get(i).get("INTERFACECARDCODE") + "@" + mapList.get(i).get("CONTROLNAME") + "@" + uibean2.getText() + "@" + uibean2.getCaption() );//获取名称);
                     uiMap.put("readonly", "readonly" );
                     uiMap.put("style","BORDER:1 solid gray;cursor: move");

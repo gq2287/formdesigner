@@ -1,5 +1,6 @@
 package com.wskj.project.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.reflect.TypeToken;
 import com.wskj.project.model.ResponseResult;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +45,20 @@ public class TableInputViewController {
         logger.info("获取保存录入视图---getSaveTableInputView--参数--{}",tableInput);
         Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object>  pras= JSONObject.parseObject(tableInput,typeObj);//JSONObject转换map
-        boolean  bool=tableInputViewService.saveTableInputView(pras);
+        List UIList=(JSONArray)pras.get("layout");
+        Map<String, Object>  prasUI=new HashMap<>();
+        List<Map<String,Object>>  parasUIList=new ArrayList<>();
+        String tableCode="";
+        if(UIList!=null&&UIList.size()>0){
+            for (int i = 0; i <UIList.size() ; i++) {
+                prasUI=JSONObject.parseObject(String.valueOf(UIList.get(i)),typeObj);//JSONObject转换map
+                if("".equals(tableCode)){
+                    tableCode=(String) prasUI.get("TABLECODE");
+                }
+                parasUIList.add(prasUI);
+            }
+        }
+        boolean  bool=tableInputViewService.saveTableInputView(tableCode,parasUIList);
         if(bool){
             return new ResponseResult(ResponseResult.OK, "成功", bool, true);
         }else{
