@@ -277,6 +277,27 @@ public class ClassLevelServiceImpl implements ClassLevelService {
     }
 
     /**
+     * 更新父级节点值
+     * @param parentCode
+     * @return
+     */
+    @Override
+    public Boolean upDragDropNodeByparentCode(String parentCode,String nodeCode) {
+        Boolean bool=true;
+        try {
+             bool =classLevelMapper.upParentCode(parentCode,nodeCode);
+             if(bool){
+                 System.err.println("修改成功参数："+parentCode+"--"+nodeCode);
+             }
+        }catch (Exception e){
+            System.err.println("修改失败参数："+parentCode+"--"+nodeCode+"--"+e.getMessage());
+            bool=false;
+        }finally {
+            return bool;
+        }
+    }
+
+    /**
      * 根据父节点nodecode获取旗下实体表
      * @param nodeCode
      * @return

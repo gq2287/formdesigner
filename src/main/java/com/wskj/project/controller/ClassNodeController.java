@@ -111,4 +111,27 @@ public class ClassNodeController {
         }
     }
 
+    @ApiOperation(value = "拖动节点到新的中间门类", notes = "返回信息 0成功，400失败 ")
+    @RequestMapping(value = "/getDragDropNode", method = RequestMethod.POST)
+    public ResponseResult getDragDropNode(String parentCode,String nodeCode) {
+        logger.info("拖动节点到新的中间门类---getDragDropNode--参数--{}",parentCode);
+        boolean aBoolean=true;
+        aBoolean=classLevelService.upDragDropNodeByparentCode( parentCode, nodeCode);
+        if(aBoolean){
+            return new ResponseResult(ResponseResult.OK, "拖动节点到新的中间门类成功",aBoolean);
+        }else{
+            return new ResponseResult(ResponseResult.OK, "拖动节点到新的中间门类失败",aBoolean);
+        }
+    }
+
+
+
+    @ApiOperation(value = "测试", notes = "返回信息 0成功，400失败 ")
+    @RequestMapping(value = "/test", method = RequestMethod.POST)
+    public ResponseResult test(String parentCode) {
+        logger.info("测试--参数--{}",parentCode);
+        String filename = parentCode.substring(0, parentCode.lastIndexOf("."));
+        System.err.println(filename);
+        return new ResponseResult(ResponseResult.OK, "拖动节点到新的中间门类成功");
+    }
 }

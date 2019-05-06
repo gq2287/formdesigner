@@ -29,4 +29,9 @@ public interface ClassLevelService {
 
     Boolean upTreeNameAndSerial(Map<String,String> parmMap);
 
+    /**
+     * 修改当前拖动节点父级 parentCode
+     */
+    Boolean upDragDropNodeByparentCode(String parentCode,String nodeCode);
+
 }

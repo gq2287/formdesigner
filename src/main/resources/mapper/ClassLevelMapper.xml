@@ -62,4 +62,8 @@
     <update id="upTreeNameAndSerial" parameterType="java.util.Map">
         UPDATE CLASSNODE SET NAME=#{name},SERIAL=#{serial} WHERE NODECODE=#{nodeCode}
     </update>
+    <!--修改父级节点-->
+    <update id="upParentCode" parameterType="java.lang.String">
+        UPDATE CLASSNODE SET PARENTCODE=#{parentCode} WHERE NODECODE=#{nodeCode}
+    </update>
 </mapper>
