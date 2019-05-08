@@ -33,9 +33,6 @@ public class TableViewServiceImpl implements TableViewService {
         List<Map<String, Object>> parms = null;
         try {
             parms = tableViewMapper.getTableView(tableCode);
-            if(parms!=null&&parms.size()>0){
-                System.err.println("查询视图列成功"+parms);
-            }
         } catch (Exception e) {
             System.err.println("查询视图列失败：" + e.getMessage() + "tableCode");
         }
@@ -148,33 +145,33 @@ public class TableViewServiceImpl implements TableViewService {
             if(parms!=null&&parms.size()>0){
                 for (int i = 0; i <parms.size() ; i++) {
                     Map<String,String>  pras= JSONObject.parseObject(String.valueOf(parms.get(i)),typeObj);//JSONObject转换map
-                    System.err.println("----------"+pras);
+//                    System.err.println("----------"+pras);
                     String tableCode=pras.get("TABLECODE");
                     String listCode=pras.get("LISTCODE");//如果存在就是已存在的视图列
                     if(listCode!=null&&!"".equals(listCode)){
                         pras.put("SERIAL",i+"");//序号
                         int result=tableViewMapper.upTableViewSelect(pras);//更新视图列
-                        if(result>0){
-                            System.out.println("修改添加显示卡片列成功"+pras);
-                        }
+//                        if(result>0){
+//                            System.out.println("修改添加显示卡片列成功"+pras);
+//                        }
                     }else{
                         int result=tableViewMapper.upTableColumnSelect(pras);//修改纪录表
-                        if(result>0){
-                            System.out.println("修改纪录表列成功"+pras);
-                        }
+//                        if(result>0){
+//                            System.out.println("修改纪录表列成功"+pras);
+//                        }
                         pras.put("SERIAL",i+"");//序号
                         pras.put("LISTCODE", String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));
                         result=tableViewMapper.addTableViewColumn(pras);//添加视图列
-                        if(result>0){
-                            System.out.println("成功添加视图列"+pras);
-                        }
+//                        if(result>0){
+//                            System.out.println("成功添加视图列"+pras);
+//                        }
 
                     }
                 }
             }
         }catch (Exception e){
             bool=false;
-            System.err.println("添加显示卡片列失败"+parms+"---"+e.getMessage());
+            System.err.println("添加显示卡片列失败---"+e.getMessage());
         }
         return bool;
     }
@@ -192,7 +189,7 @@ public class TableViewServiceImpl implements TableViewService {
                for (int i = 0; i <listCodes.size() ; i++) {
                    int result=tableViewMapper.delTableViewColumnByListCode(listCodes.get(i));
                    if(result>0){
-                       System.out.println("** "+i+" **删除视图列数据成功ListCode:"+listCodes.get(i));
+//                       System.out.println("** "+i+" **删除视图列数据成功ListCode:"+listCodes.get(i));
                    }else{
                        bool=false;
                        System.err.println("** "+i+" **删除视图列数据失败,删除列不存在ListCode:"+listCodes.get(i));

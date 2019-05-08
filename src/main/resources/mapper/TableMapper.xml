@@ -11,6 +11,7 @@
         INSERT INTO CLASSDESCRIPTION (CLASSCODE,NAME,CHINESENAME)
         VALUES(#{classCode},#{name},#{chineseName})
     </insert>
+
     <!--删除已选择模版列表-->
     <delete id="delTemplate">
          DELETE FROM CLASSDESCRIPTION WHERE CLASSCODE = #{classCode}
@@ -34,7 +35,7 @@
     </select>
     <!--获取创建实体表字段信息 getTableInfoByTableCode-->
     <select id="getTableInfoByTableCode" resultType="java.util.Map">
-        SELECT COLUMNCODE,TABLECODE,NAME,CHINESENAME,SERIAL,CATEGORY,TYPE,WIDTH,POINT,ISKEY,INDEXNAME,CANNULL,CANREPEAT,VISIBLE,FORMAT,VALUESCALE,VALUEDEFAULT,ISSECURITY,INHERIT,INCREASE,INPUTTYPE,DICTIONARYCODE,REMARK,ISSIMPLEQUERY,ISCATALOGQUERY FROM
+         SELECT COLUMNCODE,TABLECODE,NAME,CHINESENAME,SERIAL,CATEGORY,TYPE,WIDTH,POINT,ISKEY,INDEXNAME,CANNULL,CANREPEAT,VISIBLE,FORMAT,VALUESCALE,VALUEDEFAULT,ISSECURITY,INHERIT,INCREASE,INPUTTYPE,DICTIONARYCODE,REMARK,ISSIMPLEQUERY,ISCATALOGQUERY FROM
          CLASSCOLUMNDESCRIPTION
          WHERE TABLECODE=#{tableCode}
          ORDER BY SERIAL
@@ -170,4 +171,195 @@
         ALTER TABLE ${tableName} DROP COLUMN ${columnName}
     </delete>
 
+
+
+
+
+    <!--添加模版节点实体表等级表-->
+    <insert id="createClassLevel" parameterType="java.util.Map">
+        INSERT INTO CLASSLEVEL(LEVELCODE,CLASSCODE,RELATIONLEVEL,TABLECODE,ISNECESSARY,CHINESENAME)
+        VALUES(#{LEVELCODE},#{CLASSCODE},#{RELATIONLEVEL,jdbcType=NUMERIC},#{TABLECODE},#{ISNECESSARY},#{CHINESENAME})
+    </insert>
+
+    <!--模版表字段描述-->
+    <insert id="createClassColumnDescription" parameterType="java.util.Map">
+        INSERT INTO CLASSCOLUMNDESCRIPTION(
+
+        <if test="ISCATALOGQUERY != null and '' != ISCATALOGQUERY">
+            ISCATALOGQUERY,
+        </if>
+
+        <if test="TABLECODE != null and '' != TABLECODE">
+            TABLECODE,
+        </if>
+        <if test="NAME != null and '' != NAME">
+            NAME,
+        </if>
+        <if test="CHINESENAME != null and '' != CHINESENAME">
+            CHINESENAME,
+        </if>
+        <if test="SERIAL != null and '' != SERIAL">
+            SERIAL,
+        </if>
+        <if test="CATEGORY != null and '' != CATEGORY">
+            CATEGORY,
+        </if>
+        <if test="TYPE != null and '' != TYPE">
+            TYPE,
+        </if>
+        <if test="WIDTH != null and '' != WIDTH">
+            WIDTH,
+        </if>
+        <if test="POINT != null and '' != POINT">
+            POINT,
+        </if>
+        <if test="ISKEY != null and '' != ISKEY">
+            ISKEY,
+        </if>
+        <if test="INDEXNAME != null and '' != INDEXNAME">
+            INDEXNAME,
+        </if>
+        <if test="CANNULL != null and '' != CANNULL">
+            CANNULL,
+        </if>
+        <if test="CANREPEAT != null and '' != CANREPEAT">
+            CANREPEAT,
+        </if>
+        <if test="VISIBLE != null and '' != VISIBLE">
+            VISIBLE,
+        </if>
+        <if test="FORMAT != null and '' != FORMAT">
+            FORMAT,
+        </if>
+        <if test="VALUESCALE != null and '' != VALUESCALE">
+            VALUESCALE,
+        </if>
+        <if test="VALUEDEFAULT != null and '' != VALUEDEFAULT">
+            VALUEDEFAULT,
+        </if>
+        <if test="ISSECURITY != null and '' != ISSECURITY">
+            ISSECURITY,
+        </if>
+        <if test="INHERIT != null and '' != INHERIT">
+            INHERIT,
+        </if>
+        <if test="INCREASE != null and '' != INCREASE">
+            INCREASE,
+        </if>
+        <if test="INPUTTYPE != null and '' != INPUTTYPE">
+            INPUTTYPE,
+        </if>
+        <if test="DICTIONARYCODE != null and '' != DICTIONARYCODE">
+            DICTIONARYCODE,
+        </if>
+        <if test="REMARK != null and '' != REMARK">
+            REMARK,
+        </if>
+        <if test="ISSIMPLEQUERY != null and '' != ISSIMPLEQUERY">
+            ISSIMPLEQUERY,
+        </if>
+        <if test="COLUMNCODE != null and '' != COLUMNCODE">
+            COLUMNCODE
+        </if>
+        )
+        VALUES(
+
+        <if test="ISCATALOGQUERY != null and '' != ISCATALOGQUERY">
+            #{ISCATALOGQUERY},
+        </if>
+        <if test="TABLECODE != null and '' != TABLECODE">
+            #{TABLECODE},
+        </if>
+        <if test="NAME != null and '' != NAME">
+            #{NAME},
+        </if>
+        <if test="CHINESENAME != null and '' != CHINESENAME">
+            #{CHINESENAME},
+        </if>
+        <if test="SERIAL != null and '' != SERIAL">
+            #{SERIAL},
+        </if>
+        <if test="CATEGORY != null and '' != CATEGORY">
+            #{CATEGORY},
+        </if>
+        <if test="TYPE != null and '' != TYPE">
+            #{TYPE},
+        </if>
+        <if test="WIDTH != null and '' != WIDTH">
+            #{WIDTH},
+        </if>
+        <if test="POINT != null and '' != POINT">
+            #{POINT},
+        </if>
+        <if test="ISKEY != null and '' != ISKEY">
+            #{ISKEY},
+        </if>
+        <if test="INDEXNAME != null and '' != INDEXNAME">
+            #{INDEXNAME},
+        </if>
+        <if test="CANNULL != null and '' != CANNULL">
+            #{CANNULL},
+        </if>
+        <if test="CANREPEAT != null and '' != CANREPEAT">
+            #{CANREPEAT},
+        </if>
+        <if test="VISIBLE != null and '' != VISIBLE">
+            #{VISIBLE},
+        </if>
+        <if test="FORMAT != null and '' != FORMAT">
+            #{FORMAT},
+        </if>
+        <if test="VALUESCALE != null and '' != VALUESCALE">
+            #{VALUESCALE},
+        </if>
+        <if test="VALUEDEFAULT != null and '' != VALUEDEFAULT">
+            #{VALUEDEFAULT},
+        </if>
+        <if test="ISSECURITY != null and '' != ISSECURITY">
+            #{ISSECURITY},
+        </if>
+        <if test="INHERIT != null and '' != INHERIT">
+            #{INHERIT},
+        </if>
+        <if test="INCREASE != null and '' != INCREASE">
+            #{INCREASE},
+        </if>
+        <if test="INPUTTYPE != null and '' != INPUTTYPE">
+            #{INPUTTYPE},
+        </if>
+        <if test="DICTIONARYCODE != null and '' != DICTIONARYCODE">
+            #{DICTIONARYCODE},
+        </if>
+        <if test="REMARK != null and '' != REMARK">
+            #{REMARK},
+        </if>
+        <if test="ISSIMPLEQUERY != null and '' != ISSIMPLEQUERY">
+            #{ISSIMPLEQUERY},
+        </if>
+        <if test="COLUMNCODE != null and '' != COLUMNCODE">
+            #{COLUMNCODE}
+        </if>
+        )
+    </insert>
+    <!--删除纪录-->
+    <delete id="delClassColumnDes" parameterType="java.util.Map">
+        DELETE FROM CLASSCOLUMNDESCRIPTION WHERE TABLECODE = #{tableCode}
+    </delete>
+    <!--获取创建实体表字段信息-->
+    <select id="getTableColumnInfoByTableCode" resultType="java.util.Map">
+         SELECT * FROM
+         TABLECOLUMNDESCRIPTION
+         WHERE TABLECODE=#{tableCode}
+         ORDER BY SERIAL
+    </select>
+    <!--删除等级-->
+    <delete id="delClassLeveByClassCode" parameterType="java.util.Map">
+        DELETE FROM CLASSLEVEL WHERE CLASSCODE = #{classCode}
+    </delete>
+
+    <!--添加模版-->
+    <insert id="addTableTempT" parameterType="java.util.Map">
+        INSERT INTO CLASSNODE (NODECODE, PARENTCODE,NAME,TYPE,CLASSCODE,CLASSTABLECODE,TABLECODE,SERIAL)
+        VALUES (#{NODECODE},#{PARENTCODE},#{NAME},#{TYPE},#{CLASSCODE},#{CLASSTABLECODE},#{TABLECODE},#{SERIAL})
+    </insert>
 </mapper>

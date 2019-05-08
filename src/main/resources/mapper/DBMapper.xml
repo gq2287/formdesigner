@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wskj.project.dao.DBMapper">
+    <!--判断数据库是否含有当前用户-->
+    <select id="getuser" resultType="java.util.Map">
+       select * from dba_users WHERE username=#{name}
+    </select>
+
+</mapper>

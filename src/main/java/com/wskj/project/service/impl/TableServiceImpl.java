@@ -39,8 +39,70 @@ public class TableServiceImpl implements TableService
      * @return
      */
     @Override
-    public int createTemplate(Map<String, String> parmMap) {
-        return tableMapper.createTemplate(parmMap);
+    public Boolean createTemplate(Map<String, String> parmMap) {
+        Boolean bool=true;
+        Map<String, String> map=new HashMap<>();
+
+        map.put("NODECODE",parmMap.get("nodeCode"));
+        map.put("PARENTCODE",parmMap.get("parentCode"));
+        map.put("CLASSTABLECODE",parmMap.get("classTableCode"));
+        map.put("CLASSCODE",parmMap.get("classCode"));
+        int result=tableMapper.createTemplate(parmMap);
+        if(result>0){
+            if(!getAttrs(map)){
+                bool=false;
+            }
+        }else {
+            bool=false;
+        }
+        return bool;
+    }
+    //添加模版classLeve
+    public boolean getAttrs(Map<String, String> attrs) {
+        boolean bool=true;
+        String classCode="";
+        List<String> tableList=new ArrayList<>();
+        try {
+            //底层门类
+            String nodeCode = attrs.get("NODECODE") + "";
+            String parentCode = attrs.get("PARENTCODE") + "";
+            classCode= attrs.get("CLASSCODE") + "";
+            List<Map<String, Object>> newList = new ArrayList<>();//存放全部门类节点旗下子节点信息
+            List<Map<String, String>> listMap = classLevelService.getTableByNodeCode(nodeCode);//获取全部实体表 tableCode
+            if (listMap != null && listMap.size() > 0) {
+                for (int i = 0; i < listMap.size(); i++) {
+                    String tableCode= listMap.get(i).get("TABLECODE");
+                    tableList.add(tableCode);
+                    Map<String,String> mmm=new HashMap<>();
+                    mmm.put("LEVELCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));
+                    mmm.put("CLASSCODE",classCode);
+                    mmm.put("RELATIONLEVEL",i+"");
+                    mmm.put("TABLECODE",tableCode);
+                    mmm.put("ISNECESSARY","T");
+                    mmm.put("CHINESENAME",listMap.get(i).get("NAME"));
+                    bool=tableMapper.createClassLevel(mmm);//添加模版
+                    Map<String,String> tableMap=new HashMap<>();
+                    tableMap.put("tableCode",tableCode);
+                    List<Map<String,String>> columnMap=tableMapper.getTableColumnInfoByTableCode(tableMap);
+                    for (int j = 0; j < columnMap.size(); j++) {
+                        columnMap.get(j).put("COLUMNCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));
+                         bool=tableMapper.createClassColumnDescription(columnMap.get(j));
+                         if(!bool){
+                             tableMapper.delClassColumnDes(tableCode);
+                         }
+                    }
+                }
+            }
+        }catch (Exception e){
+            bool=false;
+            System.out.println("模版添加ClassLeve失败"+e.getMessage());
+            tableMapper.delTemplate(classCode);
+            for (int i = 0; i <tableList.size() ; i++) {
+                tableMapper.delClassColumnDes(tableList.get(i));
+            }
+            return bool;
+        }
+        return bool;
     }
 
     /**
@@ -51,6 +113,7 @@ public class TableServiceImpl implements TableService
      */
     @Override
     public int delTemplate(String classCode) {
+        tableMapper.delClassLeveByClassCode(classCode);
         return tableMapper.delTemplate(classCode);
     }
 
@@ -93,6 +156,7 @@ public class TableServiceImpl implements TableService
         boolean bool = true;
         Map<String, String> tableCodeMap=new HashMap<>();//存放tableCode
         try {
+            String classcodeNO=String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D);
             //创建底层门类
             Map<String, String> attrs = (Map<String, String>) parmMap.get("attrs");
             String uuid = "ucls" + StringUtil.getDate(2) + StringUtil.getRandom(1000, 10000) + 1;
@@ -101,14 +165,12 @@ public class TableServiceImpl implements TableService
             treeT.put("PARENTCODE", attrs.get("NODECODE") + "");
             treeT.put("NAME", parmMap.get("name").toString());
             treeT.put("TYPE", parmMap.get("type").toString());//C
-            treeT.put("CLASSCODE", "");//表
+            treeT.put("CLASSCODE", classcodeNO);//表
             treeT.put("CLASSTABLECODE", attrs.get("templateCode") + "");
             treeT.put("TABLECODE", "");
             treeT.put("SERIAL", "");//最大的
             int result = tableMapper.addTableTreeInfo(treeT);//父节点
-            if (result > 0) {
-                System.out.println("底层门类父节点创建成功");
-            }
+
             String tableName = "";
             Map<String, String> dataType = new HashMap();//数据库为Oracle字段类型
             dataType.put("1", "VARCHAR2");
@@ -135,14 +197,12 @@ public class TableServiceImpl implements TableService
                                         Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
                                         Map<String, Object> tempMap = JSONObject.parseObject(String.valueOf(tempListMap.get(i)), typeObj);
                                         tableName = tempMap.get("name") + "";//获取创建的表名
+
                                         //创建用户角色表权限
                                         Map<String, String> sysMap = new HashMap<>();
                                         sysMap.put("userCode", listUUID.get(i + 1));
                                         sysMap.put("tableName", tableName);
                                         int result2 = tableMapper.addSystemUseRRoleTable(sysMap);//添加表权限
-                                        if (result2 > 0) {
-                                            System.out.println("添加表权限创建成功");
-                                        }
                                         //添加tree节点
                                         treeT.put("NODECODE", listUUID.get(i + 1));//唯一编号
                                         treeT.put("PARENTCODE", listUUID.get(i));
@@ -157,7 +217,7 @@ public class TableServiceImpl implements TableService
                                         Map<String, String> tableDescriptionMap = new HashMap<>();//表描述
                                         boolean isOK = true;//判断是只有一个主键bi
                                         for (String temp : tempMap.keySet()) {
-                                            treeT.put("CLASSCODE", tempMap.get("tableCode") + "");//底层门类字段
+                                            treeT.put("CLASSCODE", classcodeNO);//底层门类字段
                                             if ("tableColumns".equals(temp)) {
                                                 if (tempMap.get(temp) != null) {
                                                     JSONArray tableColumnsArray = (JSONArray) tempMap.get(temp);//jsonArray
@@ -171,10 +231,7 @@ public class TableServiceImpl implements TableService
                                                             tableColumnDMap.put("COLUMNCODE", tableColumnDMap.get("COLUMNCODE"));//防止主键重复添加失败，把clomnCode修改为数据库编号
                                                             tableColumnDMap.put("SERIAL",String.valueOf(j));
                                                             StringBuffer stringBuffer = getSQLTableColumnDescription(tableColumnDMap);
-                                                            int count = tableMapper.addTableColumnDescription(stringBuffer);//保存字段到纪录表
-                                                            if (count > 0) {
-                                                                System.out.println("保存字段到纪录表成功--" + stringBuffer);
-                                                            }
+                                                            int count = tableMapper.addTableColumnDescription(stringBuffer);//保存字段到纪录表 CLASSCOLUMNDESCRIPTION
                                                             //保存视图列表
                                                             String visible = tempColumnsMap.get("VISIBLE") + "";//是否可见 T全部添加数据
                                                             if("T".equals(visible)){
@@ -184,9 +241,6 @@ public class TableServiceImpl implements TableService
                                                                 viewMap.put("serial", String.valueOf(j));
                                                                 viewMap.put("title", String.valueOf(tableColumnDMap.get("CHINESENAME")));
                                                                 count=tableMapper.addOneColumn(viewMap);
-                                                                if (count > 0) {
-                                                                    System.out.println("保存列到视图表成功--" + viewMap);
-                                                                }
                                                             }
                                                             String mc =  String.valueOf(tempColumnsMap.get("NAME") );//字段名称
                                                             String lx =  String.valueOf(tempColumnsMap.get("TYPE") );//数据类型
@@ -224,13 +278,13 @@ public class TableServiceImpl implements TableService
                                                             sql.append(sb);
                                                         }
                                                         sql.append(isKey);
-                                                        System.out.println(sql);
+//                                                        System.out.println(sql);
                                                         Map<String, String> SQLMap = new HashMap<>();
                                                         SQLMap.put("SQL", sql.toString());//添加表
                                                         int result4 = tableMapper.addTable(SQLMap);//创建实体表
-                                                        if (result4 > 0) {
-                                                            System.out.println("创建实体表创建成功");
-                                                        }
+//                                                        if (result4 > 0) {
+//                                                            System.out.println("创建实体表创建成功");
+//                                                        }
                                                     }
                                                 }
                                             } else if ("tableRelation".equals(temp)) {//获取里面的数据列字段
@@ -251,17 +305,14 @@ public class TableServiceImpl implements TableService
                                         treeT.put("TABLECODE", tableCode);
                                         //底层门类
                                         int result6 = tableMapper.addTableTreeInfo(treeT);
-                                        if (result6 > 0) {
-                                            System.out.println("底层门类子节点创建成功");
-                                        }
+//                                        if (result6 > 0) {
+//                                            System.out.println("底层门类子节点创建成功");
+//                                        }
                                         //调用添加表描述  唯一表编号
                                         tableDescriptionMap.put("tableCode", tableCode);
                                         tableDescriptionMap.put("systemType", "D");//追加条件
                                         tableDescriptionMap.put("aggregate", "A");//追加条件
-                                        int result7 = tableMapper.addTableDescription(tableDescriptionMap);
-                                        if (result7 > 0) {
-                                            System.out.println("添加表描述 创建成功");
-                                        }
+                                        tableMapper.addTableDescription(tableDescriptionMap);
                                     }
 
                                 }
@@ -279,7 +330,7 @@ public class TableServiceImpl implements TableService
                 for (String tableCode:tableCodeMap.keySet()) {
                     List<Map<String,Object>> viewss=tableInputViewService.getTableInputView(tableCode);
                     if(viewss!=null&&viewss.size()>0){
-                        System.err.println("创建默认录入列表成功！--"+viewss);
+//                        System.err.println("创建默认录入列表成功！--"+viewss);
                     }else{
                         bool=false;
                     }
@@ -301,9 +352,9 @@ public class TableServiceImpl implements TableService
             tableRelationMap.put("TYPE","A");//追加条件
             tableRelationMap.put("CANCHANGE","A");//追加条件
             int result=tableMapper.createTableRelation(tableRelationMap);//添加字段关系
-            if(result>0){
-                System.out.println("添加字段关系创建成功--"+tableRelationMap);
-            }
+//            if(result>0){
+//                System.out.println("添加字段关系创建成功--"+tableRelationMap);
+//            }
         }catch (Exception e){
             System.err.println("添加字段关系失败--"+e.getMessage());
         }
@@ -394,16 +445,16 @@ public class TableServiceImpl implements TableService
             parms.put("tableName", tableName);//表名
             parms.put("sql", sql);//修改的sql
             int result1 = tableMapper.addField(parms);//向表内添加字段
-            if (result1 >= 0) {
-                System.err.println("追加新字段成功--" + sql);
-            }
+//            if (result1 >= 0) {
+//                System.err.println("追加新字段成功--" + sql);
+//            }
 
             //判断字段是否为空 如果为空那么添加时就不需要添加该字段
             sql = getSQLTableColumnDescription(objectMap);
             int result2 = tableMapper.addTableColumnDescription(sql);
-            if (result2 > 0) {
-                System.err.println("追加新表纪录列成功--" + objectMap);
-            }
+//            if (result2 > 0) {
+//                System.err.println("追加新表纪录列成功--" + objectMap);
+//            }
             //保存视图列表
             String visible = objectMap.get("VISIBLE") + "";//是否可见 T全部添加数据
             if("T".equals(visible)){
@@ -414,9 +465,9 @@ public class TableServiceImpl implements TableService
                 viewMap.put("serial", ++SERIAL+"");
                 viewMap.put("title", String.valueOf(objectMap.get("CHINESENAME")));
                 int count=tableMapper.addOneColumn(viewMap);
-                if (count > 0) {
-                    System.out.println("保存列到视图表成功--" + viewMap);
-                }
+//                if (count > 0) {
+//                    System.out.println("保存列到视图表成功--" + viewMap);
+//                }
             }
             bool = true;
         } catch (Exception e) {
@@ -436,9 +487,9 @@ public class TableServiceImpl implements TableService
         boolean bool=true;
         try {
             int result=tableMapper.upFieldTableDescription(field);
-            if(result>1){
-                System.err.println("修改描述表信息"+field);
-            }
+//            if(result>1){
+//                System.err.println("修改描述表信息"+field);
+//            }
         }catch (Exception e){
             System.err.println("修改描述表信息"+e.getMessage());
             bool=false;
@@ -457,11 +508,11 @@ public class TableServiceImpl implements TableService
         boolean bool=true;
         try {
             int result=tableMapper.upFieldTableRelation(fieldRelation);
-            if(result>1){
-                System.err.println("表关系修改成功"+fieldRelation);
-            }
+//            if(result>1){
+//                System.err.println("表关系修改成功"+fieldRelation);
+//            }
         }catch (Exception e){
-            System.err.println("表关系修改"+e.getMessage());
+            System.err.println("表关系修改失败"+e.getMessage());
             bool=false;
         }finally {
             return bool;
@@ -479,19 +530,19 @@ public class TableServiceImpl implements TableService
         try{
             int res1=tableMapper.delFieldTableColumnDescription(field);//受影响行数
             if(res1>0){
-                System.out.println("删除表字段描述成功"+field);
+//                System.out.println("删除表字段描述成功"+field);
             }
             res1=tableMapper.delFieldTableRelation(field);
             if(res1>0){
-                System.out.println("删除表字段关系成功"+field);
+//                System.out.println("删除表字段关系成功"+field);
             }
             res1=tableMapper.delFieldTable(field);
             if(res1>0){
-                System.out.println("删除实体表字段成功"+field);
+//                System.out.println("删除实体表字段成功"+field);
             }
             res1=tableMapper.delOneColumn(field);
             if(res1>0){
-                System.out.println("删除视图字段成功"+field);
+//                System.out.println("删除视图字段成功"+field);
             }
         }catch (Exception e){
             bool=false;
@@ -511,9 +562,9 @@ public class TableServiceImpl implements TableService
         Boolean bool = true;
         try{
             int res2=tableMapper.delFieldRelation(relationCode);
-            if(res2>0){
-                System.out.println("删除表关系成功"+relationCode);
-            }
+//            if(res2>0){
+//                System.out.println("删除表关系成功"+relationCode);
+//            }
 
         }catch (Exception e){
             bool=false;
@@ -534,6 +585,11 @@ public class TableServiceImpl implements TableService
         //修改表字段信息
         System.out.println("修改表字段信息:"+bool);
         return bool;
+    }
+
+    @Override
+    public Boolean delClassLeve() {
+        return null;
     }
 
     /**
@@ -587,7 +643,7 @@ public class TableServiceImpl implements TableService
             }
             index++;
         }
-        System.err.println("sql---" + sql);
+//        System.err.println("sql---" + sql);
         return sql;
     }
 
@@ -638,13 +694,13 @@ public class TableServiceImpl implements TableService
         columns.put("tableCode",tableCode);
         try {
             int res1=tableMapper.upFieldEntityTable(newmap);//修改实体表字段
-            if(res1>0){
-                System.out.println("修改实体表"+sql);
-            }
+//            if(res1>0){
+//                System.out.println("修改实体表"+sql);
+//            }
             int res2=tableMapper.upFieldTableColumnDescription(columns);//修改列纪录表内容
-            if(res2>0){
-                System.out.println("修改纪录表"+columnSql);
-            }
+//            if(res2>0){
+//                System.out.println("修改纪录表"+columnSql);
+//            }
         }catch (Exception e){
             bool=false;
         }finally {

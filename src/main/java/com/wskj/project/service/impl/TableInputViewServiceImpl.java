@@ -26,9 +26,8 @@ public class TableInputViewServiceImpl implements TableInputViewService {
      */
     @Override
     public List<Map<String, Object>> getTableInputView(String tableCode) {
-        System.out.println(tableCode);
         List<Map<String, Object>> AllList=new ArrayList<>();//返回数据集合
-        List<Map<String, String>> inputList=null;
+        List<Map<String, String>> inputList=new ArrayList<>();
         List<Map<String, String>> tagMapList=new ArrayList<>();
         try {
             inputList=tableInputViewMapper.getTableInputView(tableCode);
@@ -41,13 +40,13 @@ public class TableInputViewServiceImpl implements TableInputViewService {
                 if(conlumnList!=null&&conlumnList.size()>0){
                     Boolean bool=getAddColumn(tableCode,conlumnList);//获取当前添加数据
                     if(bool){
-                        System.out.println("添加录入数据成功"+conlumnList);
+                        System.out.println("添加录入数据成功");
                         Map<String,String> parIndexMap=new HashMap<>();
                         parIndexMap.put("indexCode", StringUtil.getDate(2)+StringUtil.getRandomStr(6));
                         parIndexMap.put("tableCode",tableCode);
                         bool=tableInputViewMapper.addTableIndex(parIndexMap);
                         if(bool){
-                            System.out.println("添加索引表数据成功"+parIndexMap);
+                            System.out.println("添加索引表数据成功");
                         }
                     }
                     inputList=tableInputViewMapper.getTableInputView(tableCode);//获取当前录入列表数据
@@ -60,7 +59,7 @@ public class TableInputViewServiceImpl implements TableInputViewService {
                 }
             }
         }catch (Exception e){
-            System.err.println("获取录入视图失败！"+e.getMessage()+"---"+tableCode);
+            System.err.println("获取录入视图失败！"+tableCode);
         }
         Map<String, Object> tempMap=new HashMap<>();
         tempMap.put("tagMapList",tagMapList);
@@ -180,9 +179,9 @@ public class TableInputViewServiceImpl implements TableInputViewService {
                             inputMap.put("REMARK", remark);
                             int result =tableInputViewMapper.addTableInputViewColumn(inputMap);//添加到录入表
                             if(result>0){
-                                System.out.println("主---添加成功！"+inputMap);
+                                System.out.println("主---添加成功！");
                             }else{
-                                System.err.println("主---添加失败！"+inputMap);
+                                System.err.println("主---添加失败！");
                             }
                             //添加副表
                             inputMap.put("INTERFACECARDCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));//录入界面设置编号
@@ -205,9 +204,9 @@ public class TableInputViewServiceImpl implements TableInputViewService {
                             inputMap.put("REMARK", remark);
                             result =tableInputViewMapper.addTableInputViewColumn(inputMap);//添加到录入表
                             if(result>0){
-                                System.out.println("副---添加成功！"+inputMap);
+                                System.out.println("副---添加成功！");
                             }else{
-                                System.err.println("副---添加失败！"+inputMap);
+                                System.err.println("副---添加失败！");
                             }
                             CONTAINERINDEX=1+CONTAINERINDEX;
                             top = top+step;
@@ -245,11 +244,8 @@ public class TableInputViewServiceImpl implements TableInputViewService {
 
         inputMap.put("PROPERTIESINFO1","@CAPTION|1|记录操作界面设计@ForeColor|3|-2147483630@BackColor|3|-2147483633@HEIGHT|2|11640@WIDTH|2|19320");//属性信息1
         int result =tableInputViewMapper.defAddTableInputViewColumn(inputMap);//添加到录入表
-        if(result>0){
-            System.out.println("1---添加成功！"+inputMap);
-        }else{
-            System.err.println("1---添加失败！"+inputMap);
-        }
+
+
         inputMap.put("INTERFACECARDCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));//录入界面设置编号
         inputMap.put("TABLECODE",tableCode);
         inputMap.put("CONTROLNAME","picContainerBack");
@@ -261,11 +257,7 @@ public class TableInputViewServiceImpl implements TableInputViewService {
         inputMap.put("LOADNO","2");
         inputMap.put("PROPERTIESINFO1","@ALIGN|1|0@ForeColor|3|-2147483630@BackColor|3|-2147483633@HEIGHT|2|10070@WIDTH|2|19320");//属性信息1
         result =tableInputViewMapper.defAddTableInputViewColumn(inputMap);//添加到录入表
-        if(result>0){
-            System.out.println("2---添加成功！"+inputMap);
-        }else{
-            System.err.println("2---添加失败！"+inputMap);
-        }
+
         inputMap.put("INTERFACECARDCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));//录入界面设置编号
         inputMap.put("CONTROLNAME","picContainerFront");
         inputMap.put("CONTROLINDEX",-1+"");
@@ -276,11 +268,6 @@ public class TableInputViewServiceImpl implements TableInputViewService {
         inputMap.put("LOADNO","3");
         inputMap.put("PROPERTIESINFO1","@ALIGN|1|1@ForeColor|3|-2147483630@BackColor|3|-2147483633@HEIGHT|2|10070@WIDTH|2|19320");//属性信息1
         result =tableInputViewMapper.defAddTableInputViewColumn(inputMap);//添加到录入表
-        if(result>0){
-            System.out.println("3---添加成功！"+inputMap);
-        }else{
-            System.err.println("3---添加失败！"+inputMap);
-        }
 
         inputMap.put("INTERFACECARDCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));//录入界面设置编号
         inputMap.put("CONTROLNAME","vsbVScroll");
@@ -292,11 +279,7 @@ public class TableInputViewServiceImpl implements TableInputViewService {
         inputMap.put("LOADNO","4");
         inputMap.put("PROPERTIESINFO1","@VALUE|2|0@VISIBLE|1|F@HEIGHT|2|4365@WIDTH|2|240");//属性信息1
         result =tableInputViewMapper.defAddTableInputViewColumn(inputMap);//添加到录入表
-        if(result>0){
-            System.out.println("4---添加成功！"+inputMap);
-        }else{
-            System.err.println("4---添加失败！"+inputMap);
-        }
+
         inputMap.put("INTERFACECARDCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));//录入界面设置编号
         inputMap.put("CONTROLNAME","vsbHScroll");
         inputMap.put("CONTROLINDEX",-1+"");
@@ -307,12 +290,6 @@ public class TableInputViewServiceImpl implements TableInputViewService {
         inputMap.put("LOADNO","1");
         inputMap.put("PROPERTIESINFO1","@VALUE|2|100@VISIBLE|1|F@HEIGHT|2|255@WIDTH|2|9225");//属性信息1
         result =tableInputViewMapper.defAddTableInputViewColumn(inputMap);//添加到录入表
-        if(result>0){
-            System.out.println("5---添加成功！"+inputMap);
-        }else{
-            System.err.println("5---添加失败！"+inputMap);
-        }
-
     }
 
     /**

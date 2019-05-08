@@ -92,4 +92,21 @@ public interface TableMapper {
     //删除实体表字段
     Integer delFieldTable(Map<String,Object> field);
 
+
+
+
+    //添加模版旗下的实体表到classleve内
+    Boolean createClassLevel(Map<String,String> map);
+
+//   添加模版字段纪录
+    Boolean createClassColumnDescription(Map<String,String> map);
+//    实体表字段纪录
+    List<Map<String,String>> getTableColumnInfoByTableCode(Map<String,String> map);
+//    删除纪录
+    Boolean delClassColumnDes(@Param("tableCode")String tableCode);
+
+    //删除等级
+    Boolean delClassLeveByClassCode(@Param("classCode")String classCode);
+//    添加T模版
+    Boolean addTableTempT(Map<String,String> map);
 }

@@ -29,7 +29,7 @@ public class TableViewController {
     @ApiOperation(value = "获取视图节点", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTableView", method = RequestMethod.POST)
     public ResponseResult getTableView(String tableCode) {
-        logger.info("获取视图节点---getTableView--参数--{}",tableCode);
+//        logger.info("获取视图节点---getTableView--参数--{}",tableCode);
         if (tableCode != null) {
             List<Map<String, Object>> parms = tableViewService.getTableView(tableCode);
             if (parms != null && parms.size() > 0) {
@@ -47,14 +47,14 @@ public class TableViewController {
     @RequestMapping(value = "/getTableViewTree", method = RequestMethod.POST)
     public ResponseResult getTableViewTree() {
         Tree tree=tableViewService.getTreeMenu();
-        logger.info("获取视图树---getTableViewTree--参数--{}",tree);
+//        logger.info("获取视图树---getTableViewTree--参数--{}",tree);
         return new ResponseResult(ResponseResult.OK, "成功", tree, true);
     }
 
     @ApiOperation(value = "添加视图列表", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getUpTableViewSelect", method = RequestMethod.POST)
     public ResponseResult getUpTableViewSelect(String parms) {
-        logger.info("添加视图列表---getUpTableViewSelect--参数--{}",parms);
+//        logger.info("添加视图列表---getUpTableViewSelect--参数--{}",parms);
         Type typeObj = new TypeToken<List<Object>>() {}.getType();
         List<Object>  pras= JSONObject.parseObject(parms,typeObj);//JSONObject转换map
         boolean bool=tableViewService.upTableViewSelect(pras);
@@ -68,7 +68,7 @@ public class TableViewController {
     @ApiOperation(value = "删处视图列表", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/delTableViewByListCode", method = RequestMethod.POST)
     public ResponseResult delTableViewByListCode(@RequestParam(required = false, value = "parms[]") List<String> parms) {
-        logger.info("删处视图列表---delTableViewByListCode--参数--{}",parms);
+//        logger.info("删处视图列表---delTableViewByListCode--参数--{}",parms);
         boolean bool=tableViewService.delTableViewColumn(parms);
         if(bool){
             return new ResponseResult(ResponseResult.OK, "成功", true);

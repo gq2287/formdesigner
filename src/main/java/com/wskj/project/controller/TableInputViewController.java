@@ -30,7 +30,7 @@ public class TableInputViewController {
     @ApiOperation(value = "获取表录入视图", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTableInputView", method = RequestMethod.POST)
     public ResponseResult getTableInputView(String tableCode) {
-        logger.info("获取表录入视图getTableInputView--参数--{}",tableCode);
+//        logger.info("获取表录入视图getTableInputView--参数--{}",tableCode);
         List<Map<String, Object>>  mapList=tableInputViewService.getTableInputView(tableCode);
         if(mapList!=null&&mapList.size()>0){
             return new ResponseResult(ResponseResult.OK, "成功", mapList, true);
@@ -42,7 +42,7 @@ public class TableInputViewController {
     @ApiOperation(value = "获取保存录入视图", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getSaveTableInputView", method = RequestMethod.POST)
     public ResponseResult getSaveTableInputView(String tableInput) {
-        logger.info("获取保存录入视图---getSaveTableInputView--参数--{}",tableInput);
+//        logger.info("获取保存录入视图---getSaveTableInputView--参数--{}",tableInput);
         Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object>  pras= JSONObject.parseObject(tableInput,typeObj);//JSONObject转换map
         List UIList=(JSONArray)pras.get("layout");

@@ -149,11 +149,11 @@ public class ClassLevelServiceImpl implements ClassLevelService {
                             List<Map<String,String>> tableList=tableMapper.getTableByTableCode(tableCode);//查询表描述
                             re=classLevelMapper.delTreeE(listMap.get(i));//删除实体E节点
                             if(re>0){
-                                System.err.println("删除成功CLASSNODE里Type为E的成功--"+listMap.get(i));
+                                System.err.println("删除成功CLASSNODE里Type为E的成功--");
                             }
                             re=classLevelMapper.delTreeC(parmMap);//删除C节点
                             if(re>0){
-                                System.err.println("删除成功CLASSNODE里Type为C的成功--"+parmMap);
+                                System.err.println("删除成功CLASSNODE里Type为C的成功--");
                             }
                             if(tableList!=null&&tableList.size()!=0){
                                 for (int j = 0; j <tableList.size() ; j++) {
@@ -265,12 +265,12 @@ public class ClassLevelServiceImpl implements ClassLevelService {
         boolean bool=true;
         try {
             int result= classLevelMapper.upTreeNameAndSerial(parmMap);
-            if (result>0){
-                System.out.println("修改classnode名称及序号成功--"+parmMap);
-            }
+//            if (result>0){
+//                System.out.println("修改classnode名称及序号成功--"+parmMap);
+//            }
         }catch (Exception e){
             bool=false;
-            System.out.println("修改classnode名称及序号--"+e.getMessage()+"参数："+parmMap);
+            System.out.println("修改classnode名称及序号--"+e.getMessage());
         }finally {
             return bool;
         }
@@ -286,9 +286,9 @@ public class ClassLevelServiceImpl implements ClassLevelService {
         Boolean bool=true;
         try {
              bool =classLevelMapper.upParentCode(parentCode,nodeCode);
-             if(bool){
-                 System.err.println("修改成功参数："+parentCode+"--"+nodeCode);
-             }
+//             if(bool){
+//                 System.err.println("修改成功参数："+parentCode+"--"+nodeCode);
+//             }
         }catch (Exception e){
             System.err.println("修改失败参数："+parentCode+"--"+nodeCode+"--"+e.getMessage());
             bool=false;
