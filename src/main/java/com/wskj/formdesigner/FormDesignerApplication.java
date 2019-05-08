@@ -15,15 +15,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @SpringBootApplication
 @EnableTransactionManagement
-public class FormDesignerApplication {
+public class FormDesignerApplication  {
     private static String[] args;
     private static ConfigurableApplicationContext context;
-
-
-//    public static void main(String[] args) {
-//        SpringApplication.run(FormDesignerApplication.class, args);
-//    }
-
 
     public static void main(String[] args) {
         FormDesignerApplication.args = args;

@@ -1,4 +1,4 @@
-package com.wskj.project.model;
+package com.wskj.project.dbCongfig;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.wskj.formdesigner.FormDesignerApplication;

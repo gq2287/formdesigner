@@ -1,6 +1,6 @@
 package com.wskj.project.controller;
 
-import com.wskj.project.model.DataSourceConfig;
+import com.wskj.project.dbCongfig.DataSourceConfig;
 import com.wskj.project.model.ResponseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,7 +27,7 @@ public class DataSourceController {
     @RequestMapping(value = "/setDB", method = RequestMethod.POST)
     public ResponseResult setDB(String driverClassName,String url,String username,String password){
         try {
-            PropertiesConfiguration conf = new PropertiesConfiguration("db.properties");
+            PropertiesConfiguration conf = new PropertiesConfiguration("DB.properties");
             conf.setProperty("driverClassName",driverClassName);
             conf.setProperty("url",url);
             conf.setProperty("username",username);
@@ -35,10 +35,10 @@ public class DataSourceController {
             conf.save();
             dataSourceConfig.changeDataSource();
         } catch (Exception e) {
-            logger.error("获取数据库配置文件失败：" + e);
-            return new ResponseResult(ResponseResult.OK, "数据库配置失败,请检查异常信息:"+e.getMessage(),false);
+            logger.error("设置数据源失败：" + e);
+            return new ResponseResult(ResponseResult.OK, "设置数据源失败,请检查异常信息:"+e.getMessage(),false);
         }
-        return new ResponseResult(ResponseResult.OK, "数据库配置成功",true);
+        return new ResponseResult(ResponseResult.OK, "设置数据源成功",true);
     }
 
     @ApiOperation(value = "获取数据源", notes = "返回信息 0成功，400失败 ")
@@ -56,7 +56,7 @@ public class DataSourceController {
 
             return new ResponseResult(ResponseResult.OK, e.getMessage(),false);
         }
-        return new ResponseResult(ResponseResult.OK, "数据库配置成功",db,true);
+        return new ResponseResult(ResponseResult.OK, "获取数据库配置成功",db,true);
     }
 
 }
