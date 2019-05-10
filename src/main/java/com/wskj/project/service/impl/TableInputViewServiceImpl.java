@@ -111,8 +111,6 @@ public class TableInputViewServiceImpl implements TableInputViewService {
     }
 
     /**
-     * 未录入列
-    /**
      * 添加录入列默认数据
      * @param tableCode 表编号
      * @param listColumn 标签列

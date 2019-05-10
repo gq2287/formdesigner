@@ -113,7 +113,9 @@
     </select>
     <!--获取修改实体表字段-->
     <select id="getEntityTableColumnByVisible" resultType="java.util.Map">
-        SELECT * FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode} and VISIBLE='T'
+         SELECT
+         COLUMNCODE,NAME,CHINESENAME,INPUTTYPE
+         FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode} and VISIBLE='T'
     </select>
     <!--实体表关系-->
     <select id="getEntityTableRelation" resultType="java.util.Map">

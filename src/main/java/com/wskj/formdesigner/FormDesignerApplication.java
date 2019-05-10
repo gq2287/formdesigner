@@ -19,14 +19,15 @@ public class FormDesignerApplication  {
     private static String[] args;
     private static ConfigurableApplicationContext context;
 
+
     public static void main(String[] args) {
         FormDesignerApplication.args = args;
         FormDesignerApplication.context = SpringApplication.run(FormDesignerApplication.class, args);
     }
-
     public static void restart() {
         context.close();
-        FormDesignerApplication.context = SpringApplication.run(FormDesignerApplication.class, args);
+        FormDesignerApplication.context =SpringApplication.run(FormDesignerApplication.class, args);
 
     }
+
 }

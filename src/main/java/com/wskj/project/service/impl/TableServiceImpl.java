@@ -21,7 +21,7 @@ public class TableServiceImpl implements TableService
     private ClassLevelServiceImpl classLevelService;
 
     @Resource
-    private TableInputViewServiceImpl tableInputViewService;
+    private NewInputViewImpl newInputView  ;
     @Override
     public List<Map<String, String>> getTemplateList() {
         return tableMapper.getTemplateList();
@@ -328,9 +328,9 @@ public class TableServiceImpl implements TableService
             System.out.println("是否成功：" + bool);
             if(bool){
                 for (String tableCode:tableCodeMap.keySet()) {
-                    List<Map<String,Object>> viewss=tableInputViewService.getTableInputView(tableCode);
-                    if(viewss!=null&&viewss.size()>0){
-//                        System.err.println("创建默认录入列表成功！--"+viewss);
+                    boolean bool12=newInputView.saveInputView(tableCode,null);
+                    if(bool12){
+                        System.err.println("创建默认录入列表成功！--"+bool12);
                     }else{
                         bool=false;
                     }

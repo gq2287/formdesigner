@@ -104,6 +104,13 @@
             <artifactId>aspectjrt</artifactId>
             <version>1.6.10</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/net.oschina.dajiangnan/commonUtil -->
+        <dependency>
+            <groupId>net.oschina.dajiangnan</groupId>
+            <artifactId>commonUtil</artifactId>
+            <version>1.0.10</version>
+        </dependency>
+
     </dependencies>
     <build>
         <!-- 应与application.properties(或application.yml)中context-path保持一致 -->

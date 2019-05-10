@@ -1,6 +1,7 @@
 package com.wskj.project.service.impl;
 
 import com.wskj.project.dao.ClassLevelMapper;
+import com.wskj.project.dao.NewInputViewMapper;
 import com.wskj.project.dao.TableInputViewMapper;
 import com.wskj.project.dao.TableMapper;
 import com.wskj.project.model.Tree;
@@ -25,6 +26,8 @@ public class ClassLevelServiceImpl implements ClassLevelService {
     private TableServiceImpl tableService;
     @Resource
     private TableInputViewMapper tableInputViewMapper;
+    @Resource
+    private NewInputViewMapper newInputViewMapper;
 
 
     @Override
@@ -185,23 +188,10 @@ public class ClassLevelServiceImpl implements ClassLevelService {
                                         System.err.println("删除录入表失败----"+tableCode+"---未有数据或内部错误");
                                     }
 
-                                    List<Map<String,Object>> listView=tableMapper.getEntityTableColumn(tableCode);//获取纪录表列
-                                    if(listView!=null&&listView.size()>0){
-                                        for (int k = 0; k < listView.size(); k++) {
-                                            for (String strr:listView.get(k).keySet()) {
-                                                Map<String,Object> mapView=new HashMap();
-                                                mapView.put("columnCode",String.valueOf(listView.get(k).get("COLUMNCODE")));
-                                                re=tableMapper.delOneColumn(mapView);//删除视图表数据
-                                                if(re>0){
-                                                    System.err.println("删除视图表数据成功----删除列："+String.valueOf(listView.get(k).get("COLUMNCODE")));
-                                                    break;
-                                                }else{
-                                                    continue;
-                                                }
-                                            }
-                                        }
+                                    boolean bool=newInputViewMapper.delAllInputViewByTableCode(tableCode);
+                                    if(bool){
+                                        System.out.println("底层门类---视图删除成功");
                                     }
-
                                     re=tableMapper.delTableColumnDescription(tableCode);//删除字纪录表数据
                                     if(re>0){
                                         System.err.println("删除字纪录表数据成功----"+tableCode);

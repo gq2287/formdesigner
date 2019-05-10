@@ -141,6 +141,6 @@
     <select id="getInputColumnByTableCode" resultType="java.util.Map">
         SELECT * FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode} and  NAME NOT IN(
         SELECT DISTINCT FIELDNAME FROM TABLEINTERFACECARD WHERE TABLECODE=#{tableCode} and FIELDNAME is NOT null
-        and FIELDNAME  in (select FIELDNAME from TABLEINTERFACECARD group by FIELDNAME having count(FIELDNAME)>1))
+        and FIELDNAME  in (select FIELDNAME from TABLEINTERFACECARD group by FIELDNAME having count(FIELDNAME)>=1))
     </select>
 </mapper>

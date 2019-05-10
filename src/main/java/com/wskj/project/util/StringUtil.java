@@ -1,6 +1,8 @@
 package com.wskj.project.util;
 
 
+import org.springframework.util.ResourceUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -366,4 +368,24 @@ public class StringUtil {
 //        String referer = "ucls"+StringUtil.getDate(2)+StringUtil.getRandom(0,20000);
 //        System.out.println(referer);
 //    }
+    //获取Properties 路径
+    public static String getProperties(){
+        //获取跟目录
+        String path="";
+        try {
+            File pathFile = new File(ResourceUtils.getURL("classpath:").getPath());
+            path=pathFile.getPath().replace("FormDesigner\\target\\classes","")+"config\\db.properties";
+            pathFile=new File(path);
+            if(!pathFile.exists())
+                pathFile = new File("");
+            System.out.println("path:"+path);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }finally {
+            return path;
+        }
+    }
+    public static void main(String[] s){
+        StringUtil.getProperties();
+    }
 }

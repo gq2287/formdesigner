@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wskj.project.dao.NewInputViewMapper">
+    <!--查询当前表录入界面-->
+    <select id="getAllInputView" resultType="java.util.Map">
+         SELECT
+             *
+         FROM TABLEINTERFACECARD
+         WHERE TABLECODE= #{tableCode}
+         ORDER BY  LOADNO
+    </select>
+
+    <!--添加录入列-->
+    <insert id="addInputViewColumn" parameterType="java.util.Map">
+      INSERT INTO TABLEINTERFACECARD(
+        INTERFACECARDCODE,
+        TABLECODE,
+        USERCODE,
+        CONTROLNAME,
+        CONTROLTYPE ,
+        FIELDNAME,
+        PROPERTIESINFO1,
+        <if test="ROWNO != null and '' != ROWNO">
+          ROWNO,
+        </if>
+        <if test="COLUMNNO != null and '' != COLUMNNO">
+          COLUMNNO,
+        </if>
+        <if test="LOADNO != null and '' != LOADNO">
+            LOADNO,
+        </if>
+        <if test="REMARK != null and '' != REMARK">
+            REMARK
+        </if>
+        )
+      VALUES (
+      #{INTERFACECARDCODE,jdbcType=VARCHAR},
+      #{TABLECODE,jdbcType=VARCHAR},
+      'ISA',
+      #{CONTROLNAME ,jdbcType=VARCHAR},
+      #{CONTROLTYPE ,jdbcType=NUMERIC},
+        <if test="FIELDNAME != null and '' != FIELDNAME">
+            #{FIELDNAME,jdbcType=VARCHAR},
+        </if>
+        <if test="PROPERTIESINFO1 != null and '' != PROPERTIESINFO1">
+            #{PROPERTIESINFO1,jdbcType=VARCHAR},
+        </if>
+        <if test="ROWNO != null and '' != ROWNO">
+          #{ROWNO,jdbcType=VARCHAR},
+        </if>
+        <if test="COLUMNNO != null and '' != COLUMNNO">
+          #{COLUMNNO,jdbcType=VARCHAR},
+        </if>
+        <if test="LOADNO != null and '' != LOADNO">
+          #{LOADNO,jdbcType=NUMERIC},
+        </if>
+        <if test="REMARK != null and '' != REMARK">
+            #{REMARK,jdbcType=NUMERIC}
+        </if>
+      )
+    </insert>
+
+    <!--删除全部录入视图-->
+    <delete id="delAllInputViewByTableCode" parameterType="java.util.Map">
+        DELETE FROM TABLEINTERFACECARD WHERE TABLECODE= #{tableCode}
+    </delete>
+
+    <!--修改当前表字段-->
+    <update id="upFieldTableColumnDescription" parameterType="java.util.Map">
+        UPDATE TABLECOLUMNDESCRIPTION VI WHERE COLUMNCODE=#{columnCode} and TABLECODE=#{tableCode}
+    </update>
+</mapper>
