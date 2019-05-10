@@ -2,7 +2,6 @@ package com.wskj.project.controller;
 
 import com.wskj.project.dataSourceConfig.DataSourceConfig;
 import com.wskj.project.model.ResponseResult;
-import com.wskj.project.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -27,7 +26,7 @@ public class DataSourceController {
     @RequestMapping(value = "/setDB", method = RequestMethod.POST)
     public ResponseResult setDB(String driverClassName, String url, String username, String password) {
         try {
-            PropertiesConfiguration properties = new PropertiesConfiguration(StringUtil.getProperties());
+            PropertiesConfiguration properties = new PropertiesConfiguration("config\\db.properties");
             properties.setProperty("spring.datasource.driverClassName", driverClassName);
             properties.setProperty("spring.datasource.url", url);
             properties.setProperty("spring.datasource.username", username);
@@ -46,7 +45,7 @@ public class DataSourceController {
     public ResponseResult getDB() {
         Map<String, String> db = new HashMap<>();
         try {
-            PropertiesConfiguration properties = new PropertiesConfiguration(StringUtil.getProperties());
+            PropertiesConfiguration properties = new PropertiesConfiguration("config\\db.properties");
             db.put("driverClassName", properties.getString("spring.datasource.driverClassName"));
             db.put("url", properties.getString("spring.datasource.url"));
             db.put("username", properties.getString("spring.datasource.username"));

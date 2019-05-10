@@ -3,7 +3,6 @@ package com.wskj.project.dataSourceConfig;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.wskj.formdesigner.FormDesignerApplication;
 import com.wskj.project.controller.DataSourceController;
-import com.wskj.project.util.StringUtil;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,7 @@ public class DataSourceConfig {
     public DruidDataSource dataSource() {
         DruidDataSource dataSource = new DruidDataSource();
         try {
-            PropertiesConfiguration properties = new PropertiesConfiguration(StringUtil.getProperties());
+            PropertiesConfiguration properties = new PropertiesConfiguration("config\\db.properties");
             String driverClassName = properties.getString("spring.datasource.driverClassName");
             dataSource.setDriverClassName(driverClassName);
             dataSource.setUrl(properties.getString("spring.datasource.url"));
