@@ -28,7 +28,7 @@ public class DataSourceConfig {
     public DruidDataSource dataSource() {
         DruidDataSource dataSource = new DruidDataSource();
         try {
-            PropertiesConfiguration properties = new PropertiesConfiguration( StringUtil.getRealPathByIdea());
+            PropertiesConfiguration properties = new PropertiesConfiguration( StringUtil.getRealPathByPack());
             String driverClassName = properties.getString("spring.datasource.driverClassName");
             dataSource.setDriverClassName(driverClassName);
             dataSource.setUrl(properties.getString("spring.datasource.url"));

@@ -7,6 +7,7 @@ import com.wskj.project.model.Tree;
 import com.wskj.project.service.impl.TableViewServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,7 @@ public class TableViewController {
 
     @ApiOperation(value = "获取视图节点", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTableView", method = RequestMethod.POST)
-    public ResponseResult getTableView(String tableCode) {
+    public ResponseResult getTableView(@ApiParam(required =true, name = "tableCode", value = "表编号")String tableCode) {
 //        logger.info("获取视图节点---getTableView--参数--{}",tableCode);
         if (tableCode != null) {
             List<Map<String, Object>> parms = tableViewService.getTableView(tableCode);
@@ -67,7 +68,7 @@ public class TableViewController {
 
     @ApiOperation(value = "删处视图列表", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/delTableViewByListCode", method = RequestMethod.POST)
-    public ResponseResult delTableViewByListCode(@RequestParam(required = false, value = "parms[]") List<String> parms) {
+    public ResponseResult delTableViewByListCode(@ApiParam(required =true, name = "parms", value = "视图列数组")@RequestParam(required = false, value = "parms[]") List<String> parms) {
 //        logger.info("删处视图列表---delTableViewByListCode--参数--{}",parms);
         boolean bool=tableViewService.delTableViewColumn(parms);
         if(bool){

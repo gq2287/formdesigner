@@ -7,6 +7,7 @@ import com.wskj.project.model.ResponseResult;
 import com.wskj.project.service.impl.TableInputViewServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +30,7 @@ public class TableInputViewController {
 
     @ApiOperation(value = "获取表录入视图", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTableInputView", method = RequestMethod.POST)
-    public ResponseResult getTableInputView(String tableCode) {
-//        logger.info("获取表录入视图getTableInputView--参数--{}",tableCode);
+    public ResponseResult getTableInputView(@ApiParam(required =true, name = "tableCode", value = "表编号")String tableCode) {
         List<Map<String, Object>>  mapList=tableInputViewService.getTableInputView(tableCode);
         if(mapList!=null&&mapList.size()>0){
             return new ResponseResult(ResponseResult.OK, "成功", mapList, true);
@@ -41,8 +41,7 @@ public class TableInputViewController {
 
     @ApiOperation(value = "获取保存录入视图", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getSaveTableInputView", method = RequestMethod.POST)
-    public ResponseResult getSaveTableInputView(String tableInput) {
-//        logger.info("获取保存录入视图---getSaveTableInputView--参数--{}",tableInput);
+    public ResponseResult getSaveTableInputView(@ApiParam(required =true, name = "tableInput", value = "录入字段集合")String tableInput) {
         Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object>  pras= JSONObject.parseObject(tableInput,typeObj);//JSONObject转换map
         List UIList=(JSONArray)pras.get("layout");

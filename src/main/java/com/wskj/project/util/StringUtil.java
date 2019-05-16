@@ -405,8 +405,7 @@ public class StringUtil {
         File file = new File(realPath);
         realPath = file.getAbsolutePath();//去掉了最前面的斜杠/
         try {
-//            realPath=realPath.substring(4,realPath.indexOf("FormDesigner"))+"config\\db.properties";//打包后修改为4
-            realPath=realPath.substring(0,realPath.indexOf("FormDesigner"))+"config\\db.properties";//idea运行为0
+            realPath=realPath.substring(realPath.lastIndexOf(":")-1,realPath.indexOf("FormDesigner"))+"config\\db.properties";//打包后修改为4
             System.out.println(realPath);
 
         } catch (Exception e) {
@@ -414,7 +413,8 @@ public class StringUtil {
         }
         return realPath;
     }
-
-
+//    public static void main(String[] s){
+//        StringUtil.getRealPathByPack();
+//    }
 
 }

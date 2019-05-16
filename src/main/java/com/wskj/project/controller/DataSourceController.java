@@ -6,6 +6,7 @@ import com.wskj.project.service.impl.DBServiceImpl;
 import com.wskj.project.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,10 @@ public class DataSourceController {
 
     @ApiOperation(value = "设置数据源", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/setDB", method = RequestMethod.POST)
-    public ResponseResult setDB(String driverClassName, String url, String username, String password) {//前端非空判断了
+    public ResponseResult setDB(@ApiParam(required =true, name = "driverClassName", value = "数据库驱动")String driverClassName,
+                                @ApiParam(required =true, name = "url", value = "连接地址") String url,
+                                @ApiParam(required =true, name = "username", value = "用户名")String username,
+                                @ApiParam(required =true, name = "password", value = "密码") String password) {//前端非空判断了
         if(driverClassName!=null&&!"".equals(driverClassName)&&url!=null&&!"".equals(url)&&username!=null&&!"".equals(username)&&password!=null&&!"".equals(password)){
             if(countDB>=8){
                 return new ResponseResult(ResponseResult.OK, "密码错误"+countDB+"次，无法设置数据源,请确认密码及用户名,", false);
@@ -45,7 +49,7 @@ public class DataSourceController {
                 Connection  conss=getTestDB(driverClassName,url,username,password);
                 if(conss!=null){
                     try {
-                        PropertiesConfiguration properties = new PropertiesConfiguration( StringUtil.getRealPathByIdea());
+                        PropertiesConfiguration properties = new PropertiesConfiguration( StringUtil.getRealPathByPack());
                         properties.setProperty("spring.datasource.driverClassName", driverClassName);
                         properties.setProperty("spring.datasource.url", url);
                         properties.setProperty("spring.datasource.username", username);
@@ -77,7 +81,7 @@ public class DataSourceController {
     public ResponseResult getDB() {
         Map<String, String> db = new HashMap<>();
         try {
-            PropertiesConfiguration properties = new PropertiesConfiguration( StringUtil.getRealPathByIdea());
+            PropertiesConfiguration properties = new PropertiesConfiguration( StringUtil.getRealPathByPack());
             db.put("driverClassName", properties.getString("spring.datasource.driverClassName"));
             db.put("url", properties.getString("spring.datasource.url"));
             db.put("username", properties.getString("spring.datasource.username"));

@@ -39,6 +39,8 @@ public class NewInputViewServiceImpl implements NewInputViewService {
     /**
      * 添加底层门类成功后就创建录入界面
      * @param tableCode
+     * @param parasUIList 有值录入界面进来 没值底层新建进来
+     * @param nodeCode
      * @return
      */
     @Override
@@ -144,6 +146,7 @@ public class NewInputViewServiceImpl implements NewInputViewService {
         }
         return EView;
     }
+
 
 
 }

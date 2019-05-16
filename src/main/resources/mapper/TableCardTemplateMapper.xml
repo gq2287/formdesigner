@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wskj.project.dao.TableCardTemplateMapper">
+    <!--获取视图模版-->
+    <select id="getAllTableCardTemplate" resultType="java.util.Map">
+       select *  from TABLECARDTEMPLATE WHERE id=#{id} and tablecode=#{tableCode}
+    </select>
+
+    <insert id="addTableCardTemplate" parameterType="java.util.Map">
+        INSERT INTO TABLEINTERFACECARD(
+        ID,TABLECODE,CHINANAME
+        )
+        VALUES (
+        #{id,jdbcType=VARCHAR},
+        #{tableCode,jdbcType=VARCHAR},
+        #{chinaName,jdbcType=VARCHAR}
+        )
+    </insert>
+</mapper>

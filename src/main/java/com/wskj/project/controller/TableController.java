@@ -8,6 +8,7 @@ import com.wskj.project.model.Template;
 import com.wskj.project.service.impl.TableServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +32,7 @@ public class TableController {
 
     @ApiOperation(value = "获取要修改表的详细信息", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getUpTree", method = RequestMethod.POST)
-    public ResponseResult getUpTreeByAttrs(String attrs) {
+    public ResponseResult getUpTreeByAttrs(@ApiParam(required =true, name = "attrs", value = "属性")String attrs) {
 //        logger.info("获取要修改表的详细信息--getUpTreeByAttrs---参数--{}",attrs);
         Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object>  pras=JSONObject.parseObject(attrs,typeObj);//JSONObject转换map
@@ -45,7 +46,7 @@ public class TableController {
 
     @ApiOperation(value = "当前表是否纯在数据", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getIsOkUpDataByTableName", method = RequestMethod.POST)
-    public ResponseResult getIsOkUpDataByTableName(String tableName) {
+    public ResponseResult getIsOkUpDataByTableName(@ApiParam(required =true, name = "tableName", value = "表名")String tableName) {
         boolean bool=tableService.getIsOkUpDataByTableName(tableName);
 
         if(bool){
@@ -57,7 +58,8 @@ public class TableController {
 
     @ApiOperation(value = "type(add增 del删 up改) 字段", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getModifyFieldInfo", method = RequestMethod.POST)
-    public ResponseResult getModifyFieldInfo(String type,String fieldInfo) {
+    public ResponseResult getModifyFieldInfo(@ApiParam(required =true, name = "type", value = "type判断是对字段的 add增 del删 up改")String type,
+                                             @ApiParam(required =true, name = "fieldInfo", value = "获取参数列")String fieldInfo) {
 //        logger.info("type(add增 del删 up改) 字段--getModifyFieldInfo--参数--{}",type+"--"+fieldInfo);
         Boolean bool=null;
         Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
@@ -81,7 +83,7 @@ public class TableController {
 
     @ApiOperation(value = "修改表关系字段", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getModifyTableRelation", method = RequestMethod.POST)
-    public ResponseResult getModifyTableRelation(String fieldRelation) {
+    public ResponseResult getModifyTableRelation( @ApiParam(required =true, name = "fieldRelation", value = "字段关系")String fieldRelation) {
 //        logger.info("修改表关系字段---getModifyTableRelation--参数--{}",fieldRelation);
         Boolean bool=null;
         Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
@@ -96,7 +98,7 @@ public class TableController {
 
     @ApiOperation(value = "删除表字段关系", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/delFieldTableRelation", method = RequestMethod.POST)
-    public ResponseResult delFieldTableRelation(String relationCode) {
+    public ResponseResult delFieldTableRelation(@ApiParam(required =true, name = "relationCode", value = "唯一编号")String relationCode) {
 //        logger.info("删除表字段关系---delFieldTableRelation--参数--{}",relationCode);
         Boolean bool=null;
         bool=tableService.delFieldTableRelation(relationCode);
@@ -109,7 +111,7 @@ public class TableController {
 
     @ApiOperation(value = "修改描述表信息字段", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getModifyTableDescription", method = RequestMethod.POST)
-    public ResponseResult getModifyTableDescription(String fieldDescription) {
+    public ResponseResult getModifyTableDescription(@ApiParam(required =true, name = "fieldDescription", value = "字段描述")String fieldDescription) {
 //        logger.info("修改描述表信息字段---getModifyTableDescription--参数--{}",fieldDescription);
         Boolean bool=null;
         Type typeObj = new TypeToken<Map<String, String>>() {}.getType();
@@ -125,8 +127,7 @@ public class TableController {
 
     @ApiOperation(value = "添加字段关系", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/addTableRelation", method = RequestMethod.POST)
-    public ResponseResult addTableRelation(String fieldInfo) {
-//        logger.info("添加字段关系---addTableRelation--参数--{}",fieldInfo);
+    public ResponseResult addTableRelation(@ApiParam(required =true, name = "fieldInfo", value = "字段对象")String fieldInfo) {
         Type typeObj = new TypeToken<Map<String, String>>() {}.getType();
         Map<String, String>  pras=JSONObject.parseObject(fieldInfo,typeObj);// 获取参数列
         try {
@@ -157,7 +158,7 @@ public class TableController {
 
     @ApiOperation(value = "当前节点可选择底层模版", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getSelectTemplateList", method = RequestMethod.GET)
-    public ResponseResult getSelectTemplateList(String parentCode) {
+    public ResponseResult getSelectTemplateList(@ApiParam(required =true, name = "parentCode", value = "父编号")String parentCode) {
 //        logger.info("当前节点可选择底层模版---getSelectTemplateList--参数--{}",parentCode);
         Map<String,String> parmMap=new HashMap<>();
         parmMap.put("parentCode",parentCode);
@@ -167,7 +168,7 @@ public class TableController {
 
     @ApiOperation(value = "选中后加载旗下实体表", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getSelectTableByClassCode", method = RequestMethod.GET)
-    public ResponseResult getSelectTableByClassCode(String classCode) {
+    public ResponseResult getSelectTableByClassCode(@ApiParam(required =true, name = "classCode", value = "门类编号")String classCode) {
 //        logger.info("选中后加载旗下实体表---getSelectTableByClassCode--参数--{}",classCode);
         Map<String,String> parmMap=new HashMap<>();
         parmMap.put("classCode",classCode);
@@ -177,7 +178,7 @@ public class TableController {
 
     @ApiOperation(value = "加载实体表字段信息", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTableByTableCode", method = RequestMethod.GET)
-    public ResponseResult getTableByTableCode(String tableCode) {
+    public ResponseResult getTableByTableCode(@ApiParam(required =true, name = "tableCode", value = "表编号")String tableCode) {
 //        logger.info("加载实体表字段信息---getTableByTableCode--参数--{}",tableCode);
         Map<String,String> parmMap=new HashMap<>();
         parmMap.put("tableCode",tableCode);
@@ -187,7 +188,7 @@ public class TableController {
 
     @ApiOperation(value = "添加已选模版", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getCreateTemplate", method = RequestMethod.POST)
-    public ResponseResult CreateTemplate(String createData) {
+    public ResponseResult CreateTemplate(@ApiParam(required =true, name = "createData", value = "模版对象")String createData) {
         //操作使用fastjson进行字符串对象转换
         List<Template> list=new ArrayList<Template>();
         JSONArray jsonArray= JSONArray.parseArray(createData);
@@ -217,7 +218,7 @@ public class TableController {
 
     @ApiOperation(value = "删除已选模版", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/delTemplate", method = RequestMethod.POST)
-    public ResponseResult delTemplate(String delData) {
+    public ResponseResult delTemplate(@ApiParam(required =true, name = "delData", value = "模版对象")String delData) {
         //操作使用fastjson进行字符串对象转换
         List<Template> list=new ArrayList<Template>();
         JSONArray jsonArray= JSONArray.parseArray(delData);
@@ -238,13 +239,5 @@ public class TableController {
         return responseResult;
     }
 
-//
-//    @ApiOperation(value = "修改名称", notes = "返回信息 0成功，400失败 ")
-//    @RequestMapping(value = "/upEByChinaName", method = RequestMethod.POST)
-//    public ResponseResult upEByChinaName(String name) {
-//
-//
-//        return new ResponseResult(ResponseResult.OK, "成功",true);
-//    }
 
 }

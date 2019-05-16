@@ -7,6 +7,7 @@ import com.wskj.project.model.Tree;
 import com.wskj.project.service.impl.ClassLevelServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,7 +42,10 @@ public class ClassNodeController {
 
     @ApiOperation(value = "创建 L中间门类 C底层门类 ", notes = "返回信息 0成功，400失败   ")
     @RequestMapping(value = "/getCreateTree", method = RequestMethod.POST)
-    public ResponseResult createTree(String name,String type,String attrs,String tableDescriptions) {
+    public ResponseResult createTree(@ApiParam(required =true, name = "name", value = "表名")String name,
+                                     @ApiParam(required =true, name = "type", value = "门类类型")String type,
+                                     @ApiParam(required =true, name = "attrs", value = "属性") String attrs,
+                                     @ApiParam(required =true, name = "tableDescriptions", value = "表描述")String tableDescriptions) {
 //        logger.info("创建 L中间门类 C底层门类---getCreateTree--参数--{}",name+"--"+type+"--"+attrs+"--"+tableDescriptions);
         Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object>  pras=JSONObject.parseObject(attrs,typeObj);//JSONObject转换map
@@ -65,7 +69,7 @@ public class ClassNodeController {
 
     @ApiOperation(value = "删除 L中间门类 C底层门类 (如果旗下还存在子节点前台请给与提示)", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/delTree", method = RequestMethod.POST)
-    public ResponseResult delTree(String attrs) {
+    public ResponseResult delTree(@ApiParam(required =true, name = "attrs", value = "属性")String attrs) {
 //        logger.info("删除  L中间门类 C底层门类---delTree--参数--{}",attrs);
         Type typeObj = new TypeToken<Map<String, String>>() {}.getType();
         Map<String, String>  pras=JSONObject.parseObject(attrs,typeObj);//JSONObject转换map
@@ -98,7 +102,7 @@ public class ClassNodeController {
 
     @ApiOperation(value = "修改名称和序号", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTreeNameAndSerial", method = RequestMethod.POST)
-    public ResponseResult getTreeNameAndSerial(String treeInfo) {
+    public ResponseResult getTreeNameAndSerial(@ApiParam(required =true, name = "treeInfo", value = "当前树详细信息(name,serial,nodeCode)")String treeInfo) {
 //        logger.info("修改名称和序号---getTreeNameAndSerial--参数--{}",treeInfo);
         boolean aBoolean=true;
         Type typeObj = new TypeToken<Map<String, String>>() {}.getType();
@@ -113,7 +117,8 @@ public class ClassNodeController {
 
     @ApiOperation(value = "拖动节点到新的中间门类", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getDragDropNode", method = RequestMethod.POST)
-    public ResponseResult getDragDropNode(String parentCode,String nodeCode) {
+    public ResponseResult getDragDropNode(@ApiParam(required =true, name = "parentCode", value = "父编号")String parentCode,
+                                          @ApiParam(required =true, name = "nodeCode", value = "自身编号")String nodeCode) {
 //        logger.info("拖动节点到新的中间门类---getDragDropNode--参数--{}",parentCode);
         boolean aBoolean=true;
         aBoolean=classLevelService.upDragDropNodeByparentCode( parentCode, nodeCode);
@@ -128,8 +133,7 @@ public class ClassNodeController {
 
     @ApiOperation(value = "测试", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/test", method = RequestMethod.POST)
-    public ResponseResult test(String parentCode) {
-//        logger.info("测试--参数--{}",parentCode);
+    public ResponseResult test( @ApiParam(required =true, name = "parentCode", value = "父编号")String parentCode) {
         String filename = parentCode.substring(0, parentCode.lastIndexOf("."));
         System.err.println(filename);
         return new ResponseResult(ResponseResult.OK,"截取文件名称" +filename);
