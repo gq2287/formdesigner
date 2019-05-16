@@ -79,4 +79,16 @@ public class TableCardTemplateController {
             return new ResponseResult(ResponseResult.OK, "暂无录入模版数据", false);
         }
     }
+
+    @ApiOperation(value = "删除录入模版", notes = "返回信息 0成功，400失败 ")
+    @RequestMapping(value = "/delCardTemplate", method = RequestMethod.GET)
+    public ResponseResult delCardTemplate(String id) {
+        boolean bool=tableCardTemplateService.delTableCardTemplateById(id);
+        if(bool){
+
+            return new ResponseResult(ResponseResult.OK, "删除录入模版成功",true);
+        }else{
+            return new ResponseResult(ResponseResult.OK, "删除录入模版失败", false);
+        }
+    }
 }

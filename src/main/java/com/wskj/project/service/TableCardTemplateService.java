@@ -8,4 +8,6 @@ public interface TableCardTemplateService {
 
     //添加录入模版
     boolean addTableCardTemplate(Map<String,String> parms);
+
+    boolean delTableCardTemplateById(String id);
 }
