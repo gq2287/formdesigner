@@ -17,4 +17,8 @@
         #{chinaName,jdbcType=VARCHAR}
         )
     </insert>
+
+    <delete id="delTableCardTemplateById" parameterType="java.util.Map">
+         DELETE FROM TABLEINTERFACECARD WHERE ID = #{id}
+    </delete>
 </mapper>
