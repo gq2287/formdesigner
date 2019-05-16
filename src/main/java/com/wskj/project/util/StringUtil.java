@@ -1,11 +1,8 @@
 package com.wskj.project.util;
 
 
-import com.aspire.nm.component.commonUtil.constants.PathUtil;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Base64.Decoder;
@@ -366,17 +363,31 @@ public class StringUtil {
     }
 
 
-    /***
-     * 这个方法打包位jar文件就无法获取项目路径了。
+    /**
+     * 获取唯一文件名
+     * @param file
      * @return
      */
-    public static String getRealPath() {
-        String realPath = PathUtil.class.getClassLoader().getResource("").getFile();
+    public static String getFileName(File file){
+        Date date=new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhssmm");
+        String fileName=file.getName().substring(0,file.getName().lastIndexOf("."))+"_"+sdf.format(date);//文件名称
+        String suffixIndex =file.getName().substring(file.getName().lastIndexOf("."),file.getName().length());//后缀
+        fileName=fileName+suffixIndex;
+        System.out.println(fileName);
+        return fileName;
+    }
+    /***
+     * 在idea中读取同级目录config下的项目配置文件路径
+     * @return
+     */
+    public static String getRealPathByIdea() {
+        String realPath = StringUtil.class.getClassLoader().getResource("").getFile();
         File file = new File(realPath);
         realPath = file.getAbsolutePath();//去掉了最前面的斜杠/
         try {
-            realPath = URLDecoder.decode(realPath, "utf-8");
-            realPath=realPath.substring(0,realPath.indexOf("FormDesigner"))+"config\\db.properties";
+//            realPath=realPath.substring(4,realPath.indexOf("FormDesigner"))+"config\\db.properties";//打包后修改为4
+            realPath=realPath.substring(0,realPath.indexOf("FormDesigner"))+"config\\db.properties";//idea运行为0
             System.out.println(realPath);
 
         } catch (Exception e) {
@@ -385,7 +396,25 @@ public class StringUtil {
         return realPath;
     }
 
-    public static void main(String[] s){
-        StringUtil.getRealPath();
+    /***
+     * 打包获取项目配置文件路径
+     * @return
+     */
+    public static String getRealPathByPack() {
+        String realPath = StringUtil.class.getClassLoader().getResource("").getFile();
+        File file = new File(realPath);
+        realPath = file.getAbsolutePath();//去掉了最前面的斜杠/
+        try {
+//            realPath=realPath.substring(4,realPath.indexOf("FormDesigner"))+"config\\db.properties";//打包后修改为4
+            realPath=realPath.substring(0,realPath.indexOf("FormDesigner"))+"config\\db.properties";//idea运行为0
+            System.out.println(realPath);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return realPath;
     }
+
+
+
 }

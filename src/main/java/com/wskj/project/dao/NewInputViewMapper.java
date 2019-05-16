@@ -11,6 +11,6 @@ public interface NewInputViewMapper {
     //添加视图录入列
     Boolean addInputViewColumn(Map<String,String> parms);
     //删除全部录入视图
-    Boolean delAllInputViewByTableCode(@Param("tableCode") String tableCode);
+    Integer delAllInputViewByTableCode(@Param("tableCode") String tableCode);
 
 }

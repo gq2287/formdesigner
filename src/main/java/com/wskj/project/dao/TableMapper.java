@@ -74,7 +74,7 @@ public interface TableMapper {
     Integer addField(Map<String,Object> field);
 
     //修改描述表字段
-    Integer upFieldTableDescription(Map<String,String> field);
+    Boolean upFieldTableDescription(Map<String,String> field);
     //修改表新字段
     Integer upFieldTableColumnDescription(Map<String,String> field);
     //修改实体表

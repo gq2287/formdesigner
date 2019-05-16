@@ -42,4 +42,5 @@ public interface ClassLevelMapper {
     //修改父级节点
     Boolean upParentCode(@Param("parentCode") String parentCode,@Param("nodeCode") String nodeCode);
 
+    Boolean upNameByNodeCode(Map<String,String> parmMap);
 }

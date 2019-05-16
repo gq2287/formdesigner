@@ -7,8 +7,10 @@ public interface NewInputViewService {
     //获取录入视图列表
     Map<String,Object> getInputView(String tableCode);
     //保存录入视图列表
-    Boolean saveInputView(String tableCode,List<Map<String,Object>> parasUIList);
+    Boolean saveInputView(String tableCode,List<Map<String,Object>> parasUIList,String nodeCode);
 
-    Boolean delInputView(String tableCode);
+    int delInputView(String tableCode);
+
+    List<Object> getTemplateViewByNodeCode(String nodeCode);
 
 }

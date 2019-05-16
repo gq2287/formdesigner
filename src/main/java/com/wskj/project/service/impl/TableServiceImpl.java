@@ -3,6 +3,7 @@ package com.wskj.project.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.reflect.TypeToken;
+import com.wskj.project.dao.ClassLevelMapper;
 import com.wskj.project.dao.TableMapper;
 import com.wskj.project.service.TableService;
 import com.wskj.project.util.StringUtil;
@@ -19,9 +20,11 @@ public class TableServiceImpl implements TableService
     private TableMapper tableMapper;
     @Resource
     private ClassLevelServiceImpl classLevelService;
+    @Resource
+    private ClassLevelMapper classLevelMapper;
 
     @Resource
-    private NewInputViewImpl newInputView  ;
+    private NewInputViewServiceImpl newInputView  ;
     @Override
     public List<Map<String, String>> getTemplateList() {
         return tableMapper.getTemplateList();
@@ -155,11 +158,12 @@ public class TableServiceImpl implements TableService
     public Boolean addTableDescription(Map<String, Object> parmMap) {
         boolean bool = true;
         Map<String, String> tableCodeMap=new HashMap<>();//存放tableCode
+        String uuid="";
         try {
             String classcodeNO=String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D);
             //创建底层门类
             Map<String, String> attrs = (Map<String, String>) parmMap.get("attrs");
-            String uuid = "ucls" + StringUtil.getDate(2) + StringUtil.getRandom(1000, 10000) + 1;
+            uuid= "ucls" + StringUtil.getDate(2) + StringUtil.getRandom(1000, 10000) + 1;
             Map<String, String> treeT = new HashMap<>();//参数
             treeT.put("NODECODE", uuid);//唯一编号
             treeT.put("PARENTCODE", attrs.get("NODECODE") + "");
@@ -328,7 +332,7 @@ public class TableServiceImpl implements TableService
             System.out.println("是否成功：" + bool);
             if(bool){
                 for (String tableCode:tableCodeMap.keySet()) {
-                    boolean bool12=newInputView.saveInputView(tableCode,null);
+                    boolean bool12=newInputView.saveInputView(tableCode,null,uuid);
                     if(bool12){
                         System.err.println("创建默认录入列表成功！--"+bool12);
                     }else{
@@ -486,16 +490,22 @@ public class TableServiceImpl implements TableService
     public Boolean upFieldTableDescription(Map<String, String> field) {
         boolean bool=true;
         try {
-            int result=tableMapper.upFieldTableDescription(field);
-//            if(result>1){
-//                System.err.println("修改描述表信息"+field);
-//            }
+            bool=tableMapper.upFieldTableDescription(field);
+            if(!bool){
+                System.out.println("修改描述表失败-1");
+                return bool;
+            }
+            bool=classLevelMapper.upNameByNodeCode(field);
+            if(!bool){
+                System.out.println("修改节点表ClassNode失败-1");
+                return bool;
+            }
         }catch (Exception e){
             System.err.println("修改描述表信息"+e.getMessage());
             bool=false;
-        }finally {
             return bool;
         }
+        return bool;
     }
 
     /**

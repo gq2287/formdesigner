@@ -3,8 +3,7 @@
 
 <mapper namespace="com.wskj.project.dao.DBMapper">
     <!--判断数据库是否含有当前用户-->
-    <select id="getuser" resultType="java.util.Map">
-       select * from dba_users WHERE username=#{name}
+    <select id="getUser" resultType="java.util.Map">
+       select COUNT(1) AS COUNT from dba_users WHERE username=#{userName}
     </select>
-
 </mapper>

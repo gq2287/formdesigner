@@ -3,11 +3,14 @@ package com.wskj.project.dataSourceConfig;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.wskj.formdesigner.FormDesignerApplication;
 import com.wskj.project.controller.DataSourceController;
+import com.wskj.project.util.StringUtil;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.Resource;
 
 /**
  * @author shulipeng
@@ -19,12 +22,13 @@ public class DataSourceConfig {
  
     private Logger logger = LoggerFactory.getLogger(DataSourceController.class);
 
-
+    @Resource
+    private DataSourceConfig dbConfig;
     @Bean(name = "dataSource")
     public DruidDataSource dataSource() {
         DruidDataSource dataSource = new DruidDataSource();
         try {
-            PropertiesConfiguration properties = new PropertiesConfiguration("config\\db.properties");
+            PropertiesConfiguration properties = new PropertiesConfiguration( StringUtil.getRealPathByIdea());
             String driverClassName = properties.getString("spring.datasource.driverClassName");
             dataSource.setDriverClassName(driverClassName);
             dataSource.setUrl(properties.getString("spring.datasource.url"));

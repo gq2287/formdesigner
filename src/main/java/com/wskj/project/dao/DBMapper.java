@@ -1,5 +1,7 @@
 package com.wskj.project.dao;
 
+import java.util.Map;
+
 public interface DBMapper {
-    boolean getuser(String name);
+    Map<String,String> getUser(String userName);
 }

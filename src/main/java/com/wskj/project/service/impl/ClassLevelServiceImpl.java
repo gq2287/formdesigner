@@ -188,8 +188,8 @@ public class ClassLevelServiceImpl implements ClassLevelService {
                                         System.err.println("删除录入表失败----"+tableCode+"---未有数据或内部错误");
                                     }
 
-                                    boolean bool=newInputViewMapper.delAllInputViewByTableCode(tableCode);
-                                    if(bool){
+                                    int resulsst=newInputViewMapper.delAllInputViewByTableCode(tableCode);
+                                    if(resulsst>=0){
                                         System.out.println("底层门类---视图删除成功");
                                     }
                                     re=tableMapper.delTableColumnDescription(tableCode);//删除字纪录表数据

@@ -66,4 +66,10 @@
     <update id="upParentCode" parameterType="java.lang.String">
         UPDATE CLASSNODE SET PARENTCODE=#{parentCode} WHERE NODECODE=#{nodeCode}
     </update>
+
+
+    <!--修改表中文名称-->
+    <update id="upNameByNodeCode" parameterType="java.util.Map">
+        UPDATE CLASSNODE SET NAME=#{chineseName} WHERE TABLECODE=#{tableCode}
+    </update>
 </mapper>

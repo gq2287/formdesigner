@@ -238,4 +238,13 @@ public class TableController {
         return responseResult;
     }
 
+//
+//    @ApiOperation(value = "修改名称", notes = "返回信息 0成功，400失败 ")
+//    @RequestMapping(value = "/upEByChinaName", method = RequestMethod.POST)
+//    public ResponseResult upEByChinaName(String name) {
+//
+//
+//        return new ResponseResult(ResponseResult.OK, "成功",true);
+//    }
+
 }
