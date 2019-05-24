@@ -9,6 +9,8 @@ import java.util.Map;
  * 模板门类层级结构表
  */
 public interface ClassLevelMapper {
+    //查询门类顶级节点
+    List<Map<String,String>> getClassITop();
     //I，目录树根节点
     List<Map<String,String>> getClassI(Map<String,String> map);
 

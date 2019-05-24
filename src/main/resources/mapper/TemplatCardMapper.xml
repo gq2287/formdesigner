@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wskj.project.dao.TemplatCardMapper">
+    <!--查询指定模版列表-->
+    <select id="getTemplateCardByTableCode" resultType="java.util.Map">
+        select * from TEMPLATECARD WHERE CLASSTABLECODE =#{tableCode}
+    </select>
+    <!--查询指定模版列表-->
+    <select id="getTemplateInputCardByTableCode" resultType="java.util.Map">
+        select * from TEMPLATECARD WHERE ENTITYTABLECODE =#{tableCode}
+    </select>
+
+    <!--添加模版表与模版实体表及录入样式表关联-->
+    <insert id="addTemplateInputCard" parameterType="java.util.Map">
+        INSERT INTO TEMPLATECARD (ID,CLASSTABLECODE,INPUTTABLECODE,TEMPLATENAME,TYPE,ENTITYTABLECODE,ENTITYNAME)
+        VALUES(#{templateId},#{templateClassTableCode},#{templateInputTableCode},#{templateTemplateName},#{templateType},#{templateEntityTableCode},#{templateEntityName})
+    </insert>
+
+    <!--删除关联表Templat-->
+    <delete id="delTemplatColumns" parameterType="java.util.Map">
+        DELETE FROM TEMPLATECARD WHERE CLASSTABLECODE = #{tableCode}
+    </delete>
+
+</mapper>

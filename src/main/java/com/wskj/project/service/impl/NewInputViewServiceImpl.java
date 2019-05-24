@@ -147,6 +147,16 @@ public class NewInputViewServiceImpl implements NewInputViewService {
         return EView;
     }
 
-
-
+    /**
+     * 添加模版录入界面样式信息
+     * @return
+     */
+    @Override
+    public boolean saveTemplatInput(Map<String,String> inputView){
+        boolean bool=true;
+        if(!newInputViewMapper.addInputView(inputView)){
+            bool=false;
+        }
+        return bool;
+    }
 }

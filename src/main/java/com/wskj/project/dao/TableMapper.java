@@ -14,7 +14,6 @@ public interface TableMapper {
     Integer delTemplate(@Param("classCode") String classCode);
     //已选择模版列表
     List<Map<String,String>> getOptionalTemplateList();
-
     //当前可选择底层门类
     List<Map<String,Object>> getSelectTemplateList(Map<String,String> map);
 
@@ -97,7 +96,6 @@ public interface TableMapper {
 
     //添加模版旗下的实体表到classleve内
     Boolean createClassLevel(Map<String,String> map);
-
 //   添加模版字段纪录
     Boolean createClassColumnDescription(Map<String,String> map);
 //    实体表字段纪录

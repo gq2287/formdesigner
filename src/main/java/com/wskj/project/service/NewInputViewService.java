@@ -13,4 +13,7 @@ public interface NewInputViewService {
 
     List<Object> getTemplateViewByNodeCode(String nodeCode);
 
+
+    boolean saveTemplatInput(Map<String,String> stringMap);
+
 }

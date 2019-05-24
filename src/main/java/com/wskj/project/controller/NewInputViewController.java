@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.reflect.TypeToken;
 import com.wskj.project.model.ResponseResult;
 import com.wskj.project.service.impl.NewInputViewServiceImpl;
-import com.wskj.project.service.impl.TableServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,12 +22,10 @@ import java.util.Map;
 @RestController
 @Api("表录入视图Controller")
 public class NewInputViewController {
-    private Logger logger = LoggerFactory.getLogger(TableInputViewController.class);
+    private Logger logger = LoggerFactory.getLogger(NewInputViewController.class);
 
     @Resource
     private NewInputViewServiceImpl newInputViewService;
-    @Resource
-    private TableServiceImpl tableService;
 
     @ApiOperation(value = "获取表录入视图", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getInputView", method = RequestMethod.POST)

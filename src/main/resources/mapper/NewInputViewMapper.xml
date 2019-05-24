@@ -77,4 +77,36 @@
     <update id="upFieldTableColumnDescription" parameterType="java.util.Map">
         UPDATE TABLECOLUMNDESCRIPTION VI WHERE COLUMNCODE=#{columnCode} and TABLECODE=#{tableCode}
     </update>
+
+   <!--添加录入列-->
+    <insert id="addInputView" parameterType="java.util.Map">
+        INSERT INTO TABLEINTERFACECARD(
+        INTERFACECARDCODE,
+        TABLECODE,
+        USERCODE,
+        CONTROLNAME,
+        CONTROLTYPE ,
+        FIELDNAME,
+        PROPERTIESINFO1,
+        ROWNO,
+        COLUMNNO,
+        REMARK,
+        TRNUM,
+        LOADNO)
+        VALUES (
+        #{INTERFACECARDCODE},
+        #{TABLECODE},
+        #{USERCODE},
+        #{CONTROLNAME},
+        #{CONTROLTYPE,jdbcType=NUMERIC},
+        #{FIELDNAME},
+        #{PROPERTIESINFO1},
+        #{ROWNO},
+        #{COLUMNNO},
+        #{REMARK},
+        #{TRNUM},
+        #{LOADNO,jdbcType=NUMERIC}
+        )
+    </insert>
+
 </mapper>

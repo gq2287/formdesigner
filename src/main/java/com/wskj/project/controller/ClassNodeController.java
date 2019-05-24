@@ -46,7 +46,6 @@ public class ClassNodeController {
                                      @ApiParam(required =true, name = "type", value = "门类类型")String type,
                                      @ApiParam(required =true, name = "attrs", value = "属性") String attrs,
                                      @ApiParam(required =true, name = "tableDescriptions", value = "表描述")String tableDescriptions) {
-//        logger.info("创建 L中间门类 C底层门类---getCreateTree--参数--{}",name+"--"+type+"--"+attrs+"--"+tableDescriptions);
         Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object>  pras=JSONObject.parseObject(attrs,typeObj);//JSONObject转换map
         Map<String, Object>  tds=JSONObject.parseObject(tableDescriptions,typeObj);//JSONObject转换map
@@ -66,6 +65,7 @@ public class ClassNodeController {
             return new ResponseResult(ResponseResult.OK, "创建 L中间门类 C底层门类异常--"+e.getMessage(),false);
         }
     }
+
 
     @ApiOperation(value = "删除 L中间门类 C底层门类 (如果旗下还存在子节点前台请给与提示)", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/delTree", method = RequestMethod.POST)

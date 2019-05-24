@@ -14,7 +14,7 @@ public interface TableService {
     Boolean createTemplate(Map<String,String> parmMap);
 
     //删除已选模版列表
-    int delTemplate(String classCode);
+    Boolean delTemplate(String classCode,String tableCode);
 
     //当前可选择底层门类
     List<Map<String,Object>> getSelectTemplateList(Map<String,String> map);
@@ -49,6 +49,4 @@ public interface TableService {
     //修改表新字段
     Boolean upField(Map<String,Object> field);
 
-
-    Boolean delClassLeve();
 }

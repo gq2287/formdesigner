@@ -32,13 +32,16 @@ public class ClassLevelServiceImpl implements ClassLevelService {
 
     @Override
     public Tree getTreeMenu() {
+        List<Map<String, String>> listTop=classLevelMapper.getClassITop();//获取顶级节点
         Map<String, String> parmMap = new HashMap<>();//参数map
-        parmMap.put("type", "I");
-        parmMap.put("nodeCode", "D_DATA");
         List<Tree> treeList=new ArrayList<>();//节点集合
         Tree rootTree = new Tree();
-        rootTree.setId("D_DATA");//编号code
-        rootTree.setText("门类信息");//名称
+        for (int i = 0; i < listTop.size(); i++) {
+            parmMap.put("type", listTop.get(i).get("TYPE"));
+            parmMap.put("nodeCode", listTop.get(i).get("NODECODE"));
+            rootTree.setId(listTop.get(i).get("PARENTCODE"));//编号
+            rootTree.setText(listTop.get(i).get("NAME"));//名称
+        }
         List<Map<String, String>> classI = classLevelMapper.getClassI(parmMap);//根节点 5棵
         for (int i = 0; i < classI.size(); i++) {
             Map<String, String> classIMap = classI.get(i);
@@ -49,15 +52,15 @@ public class ClassLevelServiceImpl implements ClassLevelService {
                 treeI.setText(classIMap.get("NAME"));//获取树名称
                 if("NODECODE".equals(cI)){
                     treeI.setId(classIMap.get("NODECODE"));//获取树编号
-                    List<Map<String, String>> classCL = classLevelMapper.getClassCL(classIMap.get("NODECODE"));// 获取到 treeI 子节点
+                    List<Map<String, String>> classCL = classLevelMapper.getClassCL(classIMap.get("NODECODE"));// 获取到 5大基础门类treeI 子节点
                     List<Tree> treeCLList=new ArrayList<>();//treeI二级节点集合
                     for (int j = 0; j < classCL.size(); j++) {
-                        Tree treeCL=new Tree();//当前树
+                        Tree treeCL=new Tree();//当前中间门类和底层门类树
                         for (String jm:classCL.get(j).keySet()) {
                             treeCL.setText(classCL.get(j).get("NAME"));//获取treeCL树名称
                             treeCL.setId(classCL.get(j).get("NODECODE"));//获取树编号
                             if("NODECODE".equals(jm)){
-                                Integer count=classLevelMapper.getClassCLCount(classCL.get(j).get(jm));
+                                Integer count=classLevelMapper.getClassCLCount(classCL.get(j).get(jm));//判断旗下是否有节点
                                 if(count!=null&&count>0){
                                     List<Tree> newList=getCLBynodeCode( classCL.get(j).get(jm));//获取当前节点nodecode
                                     treeCL.setChildren(newList);
@@ -73,8 +76,6 @@ public class ClassLevelServiceImpl implements ClassLevelService {
             treeI.setLi_attr(attrIs);
             treeList.add(treeI);
         }
-        parmMap.put("type", "I");
-        parmMap.put("nodeCode", "D_DATA");
         rootTree.setLi_attr(parmMap);
         rootTree.setChildren(treeList);//节点集合放入根节点
         return rootTree;

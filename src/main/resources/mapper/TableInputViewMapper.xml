@@ -111,6 +111,7 @@
       #{PROPERTIESINFO1,jdbcType=VARCHAR}
       )
     </insert>
+
     <!--修改录入界面-->
     <update id="upTableInputColumnSelect" parameterType="java.util.Map">
 
@@ -120,13 +121,12 @@
         DELETE FROM TABLEINTERFACECARD WHERE TABLECODE= #{tableCode}
     </delete>
 
-
-    <!--添加表索引-->
+    <!--添加表索引 系统表接口索引表-->
     <insert id="addTableIndex" parameterType="java.util.Map">
         INSERT INTO TABLEINTERFACEINDEX(INTERFACEINDEXCODE,TABLECODE,USERCODE,INTERFACETYPE)
         VALUES(#{indexCode},#{tableCode},'ISA',0)
     </insert>
-    <!--添加表索引-->
+    <!--删除表索引 系统表接口索引表-->
     <delete id="dexTableIndex" parameterType="java.util.Map">
         DELETE FROM TABLEINTERFACEINDEX WHERE TABLECODE= #{tableCode}
     </delete>

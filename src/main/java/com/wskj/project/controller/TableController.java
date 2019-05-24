@@ -6,6 +6,7 @@ import com.google.common.reflect.TypeToken;
 import com.wskj.project.model.ResponseResult;
 import com.wskj.project.model.Template;
 import com.wskj.project.service.impl.TableServiceImpl;
+import com.wskj.project.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -29,11 +30,9 @@ public class TableController {
     @Resource
     private TableServiceImpl tableService;
 
-
     @ApiOperation(value = "获取要修改表的详细信息", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getUpTree", method = RequestMethod.POST)
     public ResponseResult getUpTreeByAttrs(@ApiParam(required =true, name = "attrs", value = "属性")String attrs) {
-//        logger.info("获取要修改表的详细信息--getUpTreeByAttrs---参数--{}",attrs);
         Type typeObj = new TypeToken<Map<String, Object>>() {}.getType();
         Map<String, Object>  pras=JSONObject.parseObject(attrs,typeObj);//JSONObject转换map
         Map<String,Object> mapList=tableService.getUpTreeByAttrs(pras);
@@ -47,13 +46,15 @@ public class TableController {
     @ApiOperation(value = "当前表是否纯在数据", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getIsOkUpDataByTableName", method = RequestMethod.POST)
     public ResponseResult getIsOkUpDataByTableName(@ApiParam(required =true, name = "tableName", value = "表名")String tableName) {
-        boolean bool=tableService.getIsOkUpDataByTableName(tableName);
+//        boolean bool=tableService.getIsOkUpDataByTableName(tableName);
 
-        if(bool){
-            return new ResponseResult(ResponseResult.OK, "可以修改成功",true);
-        }else {
-            return new ResponseResult(ResponseResult.OK, "无法修改",true);
-        }
+//        if(bool){
+//            return new ResponseResult(ResponseResult.OK, "可以修改成功",true);
+//        }else {
+//            return new ResponseResult(ResponseResult.OK, "无法修改",true);
+//        }
+
+        return new ResponseResult(ResponseResult.OK, "可以修改成功",true);
     }
 
     @ApiOperation(value = "type(add增 del删 up改) 字段", notes = "返回信息 0成功，400失败 ")
@@ -112,7 +113,6 @@ public class TableController {
     @ApiOperation(value = "修改描述表信息字段", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getModifyTableDescription", method = RequestMethod.POST)
     public ResponseResult getModifyTableDescription(@ApiParam(required =true, name = "fieldDescription", value = "字段描述")String fieldDescription) {
-//        logger.info("修改描述表信息字段---getModifyTableDescription--参数--{}",fieldDescription);
         Boolean bool=null;
         Type typeObj = new TypeToken<Map<String, String>>() {}.getType();
         Map<String, String>  pras=JSONObject.parseObject(fieldDescription,typeObj);// 获取参数列
@@ -138,11 +138,15 @@ public class TableController {
         }
     }
 
+
+
+
+
+
     @ApiOperation(value = "模版列表", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTemplateList", method = RequestMethod.GET)
     public ResponseResult getTemplateList() {
         List<Map<String,String>> pram=tableService.getTemplateList();
-//        logger.info("模版列表---getTemplateList--参数--{}",pram);
         ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功 ",pram ,true);
         return responseResult;
     }
@@ -151,7 +155,6 @@ public class TableController {
     @RequestMapping(value = "/getOptionalTemplateList", method = RequestMethod.GET)
     public ResponseResult getOptionalTemplateList() {
         List<Map<String,String>> pram=tableService.getOptionalTemplateList();
-//        logger.info("已选模版---getOptionalTemplateList--参数--{}",pram);
         ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功 ",pram ,true);
         return responseResult;
     }
@@ -159,7 +162,6 @@ public class TableController {
     @ApiOperation(value = "当前节点可选择底层模版", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getSelectTemplateList", method = RequestMethod.GET)
     public ResponseResult getSelectTemplateList(@ApiParam(required =true, name = "parentCode", value = "父编号")String parentCode) {
-//        logger.info("当前节点可选择底层模版---getSelectTemplateList--参数--{}",parentCode);
         Map<String,String> parmMap=new HashMap<>();
         parmMap.put("parentCode",parentCode);
         ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功", tableService.getSelectTemplateList(parmMap),true);
@@ -169,7 +171,6 @@ public class TableController {
     @ApiOperation(value = "选中后加载旗下实体表", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getSelectTableByClassCode", method = RequestMethod.GET)
     public ResponseResult getSelectTableByClassCode(@ApiParam(required =true, name = "classCode", value = "门类编号")String classCode) {
-//        logger.info("选中后加载旗下实体表---getSelectTableByClassCode--参数--{}",classCode);
         Map<String,String> parmMap=new HashMap<>();
         parmMap.put("classCode",classCode);
         ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功", tableService.getSelectTableByClassCode(parmMap),true);
@@ -179,7 +180,6 @@ public class TableController {
     @ApiOperation(value = "加载实体表字段信息", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getTableByTableCode", method = RequestMethod.GET)
     public ResponseResult getTableByTableCode(@ApiParam(required =true, name = "tableCode", value = "表编号")String tableCode) {
-//        logger.info("加载实体表字段信息---getTableByTableCode--参数--{}",tableCode);
         Map<String,String> parmMap=new HashMap<>();
         parmMap.put("tableCode",tableCode);
         ResponseResult responseResult = new ResponseResult(ResponseResult.OK, "成功 ", tableService.getTableInfoByTableCode(parmMap),true);
@@ -200,7 +200,7 @@ public class TableController {
         ResponseResult responseResult = null;
         for (Template temp:list) {
             Map<String, String> map = new HashMap<>();
-            map.put("classCode", temp.getClassCode());
+            map.put("classCode", StringUtil.getRandomStr(6));
             map.put("name", temp.getClassTableCode());
             map.put("classTableCode", temp.getClassTableCode());
             map.put("chineseName", "自定义【" + temp.getName() + "】");
@@ -229,8 +229,8 @@ public class TableController {
         }
         ResponseResult responseResult = null;
         for (Template temp:list) {
-            int result = tableService.delTemplate(temp.getClassCode());
-            if (result == 1) {
+            boolean result = tableService.delTemplate(temp.getClassCode(),temp.getTableCode());
+            if (result) {
                 responseResult = new ResponseResult(ResponseResult.OK, "成功",true);
             } else {
                 responseResult = new ResponseResult(ResponseResult.OK, "处理失败",false);

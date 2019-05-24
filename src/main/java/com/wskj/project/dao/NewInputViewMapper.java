@@ -12,5 +12,5 @@ public interface NewInputViewMapper {
     Boolean addInputViewColumn(Map<String,String> parms);
     //删除全部录入视图
     Integer delAllInputViewByTableCode(@Param("tableCode") String tableCode);
-
+    Boolean addInputView(Map<String,String> parms);//添加模版录入列样式
 }

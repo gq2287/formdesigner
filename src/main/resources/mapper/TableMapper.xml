@@ -8,9 +8,10 @@
     </select>
     <!--添加到已选模版-->
     <insert id="createTemplate" parameterType="java.util.Map">
-        INSERT INTO CLASSDESCRIPTION (CLASSCODE,NAME,CHINESENAME)
-        VALUES(#{classCode},#{name},#{chineseName})
+        INSERT INTO CLASSDESCRIPTION (CLASSCODE,NAME,CHINESENAME,TABLECODE)
+        VALUES(#{classCode},#{name},#{chineseName},#{tableCode})
     </insert>
+
 
     <!--删除已选择模版列表-->
     <delete id="delTemplate">
@@ -20,7 +21,6 @@
     <select id="getOptionalTemplateList" resultType="java.util.Map">
         SELECT  * FROM CLASSDESCRIPTION
     </select>
-
     <!--当前节点选则底层门类模版列表-->
     <select id="getSelectTemplateList" resultType="java.util.Map">
         SELECT  * FROM CLASSDESCRIPTION
@@ -89,6 +89,7 @@
     <delete id="delTableByTableName" parameterType="java.util.Map">
         DROP TABLE ${tableName}
     </delete>
+
     <!--删除描述表的列-->
     <delete id="delTableDescriptionByTableCode" parameterType="java.util.Map">
         DELETE FROM TABLEDESCRIPTION WHERE TABLECODE = #{tableCode}
@@ -98,10 +99,13 @@
     <delete id="delSystemUseRRoleTableByTableName" parameterType="java.util.Map">
         DELETE FROM SYSTEMUSERROLETABLE WHERE TABLENAME = #{tableName}
     </delete>
+
     <!--删除纪录表数据-->
     <delete id="delTableColumnDescription" parameterType="java.util.Map">
        DELETE FROM  TABLECOLUMNDESCRIPTION WHERE TABLECODE = #{tableCode}
     </delete>
+
+
     <!--获取修改的修改-->
     <select id="getEntityTableInfo" resultType="java.util.Map">
         SELECT * FROM TABLEDESCRIPTION WHERE TABLECODE=#{tableCode}
@@ -111,50 +115,59 @@
     <select id="getEntityTableColumn" resultType="java.util.Map">
         SELECT * FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode}
     </select>
+
     <!--获取修改实体表字段-->
     <select id="getEntityTableColumnByVisible" resultType="java.util.Map">
          SELECT
          COLUMNCODE,NAME,CHINESENAME,INPUTTYPE
          FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode} and VISIBLE='T'
     </select>
+
     <!--实体表关系-->
     <select id="getEntityTableRelation" resultType="java.util.Map">
         SELECT * FROM TABLERELATION WHERE MASTERCOLUMNCODE LIKE '%${tableName}%'
     </select>
+
     <!--获取模版类型-->
     <select id="getSelectTemplateByDataType" resultType="java.util.Map">
       SELECT * FROM CLASSNODE WHERE  TYPE='T' and CLASSTABLECODE=#{classTableCode} and PARENTCODE=#{parentCode}
     </select>
+
     <!--是否是空表 getIsOkUpDataByTableName-->
     <select id="getIsOkUpDataByTableName" resultType="java.lang.Integer">
       SELECT count(*) AS COUNT FROM ${tableName}
     </select>
 
-
     <!--添加当前表字段-->
     <update id="addField" parameterType="java.util.Map">
         alter table ${tableName} add (${sql} )
     </update>
+
     <!--修改实体表-->
     <update id="upFieldEntityTable" parameterType="java.util.Map">
         ${sql}
     </update>
+
     <!--修改当前表字段-->
     <update id="upFieldTableColumnDescription" parameterType="java.util.Map">
         UPDATE TABLECOLUMNDESCRIPTION ${sql} WHERE COLUMNCODE=#{columnCode} and TABLECODE=#{tableCode}
     </update>
+
     <!--修改描述表信息-->
     <update id="upFieldTableDescription" parameterType="java.util.Map">
         UPDATE TABLEDESCRIPTION SET AUXINAME=#{auxiName},CHINESENAME=#{chineseName} WHERE TABLECODE=#{tableCode}
     </update>
+
     <!--修改当前表关系-->
     <update id="upFieldTableRelation" parameterType="java.util.Map">
         UPDATE TABLERELATION SET MASTERCOLUMNCODE=#{masterColumnCode},SLAVECOLUMNCODE=#{slaveColumnCode} WHERE RELATIONCODE=#{relationCode}
     </update>
+
     <!--删除表字段描述-->
     <delete id="delFieldTableColumnDescription" parameterType="java.util.Map">
         DELETE FROM TABLECOLUMNDESCRIPTION WHERE TABLECODE=#{tableCode} and COLUMNCODE=#{columnCode}
     </delete>
+
     <!--删除默认视图列表长度-->
     <delete id="delOneColumn" parameterType="java.util.Map">
         DELETE FROM TABLEINTERFACELISTVIEW WHERE COLUMNCODE=#{columnCode}
@@ -164,18 +177,16 @@
     <delete id="delFieldTableRelation" parameterType="java.util.Map">
         DELETE FROM TABLERELATION WHERE MASTERCOLUMNCODE=#{columnCode}
     </delete>
+
     <!--删除关系-->
     <delete id="delFieldRelation" parameterType="java.util.Map">
         DELETE FROM TABLERELATION WHERE RELATIONCODE=#{relationCode}
     </delete>
+
     <!--删除实体表表字段-->
     <delete id="delFieldTable" parameterType="java.util.Map">
         ALTER TABLE ${tableName} DROP COLUMN ${columnName}
     </delete>
-
-
-
-
 
     <!--添加模版节点实体表等级表-->
     <insert id="createClassLevel" parameterType="java.util.Map">
@@ -343,18 +354,23 @@
         </if>
         )
     </insert>
+
     <!--删除纪录-->
     <delete id="delClassColumnDes" parameterType="java.util.Map">
         DELETE FROM CLASSCOLUMNDESCRIPTION WHERE TABLECODE = #{tableCode}
     </delete>
+
+
     <!--获取创建实体表字段信息-->
     <select id="getTableColumnInfoByTableCode" resultType="java.util.Map">
          SELECT * FROM
          TABLECOLUMNDESCRIPTION
-         WHERE TABLECODE=#{tableCode}
+         WHERE TABLECODE=#{TABLECODE}
          ORDER BY SERIAL
     </select>
-    <!--删除等级-->
+
+
+    <!--删除模版-->
     <delete id="delClassLeveByClassCode" parameterType="java.util.Map">
         DELETE FROM CLASSLEVEL WHERE CLASSCODE = #{classCode}
     </delete>
@@ -364,4 +380,5 @@
         INSERT INTO CLASSNODE (NODECODE, PARENTCODE,NAME,TYPE,CLASSCODE,CLASSTABLECODE,TABLECODE,SERIAL)
         VALUES (#{NODECODE},#{PARENTCODE},#{NAME},#{TYPE},#{CLASSCODE},#{CLASSTABLECODE},#{TABLECODE},#{SERIAL})
     </insert>
+
 </mapper>
