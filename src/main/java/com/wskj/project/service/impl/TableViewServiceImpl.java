@@ -47,13 +47,20 @@ public class TableViewServiceImpl implements TableViewService {
     @Override
     public Tree getTreeMenu() {
         //获取树菜单，根据树菜单获取底层门类获取旗下实体表table
+        List<Map<String, String>> listTop=classLevelMapper.getClassITop();//获取顶级节点
         Map<String, String> parmMap = new HashMap<>();//参数map
-        parmMap.put("type", "I");
-        parmMap.put("nodeCode", "D_DATA");
         List<Tree> treeList = new ArrayList<>();//节点集合
         Tree rootTree = new Tree();
-        rootTree.setId("D_DATA");//编号code
-        rootTree.setText("门类信息");//名称
+        for (int i = 0; i < listTop.size(); i++) {
+            parmMap.put("TYPE", listTop.get(i).get("TYPE"));
+            parmMap.put("nodeCode", listTop.get(i).get("NODECODE"));
+            rootTree.setId(listTop.get(i).get("PARENTCODE"));//编号
+            rootTree.setText(listTop.get(i).get("NAME"));//名称
+        }
+//        parmMap.put("TYPE", "I");
+//        parmMap.put("nodeCode", "D_DATA");
+//        rootTree.setId("D_DATA");//编号code
+//        rootTree.setText("门类信息");//名称
         List<Map<String, String>> classI = classLevelMapper.getClassI(parmMap);//根节点 5棵
         for (int i = 0; i < classI.size(); i++) {
             Map<String, String> classIMap = classI.get(i);
@@ -125,8 +132,8 @@ public class TableViewServiceImpl implements TableViewService {
             treeI.setLi_attr(attrIs);
             treeList.add(treeI);
         }
-        parmMap.put("type", "I");
-        parmMap.put("nodeCode", "D_DATA");
+//        parmMap.put("TYPE", "I");
+//        parmMap.put("nodeCode", "D_DATA");
         rootTree.setLi_attr(parmMap);
         rootTree.setChildren(treeList);//节点集合放入根节点
         return rootTree;

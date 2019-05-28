@@ -37,7 +37,7 @@ public class ClassLevelServiceImpl implements ClassLevelService {
         List<Tree> treeList=new ArrayList<>();//节点集合
         Tree rootTree = new Tree();
         for (int i = 0; i < listTop.size(); i++) {
-            parmMap.put("type", listTop.get(i).get("TYPE"));
+            parmMap.put("TYPE", listTop.get(i).get("TYPE"));
             parmMap.put("nodeCode", listTop.get(i).get("NODECODE"));
             rootTree.setId(listTop.get(i).get("PARENTCODE"));//编号
             rootTree.setText(listTop.get(i).get("NAME"));//名称
