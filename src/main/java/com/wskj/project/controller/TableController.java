@@ -81,7 +81,6 @@ public class TableController {
         }
     }
 
-
     @ApiOperation(value = "修改表关系字段", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getModifyTableRelation", method = RequestMethod.POST)
     public ResponseResult getModifyTableRelation( @ApiParam(required =true, name = "fieldRelation", value = "字段关系")String fieldRelation) {
@@ -206,7 +205,7 @@ public class TableController {
             map.put("chineseName", "自定义【" + temp.getName() + "】");
             map.put("parentCode",temp.getParentCode() );
             map.put("nodeCode",temp.getNodeCode() );
-            boolean result = tableService.createTemplate(map);
+            boolean result = tableService.addTemplate(map);
             if (result) {
                 responseResult = new ResponseResult(ResponseResult.OK, "成功",true);
             } else {

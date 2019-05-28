@@ -6,8 +6,8 @@
     <select id="getTemplateCardByTableCode" resultType="java.util.Map">
         select * from TEMPLATECARD WHERE CLASSTABLECODE =#{tableCode}
     </select>
-    <!--查询指定模版列表-->
-    <select id="getTemplateInputCardByTableCode" resultType="java.util.Map">
+    <!--查询指定输入模版列表-->
+    <select id="getTemplateEntityCardByTableCode" resultType="java.util.Map">
         select * from TEMPLATECARD WHERE ENTITYTABLECODE =#{tableCode}
     </select>
 

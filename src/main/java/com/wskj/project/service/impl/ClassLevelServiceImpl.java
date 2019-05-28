@@ -87,7 +87,7 @@ public class ClassLevelServiceImpl implements ClassLevelService {
      * @return
      */
     @Override
-    public int createTreeL(Map<String, Object> parmMap) {
+    public int addTreeL(Map<String, Object> parmMap) {
         int result=0;
         try {
             Map<String,String> treeT=new HashMap<>();
@@ -177,11 +177,11 @@ public class ClassLevelServiceImpl implements ClassLevelService {
                                     boolean booll=tableInputViewMapper.delTableInputViewByTableCode(tableCode);
                                     if(booll){
                                         System.err.println("删除录入表成功----"+tableCode);
-                                        booll=tableInputViewMapper.dexTableIndex(tableCode);
+                                        booll=tableInputViewMapper.delTableIndex(tableCode);
                                         if(booll){
                                             System.err.println("删除索引表成功----"+tableCode);
 
-                                            booll=tableInputViewMapper.dexTableIndex(tableCode);
+                                            booll=tableInputViewMapper.delTableIndex(tableCode);
                                         }else{
                                             System.err.println("删除索引表失败----"+tableCode+"---未有数据或内部错误");
                                         }

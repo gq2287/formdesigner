@@ -15,7 +15,7 @@ public interface ClassLevelService {
      * 添加树新节点
      * @return
      */
-    int createTreeL(Map<String,Object> parmMap);
+    int addTreeL(Map<String,Object> parmMap);
     /**
      * 删除树节点
      * @return

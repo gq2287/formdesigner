@@ -76,7 +76,7 @@ public class TableServiceImpl implements TableService
      * @return
      */
     @Override
-    public Boolean createTemplate(Map<String, String> parmMap) {
+    public Boolean addTemplate(Map<String, String> parmMap) {
         Boolean bool=true;
         if(!addTemplatCard(parmMap)){
             bool=false;
@@ -92,8 +92,9 @@ public class TableServiceImpl implements TableService
         boolean bool=true;
         String templateClassTableCode=new SimpleDateFormat("yyyyMMdd").format(new Date())+"-C-"+StringUtil.getRandomStr(6);//关联编号
         parmMap.put("tableCode",templateClassTableCode);
-        parmMap.put("tableCode",templateClassTableCode);
-        int result=tableMapper.createTemplate(parmMap);//添加模版表纪录
+        int Max=tableMapper.getMaxTemplateSerial();
+        parmMap.put("serial",Max+1+"");
+        int result=tableMapper.addTemplate(parmMap);//添加模版表纪录
         if(result>=1){
             String nodeCode = parmMap.get("nodeCode");
             String classCode = parmMap.get("classCode");
@@ -101,18 +102,17 @@ public class TableServiceImpl implements TableService
             Map<String,String> templCardMap=new HashMap<>();//添加的参数
             if(listMap!=null&&listMap.size()>0){
                 for (int i = 0; i <listMap.size() ; i++) {
-
                     String templateInputTableCode=StringUtil.getUuid();//录入表编号
                     String templateEntityTableCode=StringUtil.getUuid();//模版实体表编号
                     String templateEntityName=listMap.get(i).get("NAME");//模版实体表中文名
                     Map<String,String> mmm=new HashMap<>();
                     mmm.put("LEVELCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));
                     mmm.put("CLASSCODE",classCode);
-                    mmm.put("RELATIONLEVEL",i+"");
+                    mmm.put("RELATIONLEVEL",i+1+"");
                     mmm.put("TABLECODE",templateEntityTableCode);//实体表编号
                     mmm.put("ISNECESSARY","T");
                     mmm.put("CHINESENAME",listMap.get(i).get("NAME"));
-                    bool=tableMapper.createClassLevel(mmm);//添加模版级别
+                    bool=tableMapper.addClassLevel(mmm);//添加模版级别
 
                     templCardMap.put("templateId",StringUtil.getUuid());
                     templCardMap.put("templateClassTableCode",templateClassTableCode);//模版表纪录表编号
@@ -122,12 +122,12 @@ public class TableServiceImpl implements TableService
                     templCardMap.put("templateEntityTableCode",templateEntityTableCode);//模版实体表编号
                     templCardMap.put("templateEntityName",templateEntityName);//模版实体表名称
                     if(templatCardMapper.addTemplateInputCard(templCardMap)){//添加模版实体表数据及录入样式列
-                        List<Map<String,String>> inputMap=newInputViewMapper.getAllInputView(listMap.get(i).get("TABLECODE")+"");//录入视图列
+                        List<Map<String,String>> inputMap=newInputViewMapper.getAllInputView(listMap.get(i).get("TABLECODE")+"");//获取录入视图列
                         if(inputMap!=null&&inputMap.size()>0){
                             for (int j = 0; j <inputMap.size() ; j++) {
                                 inputMap.get(j).put("INTERFACECARDCODE",StringUtil.getUuid());
                                 inputMap.get(j).put("TABLECODE",templateInputTableCode);
-                                newInputView.saveTemplatInput(inputMap.get(j));//添加录入样式列
+                                newInputView.addTemplatInput(inputMap.get(j));//添加录入样式列
                             }
                         }
                         List<Map<String,Object>> columnMap=tableMapper.getEntityTableColumn(listMap.get(i).get("TABLECODE")+"");//查询旗下数据列
@@ -139,7 +139,7 @@ public class TableServiceImpl implements TableService
                                 }
                                 cdMap.put("COLUMNCODE",StringUtil.getUuid());
                                 cdMap.put("TABLECODE",templateEntityTableCode);
-                                tableMapper.createClassColumnDescription(cdMap);//添加模版表列描述
+                                tableMapper.addClassColumnDescription(cdMap);//添加模版表列描述
                             }
                         }
                     }
@@ -156,52 +156,6 @@ public class TableServiceImpl implements TableService
         return bool;
     }
 
-//    //添加模版classLeve
-//    public boolean getAttrs(Map<String, String> attrs) {
-//        boolean bool=true;
-//        String classCode="";
-//        List<String> tableList=new ArrayList<>();
-//        try {
-//            //底层门类
-//            String nodeCode = attrs.get("NODECODE") + "";
-//            classCode= attrs.get("CLASSCODE") + "";
-//            List<Map<String, String>> listMap = classLevelService.getTableByNodeCode(nodeCode);//获取全部实体表 tableCode
-//            if (listMap != null && listMap.size() > 0) {
-//                for (int i = 0; i < listMap.size(); i++) {
-//                    String tableCode= listMap.get(i).get("TABLECODE");
-////                    String tableCode= StringUtil.getRandomStr(6);
-//                    tableList.add(tableCode);
-//                    Map<String,String> mmm=new HashMap<>();
-//                    mmm.put("LEVELCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));
-//                    mmm.put("CLASSCODE",classCode);
-//                    mmm.put("RELATIONLEVEL",i+"");
-//                    mmm.put("TABLECODE",tableCode);
-//                    mmm.put("ISNECESSARY","T");
-//                    mmm.put("CHINESENAME",listMap.get(i).get("NAME"));
-//                    bool=tableMapper.createClassLevel(mmm);//添加模版
-//                    Map<String,String> tableMap=new HashMap<>();
-//                    tableMap.put("tableCode",tableCode);
-//                    List<Map<String,String>> columnMap=tableMapper.getTableColumnInfoByTableCode(tableMap);
-//                    for (int j = 0; j < columnMap.size(); j++) {
-//                        columnMap.get(j).put("COLUMNCODE",String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));
-//                         bool=tableMapper.createClassColumnDescription(columnMap.get(j));
-//                         if(!bool){
-//                             tableMapper.delClassColumnDes(tableCode);
-//                         }
-//                    }
-//                }
-//            }
-//        }catch (Exception e){
-//            bool=false;
-//            System.out.println("模版添加ClassLeve失败"+e.getMessage());
-//            tableMapper.delTemplate(classCode);
-//            for (int i = 0; i <tableList.size() ; i++) {
-//                tableMapper.delClassColumnDes(tableList.get(i));
-//            }
-//            return bool;
-//        }
-//        return bool;
-//    }
 
     /**
      * 删除已选模版
@@ -276,7 +230,7 @@ public class TableServiceImpl implements TableService
     public Boolean addTableDescription(Map<String, Object> parmMap) {
         List<String> tableCodeList=new ArrayList<>();
         boolean bool = true;
-        Map<String, String> tableCodeMap=new HashMap<>();//存放tableCode
+        List<String> tableCodeMap=new ArrayList<>();//存放tableCode
         String uuid="";
         try {
             String classcodeNO=String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D);
@@ -336,7 +290,7 @@ public class TableServiceImpl implements TableService
                                         StringBuffer sql = new StringBuffer("CREATE TABLE ");
                                         sql.append(" " + tableName + "(");//获取里面的数据列字段
                                         String tableCode = StringUtil.getDate(2) + StringUtil.getRandom(1000, 10000) + 1;//获取tableCode
-                                        tableCodeMap.put(tableCode,tableCode);//存放tableCode
+                                        tableCodeMap.add(tableCode);//存放tableCode
                                         Map<String, String> tableDescriptionMap = new HashMap<>();//表描述
                                         boolean isOK = true;//判断是只有一个主键bi
                                         for (String temp : tempMap.keySet()) {
@@ -443,27 +397,28 @@ public class TableServiceImpl implements TableService
         } finally {
             System.out.println("是否成功：" + bool);
             if(bool){
-                for (String tableCode:tableCodeMap.keySet()) {
+//                for (String tableCode:tableCodeMap.keySet()) {
                     if(tableCodeList.size()>0){
                         for (int i = 0; i <tableCodeList.size() ; i++) {
-                            Map<String,String> templatMap=templatCardMapper.getTemplateInputCardByTableCode(tableCodeList.get(i));//获取模版关联表
+                            Map<String,String> templatMap=templatCardMapper.getTemplateEntityCardByTableCode(tableCodeList.get(i));//获取模版关联表
                             String inputTableCode=templatMap.get("INPUTTABLECODE");
-                            List<Map<String,String>> listInputMap=newInputViewMapper.getAllInputView(inputTableCode);
+                            List<Map<String,String>> listInputMap=newInputViewMapper.getAllInputView(inputTableCode);//获取录入视图
                             System.out.println(inputTableCode);
                             if(listInputMap!=null&&listInputMap.size()>0){
                                 for (int j = 0; j <listInputMap.size() ; j++) {
                                     try {
                                         listInputMap.get(j).put("INTERFACECARDCODE",StringUtil.getUuid());
-                                        listInputMap.get(j).put("TABLECODE",tableCode);
-                                        newInputView.saveTemplatInput(listInputMap.get(j));//添加录入样式列
+                                        listInputMap.get(j).put("TABLECODE",tableCodeMap.get(i));
+                                        newInputView.addTemplatInput(listInputMap.get(j));//添加录入样式列
+//                                       System.err.println("创建默认录入列表成功！--"+bool);
                                     }catch (Exception e){
-                                        System.out.println(tableCode+"录入失败"+e.getMessage());
+                                        bool=false;
+                                        System.out.println(tableCodeMap.get(i)+"录入失败"+e.getMessage());
                                         Map<String,String> nodecode=new HashMap<>();
                                         nodecode.put("NODECODE",uuid);
                                         nodecode.put("TYPE","C");
                                         classLevelService.delTreeLC(nodecode);
-                                        newInputViewMapper.delAllInputViewByTableCode(tableCode);//失败删除全部
-                                        bool=false;
+                                        newInputViewMapper.delAllInputViewByTableCode(tableCodeMap.get(i));//失败删除全部
                                         System.out.println(e.getMessage());
                                     }
                                 }
@@ -471,14 +426,8 @@ public class TableServiceImpl implements TableService
 
                         }
 
-                    }else{
-                        boolean bool12=newInputView.saveInputView(tableCode,null,uuid);
-                        if(bool12){
-                            System.err.println("创建默认录入列表成功！--"+bool12);
-                        }else{
-                            bool=false;
-                        }
-                    }
+//                    }
+
                 }
             }
             return bool;
@@ -496,10 +445,10 @@ public class TableServiceImpl implements TableService
             tableRelationMap.put("NO","1");//追加条件
             tableRelationMap.put("TYPE","A");//追加条件
             tableRelationMap.put("CANCHANGE","A");//追加条件
-            int result=tableMapper.createTableRelation(tableRelationMap);//添加字段关系
-//            if(result>0){
-//                System.out.println("添加字段关系创建成功--"+tableRelationMap);
-//            }
+            int result=tableMapper.addTableRelation(tableRelationMap);//添加字段关系
+            if(result>0){
+                System.out.println("添加字段关系创建成功--"+tableRelationMap);
+            }
         }catch (Exception e){
             System.err.println("添加字段关系失败--"+e.getMessage());
         }
@@ -650,9 +599,7 @@ public class TableServiceImpl implements TableService
         boolean bool=true;
         try {
             int result=tableMapper.upFieldTableRelation(fieldRelation);
-//            if(result>1){
-//                System.err.println("表关系修改成功"+fieldRelation);
-//            }
+
         }catch (Exception e){
             System.err.println("表关系修改失败"+e.getMessage());
             bool=false;

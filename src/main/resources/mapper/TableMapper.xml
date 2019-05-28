@@ -7,9 +7,9 @@
         select * from CLASSNODE WHERE TYPE ='C'
     </select>
     <!--添加到已选模版-->
-    <insert id="createTemplate" parameterType="java.util.Map">
-        INSERT INTO CLASSDESCRIPTION (CLASSCODE,NAME,CHINESENAME,TABLECODE)
-        VALUES(#{classCode},#{name},#{chineseName},#{tableCode})
+    <insert id="addTemplate" parameterType="java.util.Map">
+        INSERT INTO CLASSDESCRIPTION (CLASSCODE,NAME,CHINESENAME,TABLECODE,SERIAL)
+        VALUES(#{classCode},#{name},#{chineseName},#{tableCode},#{serial})
     </insert>
 
 
@@ -17,9 +17,13 @@
     <delete id="delTemplate">
          DELETE FROM CLASSDESCRIPTION WHERE CLASSCODE = #{classCode}
     </delete>
+    <!--查询模版纪录最大的序号-->
+    <select id="getMaxTemplateSerial" resultType="java.lang.Integer">
+      SELECT  MAX(SERIAL) FROM CLASSDESCRIPTION
+    </select>
     <!--已选择模版列表-->
     <select id="getOptionalTemplateList" resultType="java.util.Map">
-        SELECT  * FROM CLASSDESCRIPTION
+        SELECT  * FROM CLASSDESCRIPTION ORDER BY SERIAL
     </select>
     <!--当前节点选则底层门类模版列表-->
     <select id="getSelectTemplateList" resultType="java.util.Map">
@@ -51,7 +55,7 @@
         VALUES(#{tableCode},#{name},#{auxiName},#{chineseName},#{dataType},#{systemType},#{aggregate})
     </insert>
     <!--表字段关系-->
-    <insert id="createTableRelation">
+    <insert id="addTableRelation">
         INSERT INTO TABLERELATION(RELATIONCODE ,MASTERCOLUMNCODE ,SLAVECOLUMNCODE ,NO,TYPE,CANCHANGE )
         VALUES(#{relationCode},#{masterColumnCode},#{slaveColumnCode},#{NO},#{TYPE},#{CANCHANGE})
     </insert>
@@ -189,13 +193,13 @@
     </delete>
 
     <!--添加模版节点实体表等级表-->
-    <insert id="createClassLevel" parameterType="java.util.Map">
+    <insert id="addClassLevel" parameterType="java.util.Map">
         INSERT INTO CLASSLEVEL(LEVELCODE,CLASSCODE,RELATIONLEVEL,TABLECODE,ISNECESSARY,CHINESENAME)
         VALUES(#{LEVELCODE},#{CLASSCODE},#{RELATIONLEVEL,jdbcType=NUMERIC},#{TABLECODE},#{ISNECESSARY},#{CHINESENAME})
     </insert>
 
     <!--模版表字段描述-->
-    <insert id="createClassColumnDescription" parameterType="java.util.Map">
+    <insert id="addClassColumnDescription" parameterType="java.util.Map">
         INSERT INTO CLASSCOLUMNDESCRIPTION(
 
         <if test="ISCATALOGQUERY != null and '' != ISCATALOGQUERY">

@@ -57,7 +57,7 @@ public class NewInputViewController {
         }
         int rr=newInputViewService.delInputView(tableCode);//删除
         if(rr>=0){
-            Boolean bool=newInputViewService.saveInputView(tableCode,mapList,null);//保存视图
+            Boolean bool=newInputViewService.addInputView(tableCode,mapList,null);//保存视图
             if(bool){
                 return new ResponseResult(ResponseResult.OK, "成功", bool, true);
             }else{

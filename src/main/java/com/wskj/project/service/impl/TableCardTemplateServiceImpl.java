@@ -23,7 +23,6 @@ public class TableCardTemplateServiceImpl implements TableCardTemplateService {
 
     @Override
     public boolean addTableCardTemplate(Map<String, String> parms) {
-
         return tableCardTemplateMapper.addTableCardTemplate(parms);
     }
 

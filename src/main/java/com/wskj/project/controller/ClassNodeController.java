@@ -55,7 +55,7 @@ public class ClassNodeController {
         parmMap.put("type", type);
         parmMap.put("tableDescriptions", tds);//表描述
         try {
-            int result = classLevelService.createTreeL(parmMap);
+            int result = classLevelService.addTreeL(parmMap);
             if (result == 1) {
                 return new ResponseResult(ResponseResult.OK, "成功", parmMap,true);
             } else {

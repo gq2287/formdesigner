@@ -58,7 +58,7 @@ public class TableCardTemplateController {
             parms.put("chinaName",chinaName);
             boolean bool=tableCardTemplateService.addTableCardTemplate(parms);
             if(bool){
-                bool=newInputViewService.saveInputView(id,mapList,null);//保存模版视图
+                bool=newInputViewService.addInputView(id,mapList,null);//保存模版视图
 
                 return new ResponseResult(ResponseResult.OK, "添加录入模版成功", bool);
             }else{

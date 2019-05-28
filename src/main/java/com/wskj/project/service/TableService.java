@@ -11,7 +11,7 @@ public interface TableService {
     List<Map<String,String>> getOptionalTemplateList();
 
     //添加可选模版列表
-    Boolean createTemplate(Map<String,String> parmMap);
+    Boolean addTemplate(Map<String,String> parmMap);
 
     //删除已选模版列表
     Boolean delTemplate(String classCode,String tableCode);

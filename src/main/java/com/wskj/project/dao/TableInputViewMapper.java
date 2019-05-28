@@ -13,7 +13,7 @@ public interface TableInputViewMapper {
     //添加视图录入列
     Integer addTableInputViewColumn(Map<String,Object> parms);
     //默认添加视图录入列
-    Integer defAddTableInputViewColumn(Map<String,String> parms);
+    Integer addDefaultTableInputViewColumn(Map<String,String> parms);
 
     //修改录入列
     Integer upTableInputColumnSelect(Map<String,String> parms);
@@ -23,7 +23,7 @@ public interface TableInputViewMapper {
     //添加表索引
     Boolean addTableIndex(Map<String,String> parms);
     //删除表索引
-    Boolean dexTableIndex(@Param("tableCode") String tableCode);
+    Boolean delTableIndex(@Param("tableCode") String tableCode);
 
     String getEntityTableColumnByTag(@Param("tag") String tag,@Param("tableCode") String tableCode);
 

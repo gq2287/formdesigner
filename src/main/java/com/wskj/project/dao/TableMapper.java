@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface TableMapper {
+    //T 模版列表最大序号
+    int getMaxTemplateSerial();
     //T 模版列表
     List<Map<String,String>> getTemplateList();
     //添加 已选模版数据
-    Integer createTemplate(Map<String,String> parmMap);
+    Integer addTemplate(Map<String,String> parmMap);
     //删除已选模版数据
     Integer delTemplate(@Param("classCode") String classCode);
     //已选择模版列表
@@ -25,7 +27,7 @@ public interface TableMapper {
     //数据表基本描述
     Integer addTableDescription(Map<String,String> parmMap);
     //表字段关系
-    Integer createTableRelation(Map<String,String> parmMap);
+    Integer addTableRelation(Map<String,String> parmMap);
     //添加门类树节点信息 实体类表类型为E C
     Integer addTableTreeInfo(Map<String,String> parmMap);
     //创建实体数据表 <>
@@ -95,9 +97,9 @@ public interface TableMapper {
 
 
     //添加模版旗下的实体表到classleve内
-    Boolean createClassLevel(Map<String,String> map);
+    Boolean addClassLevel(Map<String,String> map);
 //   添加模版字段纪录
-    Boolean createClassColumnDescription(Map<String,String> map);
+    Boolean addClassColumnDescription(Map<String,String> map);
 //    实体表字段纪录
     List<Map<String,String>> getTableColumnInfoByTableCode(Map<String,String> map);
 //    删除纪录

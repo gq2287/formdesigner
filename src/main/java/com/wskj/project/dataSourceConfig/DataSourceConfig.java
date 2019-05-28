@@ -13,9 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.Resource;
 
 /**
- * @author shulipeng
  * @Description:
- * @date 2018/4/2
+ * @date 2019
  */
 @Configuration
 public class DataSourceConfig {

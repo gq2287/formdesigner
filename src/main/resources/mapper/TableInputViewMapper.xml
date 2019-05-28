@@ -84,7 +84,7 @@
       )
     </insert>
     <!--默认添加录入列-->
-    <insert id="defAddTableInputViewColumn" parameterType="java.util.Map">
+    <insert id="addDefaultTableInputViewColumn" parameterType="java.util.Map">
       INSERT INTO TABLEINTERFACECARD(
       INTERFACECARDCODE,
       TABLECODE,
@@ -127,7 +127,7 @@
         VALUES(#{indexCode},#{tableCode},'ISA',0)
     </insert>
     <!--删除表索引 系统表接口索引表-->
-    <delete id="dexTableIndex" parameterType="java.util.Map">
+    <delete id="delTableIndex" parameterType="java.util.Map">
         DELETE FROM TABLEINTERFACEINDEX WHERE TABLECODE= #{tableCode}
     </delete>
 

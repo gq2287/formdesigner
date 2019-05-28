@@ -44,7 +44,7 @@ public class NewInputViewServiceImpl implements NewInputViewService {
      * @return
      */
     @Override
-    public Boolean saveInputView(String tableCode,List<Map<String,Object>> parasUIList,String nodeCode) {
+    public Boolean addInputView(String tableCode,List<Map<String,Object>> parasUIList,String nodeCode) {
         boolean bool=true;
         boolean trOk=true;//判断是默认创建还是录入界面二次调整(true录入界面。false底层添加)
         try {
@@ -152,7 +152,7 @@ public class NewInputViewServiceImpl implements NewInputViewService {
      * @return
      */
     @Override
-    public boolean saveTemplatInput(Map<String,String> inputView){
+    public boolean addTemplatInput(Map<String,String> inputView){
         boolean bool=true;
         if(!newInputViewMapper.addInputView(inputView)){
             bool=false;
