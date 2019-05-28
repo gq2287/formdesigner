@@ -46,15 +46,13 @@ public class TableController {
     @ApiOperation(value = "当前表是否纯在数据", notes = "返回信息 0成功，400失败 ")
     @RequestMapping(value = "/getIsOkUpDataByTableName", method = RequestMethod.POST)
     public ResponseResult getIsOkUpDataByTableName(@ApiParam(required =true, name = "tableName", value = "表名")String tableName) {
-//        boolean bool=tableService.getIsOkUpDataByTableName(tableName);
-
-//        if(bool){
-//            return new ResponseResult(ResponseResult.OK, "可以修改成功",true);
-//        }else {
-//            return new ResponseResult(ResponseResult.OK, "无法修改",true);
-//        }
-
-        return new ResponseResult(ResponseResult.OK, "可以修改成功",true);
+        boolean bool=tableService.getIsOkUpDataByTableName(tableName);
+        if(bool){
+            return new ResponseResult(ResponseResult.OK, "可以修改成功",true);
+        }else {
+            return new ResponseResult(ResponseResult.OK, "无法修改",true);
+        }
+//        return new ResponseResult(ResponseResult.OK, "可以修改成功",true);
     }
 
     @ApiOperation(value = "type(add增 del删 up改) 字段", notes = "返回信息 0成功，400失败 ")

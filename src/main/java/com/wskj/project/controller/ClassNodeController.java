@@ -93,7 +93,6 @@ public class ClassNodeController {
         List<Map<String,String>> list=null;
         try {
             list=classLevelService.getAllDictionaryData();
-//            logger.info("获取字典---getAllDictionaryData--参数--{}",list);
             return  new ResponseResult(ResponseResult.OK, "成功", list,true);
         }catch (Exception e){
             return new ResponseResult(ResponseResult.OK, "获取字典异常--"+e.getMessage(),false);

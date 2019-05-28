@@ -145,27 +145,17 @@ public class TableViewServiceImpl implements TableViewService {
             if(parms!=null&&parms.size()>0){
                 for (int i = 0; i <parms.size() ; i++) {
                     Map<String,String>  pras= JSONObject.parseObject(String.valueOf(parms.get(i)),typeObj);//JSONObject转换map
-//                    System.err.println("----------"+pras);
                     String tableCode=pras.get("TABLECODE");
                     String listCode=pras.get("LISTCODE");//如果存在就是已存在的视图列
                     if(listCode!=null&&!"".equals(listCode)){
                         pras.put("SERIAL",i+"");//序号
-                        int result=tableViewMapper.upTableViewSelect(pras);//更新视图列
-//                        if(result>0){
-//                            System.out.println("修改添加显示卡片列成功"+pras);
-//                        }
+                        tableViewMapper.upTableViewSelect(pras);//更新视图列
+//
                     }else{
-                        int result=tableViewMapper.upTableColumnSelect(pras);//修改纪录表
-//                        if(result>0){
-//                            System.out.println("修改纪录表列成功"+pras);
-//                        }
+                        tableViewMapper.upTableColumnSelect(pras);//修改纪录表
                         pras.put("SERIAL",i+"");//序号
                         pras.put("LISTCODE", String.valueOf((new Date()).getTime()) + (int)(100.0D + Math.random() * 1000.0D));
-                        result=tableViewMapper.addTableViewColumn(pras);//添加视图列
-//                        if(result>0){
-//                            System.out.println("成功添加视图列"+pras);
-//                        }
-
+                        tableViewMapper.addTableViewColumn(pras);//添加视图列
                     }
                 }
             }

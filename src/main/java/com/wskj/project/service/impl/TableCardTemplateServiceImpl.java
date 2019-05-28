@@ -4,6 +4,7 @@ import com.wskj.project.dao.NewInputViewMapper;
 import com.wskj.project.dao.TableCardTemplateMapper;
 import com.wskj.project.service.TableCardTemplateService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -21,11 +22,13 @@ public class TableCardTemplateServiceImpl implements TableCardTemplateService {
         return tableCardTemplateMapper.getAllTableCardTemplate();
     }
 
+    @Transactional
     @Override
     public boolean addTableCardTemplate(Map<String, String> parms) {
         return tableCardTemplateMapper.addTableCardTemplate(parms);
     }
 
+    @Transactional
     @Override
     public boolean delTableCardTemplateById(String id) {
         boolean bool = true;

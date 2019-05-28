@@ -10,6 +10,7 @@ import com.wskj.project.dao.TemplatCardMapper;
 import com.wskj.project.service.TableService;
 import com.wskj.project.util.StringUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Type;
@@ -226,6 +227,7 @@ public class TableServiceImpl implements TableService
      * @param parmMap
      * @return
      */
+    @Transactional
     @Override
     public Boolean addTableDescription(Map<String, Object> parmMap) {
         List<String> tableCodeList=new ArrayList<>();
@@ -438,6 +440,7 @@ public class TableServiceImpl implements TableService
      * 添加表关系
      *
      */
+    @Transactional
     @Override
     public void addTableRelation(Map<String,String> tableRelationMap) {
         try {
@@ -459,6 +462,7 @@ public class TableServiceImpl implements TableService
      * @param attrs
      * @return
      */
+    @Transactional
     @Override
     public Map<String, Object> getUpTreeByAttrs(Map<String, Object> attrs) {
         Map<String, Object> parms = new HashMap<>();
@@ -496,6 +500,7 @@ public class TableServiceImpl implements TableService
      * @param field
      * @return
      */
+    @Transactional
     @Override
     public Boolean addField(Map<String, Object> field) {
         Boolean bool = null;
@@ -567,23 +572,18 @@ public class TableServiceImpl implements TableService
      * @param field
      * @return
      */
+    @Transactional
     @Override
     public Boolean upFieldTableDescription(Map<String, String> field) {
         boolean bool=true;
-        try {
-            bool=tableMapper.upFieldTableDescription(field);
-            if(!bool){
-                System.out.println("修改描述表失败-1");
-                return bool;
-            }
-            bool=classLevelMapper.upNameByNodeCode(field);
-            if(!bool){
-                System.out.println("修改节点表ClassNode失败-1");
-                return bool;
-            }
-        }catch (Exception e){
-            System.err.println("修改描述表信息"+e.getMessage());
-            bool=false;
+        bool=tableMapper.upFieldTableDescription(field);
+        if(!bool){
+            System.out.println("修改描述表失败-1");
+            return bool;
+        }
+        bool=classLevelMapper.upNameByNodeCode(field);
+        if(!bool){
+            System.out.println("修改节点表ClassNode失败-1");
             return bool;
         }
         return bool;
@@ -594,18 +594,16 @@ public class TableServiceImpl implements TableService
      * @param fieldRelation  slaveColumnCode masterColumnCode
      * @return
      */
+    @Transactional
     @Override
     public Boolean upFieldTableRelation(Map<String, Object> fieldRelation) {
         boolean bool=true;
-        try {
-            int result=tableMapper.upFieldTableRelation(fieldRelation);
-
-        }catch (Exception e){
-            System.err.println("表关系修改失败"+e.getMessage());
+        int res=tableMapper.upFieldTableRelation(fieldRelation);
+        if(res==0){//没修改成功
+            System.err.println("表关系修改失败");
             bool=false;
-        }finally {
-            return bool;
         }
+        return bool;
     }
 
     /**
@@ -613,26 +611,19 @@ public class TableServiceImpl implements TableService
      * @param field
      * @return
      */
+    @Transactional
     @Override
     public Boolean delField(Map<String, Object> field) {
         Boolean bool = true;
         try{
-            int res1=tableMapper.delFieldTableColumnDescription(field);//受影响行数
-            if(res1>0){
-//                System.out.println("删除表字段描述成功"+field);
-            }
-            res1=tableMapper.delFieldTableRelation(field);
-            if(res1>0){
-//                System.out.println("删除表字段关系成功"+field);
-            }
-            res1=tableMapper.delFieldTable(field);
-            if(res1>0){
-//                System.out.println("删除实体表字段成功"+field);
-            }
-            res1=tableMapper.delOneColumn(field);
-            if(res1>0){
-//                System.out.println("删除视图字段成功"+field);
-            }
+            tableMapper.delFieldTableColumnDescription(field);//受影响行数
+
+            tableMapper.delFieldTableRelation(field);
+
+            tableMapper.delFieldTable(field);
+
+            tableMapper.delOneColumn(field);
+
         }catch (Exception e){
             bool=false;
             System.err.println(e.getMessage());
@@ -646,14 +637,12 @@ public class TableServiceImpl implements TableService
      * @param relationCode
      * @return
      */
+    @Transactional
     @Override
     public Boolean delFieldTableRelation(String relationCode) {
         Boolean bool = true;
         try{
-            int res2=tableMapper.delFieldRelation(relationCode);
-//            if(res2>0){
-//                System.out.println("删除表关系成功"+relationCode);
-//            }
+            tableMapper.delFieldRelation(relationCode);
 
         }catch (Exception e){
             bool=false;
@@ -669,6 +658,7 @@ public class TableServiceImpl implements TableService
      * @param field
      * @return
      */
+    @Transactional
     @Override
     public Boolean upField(Map<String, Object> field) {
         String tableName=String.valueOf(field.get("tableName"));

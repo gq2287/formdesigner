@@ -7,6 +7,7 @@ import com.wskj.project.dao.TableMapper;
 import com.wskj.project.service.NewInputViewService;
 import com.wskj.project.util.StringUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -43,11 +44,11 @@ public class NewInputViewServiceImpl implements NewInputViewService {
      * @param nodeCode
      * @return
      */
+    @Transactional
     @Override
     public Boolean addInputView(String tableCode,List<Map<String,Object>> parasUIList,String nodeCode) {
         boolean bool=true;
         boolean trOk=true;//判断是默认创建还是录入界面二次调整(true录入界面。false底层添加)
-        try {
             if(parasUIList==null){//不是录入界面进入
                 //查询实体表数据列
                 parasUIList=tableMapper.getEntityTableColumnByVisible(tableCode);//获取选中默认添加表数据列
@@ -98,21 +99,21 @@ public class NewInputViewServiceImpl implements NewInputViewService {
                         }
                     }
                     inputView.put("LOADNO",i+"");
-                    newInputViewMapper.addInputViewColumn(inputView);
+                    bool=newInputViewMapper.addInputViewColumn(inputView);
+                    if(!bool){
+                        Map<String,String> nodecodeMap=new HashMap<>();
+                        nodecodeMap.put("NODECODE",nodeCode);
+                        nodecodeMap.put("TYPE","C");
+                        classLevelService.delTreeLC(nodecodeMap);
+                        newInputViewMapper.delAllInputViewByTableCode(tableCode);//失败删除全部
+                        bool=false;
+                    }
                 }
             }
-        }catch (Exception e){
-            System.out.println(tableCode+"录入失败"+e.getMessage());
-            Map<String,String> nodecode=new HashMap<>();
-            nodecode.put("NODECODE",nodeCode);
-            nodecode.put("TYPE","C");
-            classLevelService.delTreeLC(nodecode);
-            newInputViewMapper.delAllInputViewByTableCode(tableCode);//失败删除全部
-            bool=false;
-        }
         return bool;
     }
 
+    @Transactional
     @Override
     public int delInputView(String tableCode) {
         int result=newInputViewMapper.delAllInputViewByTableCode(tableCode);//删除全部
@@ -151,6 +152,7 @@ public class NewInputViewServiceImpl implements NewInputViewService {
      * 添加模版录入界面样式信息
      * @return
      */
+    @Transactional
     @Override
     public boolean addTemplatInput(Map<String,String> inputView){
         boolean bool=true;

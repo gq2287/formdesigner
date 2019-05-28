@@ -8,6 +8,7 @@ import com.wskj.project.model.Tree;
 import com.wskj.project.service.ClassLevelService;
 import com.wskj.project.util.StringUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -21,7 +22,6 @@ public class ClassLevelServiceImpl implements ClassLevelService {
     private ClassLevelMapper classLevelMapper;
     @Resource
     private TableMapper tableMapper;
-
     @Resource
     private TableServiceImpl tableService;
     @Resource
@@ -86,10 +86,10 @@ public class ClassLevelServiceImpl implements ClassLevelService {
      * @param parmMap
      * @return
      */
+    @Transactional
     @Override
     public int addTreeL(Map<String, Object> parmMap) {
         int result=0;
-        try {
             Map<String,String> treeT=new HashMap<>();
             treeT.put("NODECODE", "ucls"+StringUtil.getDate(2)+StringUtil.getRandom(1000,10000)+1);//唯一编号
             treeT.put("CLASSCODE","");
@@ -119,11 +119,7 @@ public class ClassLevelServiceImpl implements ClassLevelService {
                     }
                 }
             }
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }finally {
-            return result;
-        }
+        return result;
     }
 
     /**
@@ -131,6 +127,7 @@ public class ClassLevelServiceImpl implements ClassLevelService {
      * @param parmMap
      * @return
      */
+    @Transactional
     @Override
     public String delTreeLC(Map<String,String> parmMap) {
         String result="";
@@ -251,14 +248,12 @@ public class ClassLevelServiceImpl implements ClassLevelService {
      * @parmMap
      * @return
      */
+    @Transactional
     @Override
     public Boolean upTreeNameAndSerial(Map<String, String> parmMap) {
         boolean bool=true;
         try {
-            int result= classLevelMapper.upTreeNameAndSerial(parmMap);
-//            if (result>0){
-//                System.out.println("修改classnode名称及序号成功--"+parmMap);
-//            }
+            classLevelMapper.upTreeNameAndSerial(parmMap);
         }catch (Exception e){
             bool=false;
             System.out.println("修改classnode名称及序号--"+e.getMessage());
@@ -272,14 +267,12 @@ public class ClassLevelServiceImpl implements ClassLevelService {
      * @param parentCode
      * @return
      */
+    @Transactional
     @Override
     public Boolean upDragDropNodeByparentCode(String parentCode,String nodeCode) {
         Boolean bool=true;
         try {
-             bool =classLevelMapper.upParentCode(parentCode,nodeCode);
-//             if(bool){
-//                 System.err.println("修改成功参数："+parentCode+"--"+nodeCode);
-//             }
+             bool=classLevelMapper.upParentCode(parentCode,nodeCode);
         }catch (Exception e){
             System.err.println("修改失败参数："+parentCode+"--"+nodeCode+"--"+e.getMessage());
             bool=false;

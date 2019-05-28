@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @ComponentScan("com.wskj.project.*")
 @EnableSwagger2
 @SpringBootApplication
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 public class FormDesignerApplication {
     private static String[] args;
     private static ConfigurableApplicationContext context;
