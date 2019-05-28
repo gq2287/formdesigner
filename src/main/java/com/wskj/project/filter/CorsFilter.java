@@ -3,7 +3,6 @@ package com.wskj.project.filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
@@ -26,9 +25,5 @@ public class CorsFilter implements Filter {
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
 //        System.out.println("*********************************过滤器被使用**************************");
         filterChain.doFilter(servletRequest, servletResponse);
-    }
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        //将所有/static/** 访问都映射到classpath:/static/ 目录下
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
     }
 }
