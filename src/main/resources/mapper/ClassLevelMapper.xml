@@ -24,8 +24,8 @@
     <select id="getClassI" resultType="java.util.Map">
         SELECT NODECODE,PARENTCODE,NAME,TYPE,CLASSCODE,CLASSTABLECODE,TABLECODE,SERIAL FROM CLASSNODE
         WHERE 1=1
-        <if test="type != null and type != ''">
-            AND TYPE =#{type}
+        <if test="TYPE != null and TYPE != ''">
+            AND TYPE =#{TYPE}
         </if>
         <if test="nodeCode != null and nodeCode != ''">
             AND PARENTCODE =#{nodeCode}
