@@ -413,27 +413,5 @@ public class StringUtil {
         }
         return realPath;
     }
-//    public static void main(String[] s) {
-//        List<String> list=StringUtil.getPropertieFile();
-//        for (int i = 0; i <list.size() ; i++) {
-//            System.out.println(list.get(i));
-//        }
-//    }
-
-//解析Properties文件
-//    public static List<String> getPropertieFile()  {
-//        List<String> parms=new ArrayList<String>();
-//        try {
-//            PropertiesConfiguration propertiesss = new PropertiesConfiguration("");
-//            Iterator it = propertiesss.getKeys();
-//            while(it.hasNext()) {
-//                parms.add(String.valueOf(it.next()));
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }finally {
-//            return parms;
-//        }
-//    }
 
 }
